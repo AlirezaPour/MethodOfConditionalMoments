@@ -95,6 +95,8 @@ public class OriginalModel extends data.model.Model{
 		actionsSmallUnionSmallLarge.addAll(actionsSmall);
 		actionsSmallUnionSmallLarge.addAll(actionsSmallAndLarge);
 		ArrayList<AggregatedAction> aggregatedVersions = aggregateActions(actionsSmallUnionSmallLarge);
+		
+		
 
 		
 		// construct the aggregated model. 
