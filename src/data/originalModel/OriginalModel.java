@@ -16,37 +16,26 @@ import data.model.StateVariable;
 // partitions based on their size into
 // large and small groups.
 
-public class OriginalModel extends data.model.Model{
+public class OriginalModel{
+	
+	// instance variables set by the parser
 	
 	private StateDescriptor stateDescriptor;
+	private State initialState;
+	private ArrayList<OriginalAction> actions;
+	private ArrayList<Group> largeGroups; 
+	private ArrayList<Group> smallGroups;
+	
+	// instance variables derived by considering the initial instance variables.
+	
 	private StateDescriptor stateDescriptorSmallGroups;
 	private StateDescriptor stateDescriptorLargeGroups; 
-	
-	private State initialState;
-	
-	private ArrayList<OriginalAction> actions;
 	private ArrayList<OriginalAction> actionsSmall;
 	private ArrayList<OriginalAction> actionsSmallAndLarge;
 	private ArrayList<OriginalAction> actionsLarge;
 	
-	private ArrayList<Group> largeGroups; 
-	private ArrayList<Group> smallGroups; 
-	
 	public OriginalModel(){
-		// a dummy constructor now.
-		 stateDescriptor = new StateDescriptor();
-		 stateDescriptorSmallGroups   = new StateDescriptor();
-		 stateDescriptorLargeGroups = new StateDescriptor(); 
-		
-		 initialState = new State();
-		
-		 actions = new ArrayList<OriginalAction>();
-		 actionsSmall = new ArrayList<OriginalAction>();
-		 actionsSmallAndLarge = new ArrayList<OriginalAction>();
-		 actionsLarge = new ArrayList<OriginalAction>();
-		
-		 largeGroups = new ArrayList<Group>(); 
-		 smallGroups = new ArrayList<Group>(); 
+		// all the state variables are initialised using the set and get methods.
 	}
 	
 	// returns the list of the state variables which 
@@ -59,26 +48,42 @@ public class OriginalModel extends data.model.Model{
 	// constructs an instance of the aggregatedModel from this model. 
 	public AggregatedModel consTructAggregatedModel(){
 		
-		Iterator<StateVariable> iter = stateDescriptor.iterator();
+		// find the state descriptor.
+		StateDescriptor aggStateDescriptor;
+		aggStateDescriptor = deriveAggregatedStateDescriptor();
+		
+		// derive initial aggregated state.
+		State aggInitialState;
+		aggInitialState = deriveAggregatedInitialState();
+		
+		// derive the actions related to the aggregated model. 
+		ArrayList<OriginalAction> actionsSmallUnionSmallLarge = new ArrayList<>() ;
+		actionsSmallUnionSmallLarge.addAll(actionsSmall);
+		actionsSmallUnionSmallLarge.addAll(actionsSmallAndLarge);
+		ArrayList<AggregatedAction> aggregatedActions = aggregateActions(actionsSmallUnionSmallLarge);
+
+		// construct the aggregated model. 
+		AggregatedModel aggModel = new AggregatedModel();
+		aggModel.setAggStateDescriptor(aggStateDescriptor);
+		aggModel.setAggInitialState(aggInitialState);
+		aggModel.setAggActions(aggregatedActions);
+		
+		return aggModel;
+		
+	}
+	
+	private State deriveAggregatedInitialState(){
+		
+		Iterator<StateVariable> iter = initialState.keySet().iterator();
+		
+		State aggInitialState = new State();
+		
 		StateVariable variable ;
 		Group group;
 		Integer population;
 		
-		// Variables to be found.
-		StateDescriptor aggStateDescriptor = new StateDescriptor();
-		State aggInitialState = new State();
 		
-		// derive the state descriptor
-		while(iter.hasNext()){
-			variable = iter.next();
-			group = variable.getGroup();
-			if (smallGroups.contains(group)){
-				aggStateDescriptor.add(variable);
-			}
-		}
 		
-		// derive the initial aggregated state
-		iter = initialState.keySet().iterator();
 		while(iter.hasNext()){
 			variable = iter.next();
 			group= variable.getGroup();
@@ -88,24 +93,27 @@ public class OriginalModel extends data.model.Model{
 			}
 		}
 
+		return aggInitialState;
+	}
 	
+	private StateDescriptor deriveAggregatedStateDescriptor(){
 		
-		// derive the actions related to the aggregated model. 
-		ArrayList<OriginalAction> actionsSmallUnionSmallLarge = new ArrayList<>() ;
-		actionsSmallUnionSmallLarge.addAll(actionsSmall);
-		actionsSmallUnionSmallLarge.addAll(actionsSmallAndLarge);
-		ArrayList<AggregatedAction> aggregatedVersions = aggregateActions(actionsSmallUnionSmallLarge);
+		Iterator<StateVariable> iter = stateDescriptor.iterator();
 		
+		StateDescriptor aggDescriptor = new StateDescriptor();
 		
-
+		StateVariable variable;
+		Group group;
 		
-		// construct the aggregated model. 
-		data.aggregatedModel.Model aggModel = new data.aggregatedModel.Model();
-		aggModel.setStateDescriptor(aggStateDescriptor);
-		aggModel.setInitialState(aggInitialState);
+		while(iter.hasNext()){
+			variable = iter.next();
+			group = variable.getGroup();
+			if (smallGroups.contains(group)){
+				aggDescriptor.add(variable);
+			}
+		}
 		
-		return null;
-		
+		return aggDescriptor;
 	}
 	
 	public ArrayList<AggregatedAction> aggregateActions(ArrayList<OriginalAction> actions){
@@ -165,6 +173,50 @@ public class OriginalModel extends data.model.Model{
 		
 		return aggAction;
 	}
+
+		
+	public StateDescriptor getStateDescriptor() {
+		return stateDescriptor;
+	}
+
+	public void setStateDescriptor(StateDescriptor stateDescriptor) {
+		this.stateDescriptor = stateDescriptor;
+	}
+
+	public State getInitialState() {
+		return initialState;
+	}
+
+	public void setInitialState(State initialState) {
+		this.initialState = initialState;
+	}
+
+	public ArrayList<OriginalAction> getActions() {
+		return actions;
+	}
+
+	public void setActions(ArrayList<OriginalAction> actions) {
+		this.actions = actions;
+	}
+
+	public ArrayList<Group> getLargeGroups() {
+		return largeGroups;
+	}
+
+	public void setLargeGroups(ArrayList<Group> largeGroups) {
+		this.largeGroups = largeGroups;
+	}
+
+	public ArrayList<Group> getSmallGroups() {
+		return smallGroups;
+	}
+
+	public void setSmallGroups(ArrayList<Group> smallGroups) {
+		this.smallGroups = smallGroups;
+	}
 	
 
+	
+	
+	
 }

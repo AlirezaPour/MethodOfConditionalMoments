@@ -28,7 +28,7 @@ public class Model {
 	public void setGroups(ArrayList<Group> groups) {
 		this.groups = groups;
 	}
-	public ArrayList<Action> getActions() {
+	public ArrayList<? extends Action> getActions() {
 		return actions;
 	}
 	public void setActions(ArrayList<Action> actions) {
