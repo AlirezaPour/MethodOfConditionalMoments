@@ -1,6 +1,9 @@
 package data.aggregatedModel;
 
+import java.util.Iterator;
+
 import data.model.JumpVector;
+import data.model.StateVariable;
 
 public class AggregatedAction {
 
@@ -9,6 +12,29 @@ public class AggregatedAction {
 	private JumpVector jumpVectorMinus;
 	private JumpVector jumpVectorPlus ;
 	
+	
+	public boolean isEnabledAt(AggregatedState state){
+		boolean isEnabled = true;
+		
+		StateVariable variable;
+		Integer currentPopulation; 
+		Integer requiredPopulation; 
+		Iterator<StateVariable> iter = jumpVectorMinus.keySet().iterator();
+		
+		while(	iter.hasNext() & isEnabled==true	){
+			
+			variable = iter.next();
+			currentPopulation = state.get(variable);
+			requiredPopulation = jumpVectorMinus.get(variable);
+			
+			if(currentPopulation < requiredPopulation){
+				isEnabled = false;
+			}
+			
+		}
+		
+		return isEnabled;
+	}
 	
 	public String getName() {
 		return name;

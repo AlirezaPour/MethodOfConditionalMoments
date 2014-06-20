@@ -21,4 +21,8 @@ public class StateVariable {
 	public void setLocalDerivative(LocalDerivative localDerivative){
 		this.localDerivative = localDerivative ;
 	}
+	
+	public String toString(){
+		return localDerivative.toString();
+	}
 }

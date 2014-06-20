@@ -5,6 +5,8 @@ import java.util.Iterator;
 
 import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
+import data.aggregatedModel.AggregatedState;
+import data.model.Action;
 import data.model.Group;
 import data.model.JumpVector;
 import data.model.State;
@@ -34,10 +36,24 @@ public class OriginalModel{
 	private ArrayList<OriginalAction> actionsSmallAndLarge;
 	private ArrayList<OriginalAction> actionsLarge;
 	
-	public OriginalModel(){
-		// all the state variables are initialised using the set and get methods.
+	public OriginalModel (	StateDescriptor stateDescriptor, 
+						  	State initialState,
+						  	ArrayList<OriginalAction> actions, 
+						  	ArrayList<Group> largeGroups,
+						  	ArrayList<Group> smallGroups)   {
+		
+		this.stateDescriptor = stateDescriptor;
+		this.initialState = initialState;
+		this.actions = actions;
+		this.largeGroups = largeGroups;
+		this.smallGroups = smallGroups;
+		
+		setStateDescriptorSmallGroups();
+		setStateDescriptorLargeGroups();
+		setActionsInCategories();
+		
 	}
-	
+
 	// returns the list of the state variables which 
 	// enable the action type given.
 	public ArrayList<StateVariable> getEnablingStateVariables(OriginalAction action){
@@ -48,13 +64,10 @@ public class OriginalModel{
 	// constructs an instance of the aggregatedModel from this model. 
 	public AggregatedModel consTructAggregatedModel(){
 		
-		// find the state descriptor.
-		StateDescriptor aggStateDescriptor;
-		aggStateDescriptor = deriveAggregatedStateDescriptor();
 		
 		// derive initial aggregated state.
-		State aggInitialState;
-		aggInitialState = deriveAggregatedInitialState();
+		AggregatedState aggInitialState;
+		aggInitialState = deriveAggregatedInitialState(stateDescriptorSmallGroups);
 		
 		// derive the actions related to the aggregated model. 
 		ArrayList<OriginalAction> actionsSmallUnionSmallLarge = new ArrayList<>() ;
@@ -63,59 +76,33 @@ public class OriginalModel{
 		ArrayList<AggregatedAction> aggregatedActions = aggregateActions(actionsSmallUnionSmallLarge);
 
 		// construct the aggregated model. 
-		AggregatedModel aggModel = new AggregatedModel();
-		aggModel.setAggStateDescriptor(aggStateDescriptor);
-		aggModel.setAggInitialState(aggInitialState);
-		aggModel.setAggActions(aggregatedActions);
+		AggregatedModel aggModel = new AggregatedModel(stateDescriptorSmallGroups,aggInitialState,aggregatedActions,smallGroups);
 		
 		return aggModel;
 		
 	}
 	
-	private State deriveAggregatedInitialState(){
+	private AggregatedState deriveAggregatedInitialState(StateDescriptor stateDescriptor){
 		
-		Iterator<StateVariable> iter = initialState.keySet().iterator();
+		Iterator<StateVariable> iter = stateDescriptor.iterator();
 		
-		State aggInitialState = new State();
+		AggregatedState aggInitialState = new AggregatedState(stateDescriptor);
 		
 		StateVariable variable ;
-		Group group;
 		Integer population;
 		
-		
-		
 		while(iter.hasNext()){
+			
 			variable = iter.next();
-			group= variable.getGroup();
-			if(smallGroups.contains(group)){
-				population = initialState.get(variable);
-				aggInitialState.put(variable, population);
-			}
+			population = initialState.get(variable);
+			
+			aggInitialState.put(variable, population);
+			
 		}
 
 		return aggInitialState;
 	}
-	
-	private StateDescriptor deriveAggregatedStateDescriptor(){
-		
-		Iterator<StateVariable> iter = stateDescriptor.iterator();
-		
-		StateDescriptor aggDescriptor = new StateDescriptor();
-		
-		StateVariable variable;
-		Group group;
-		
-		while(iter.hasNext()){
-			variable = iter.next();
-			group = variable.getGroup();
-			if (smallGroups.contains(group)){
-				aggDescriptor.add(variable);
-			}
-		}
-		
-		return aggDescriptor;
-	}
-	
+		 
 	public ArrayList<AggregatedAction> aggregateActions(ArrayList<OriginalAction> actions){
 		
 		ArrayList<AggregatedAction> aggregatedActions = new ArrayList<>();
@@ -216,7 +203,85 @@ public class OriginalModel{
 	}
 	
 
+	private void setStateDescriptorSmallGroups(){
+		StateDescriptor stateDescriptorSmallGroups = new StateDescriptor();
+		
+		Group group;
+		
+		for(StateVariable variable : stateDescriptor){
+			group = variable.getGroup();
+			if(smallGroups.contains(group)){
+				stateDescriptorSmallGroups.add(variable);
+			}
+		}
+		this.stateDescriptorSmallGroups = stateDescriptorSmallGroups;
+	}
 	
+	private void setStateDescriptorLargeGroups(){
+		
+		StateDescriptor stateDescriptorLargeGroups = new StateDescriptor();
+		
+		Group group;
+		
+		for(StateVariable variable : stateDescriptor){
+			group = variable.getGroup();
+			if(largeGroups.contains(group)){
+				stateDescriptorLargeGroups.add(variable);
+			}
+		}
+		this.stateDescriptorLargeGroups = stateDescriptorLargeGroups;
+		
+	}
+	
+	// use the actions state variable and populate the state variables actionSmall, actionsSmallLarge and actionsLarge
+	private void setActionsInCategories(){
+		for (OriginalAction action : actions){
+			actionCategory category = getActionCategory(action);
+			switch (category) {
+			case LARGE:
+				actionsLarge.add(action);
+				break;
+
+			case SMALL:
+				actionsSmall.add(action);
+				break;
+			case SMALLLARGE:
+				actionsSmallAndLarge.add(action);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	// for one action, this method returns the category where this action belongs.
+	private actionCategory getActionCategory(OriginalAction action){
+		JumpVector jumpVector = action.getJumpVectorMinus();
+		
+		boolean involvedSmallGroups = false ;
+		boolean involvedLargeGroups = false ;
+		
+		StateVariable variable;
+		Integer impactMinus ;
+		Group group;
+		
+		Iterator<StateVariable> iter = jumpVector.keySet().iterator();
+		
+		while( iter.hasNext() & (involvedSmallGroups == false || involvedLargeGroups==false)  ){
+			variable = iter.next();
+			group = variable.getGroup();
+			impactMinus = jumpVector.get(variable);
+			if ( impactMinus ==1 & smallGroups.contains(group) ) involvedSmallGroups = true ;
+			if ( impactMinus ==1 & largeGroups.contains(group) ) involvedLargeGroups = true ;		
+		}
+		
+		if (involvedSmallGroups==true & involvedLargeGroups==true) return actionCategory.SMALLLARGE;
+		if (involvedSmallGroups==false & involvedLargeGroups ==true) return actionCategory.LARGE;
+		if (involvedSmallGroups == true & involvedLargeGroups== false) return actionCategory.SMALL;
+		
+		return null;
+	}
+		
 	
 	
 }
