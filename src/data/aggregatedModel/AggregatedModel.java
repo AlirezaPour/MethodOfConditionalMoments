@@ -1,6 +1,7 @@
 package data.aggregatedModel;
 
 import java.util.ArrayList;
+
 import data.model.StateDescriptor;
 import data.model.Group; 
 import data.model.StateVariable;
@@ -13,6 +14,8 @@ public class AggregatedModel{
 	private ArrayList<AggregatedAction> actions; 
 	private ArrayList<Group> groups; 	
 	
+	public Display display;
+	
 	public AggregatedModel(StateDescriptor stateDescriptor, 
 							AggregatedState initialState,
 							ArrayList<AggregatedAction> actions,
@@ -21,9 +24,14 @@ public class AggregatedModel{
 		this.initialState = initialState;
 		this.actions = actions;
 		this.groups = groups;
+		
+		// initialising the model displayer.
+		display = new Display(stateDescriptor,actions,groups);
 	}
-
-
+	
+	public AggregatedModel(){
+		
+	}
 
 	public AggregatedStateSpace deriveStateSpace(){
 		
