@@ -5,14 +5,31 @@ import java.util.ArrayList;
 public class Group {
 
 	private String name;
-	private ArrayList<LocalDerivative> groupLocalDerivatives;
+	private ArrayList<LocalDerivative> localDerivatives;
+	
+	
+	public Group(String name,ArrayList<LocalDerivative> derivative){
+		this.name = name; 
+		this.localDerivatives = derivative;
+	}
+	
+	
+	public ArrayList<LocalDerivative> getGroupLocalDerivatives() {
+		return localDerivatives;
+	}
+
+	public void setGroupLocalDerivatives(
+			ArrayList<LocalDerivative> groupLocalDerivatives) {
+		this.localDerivatives = groupLocalDerivatives;
+	}
+
 	
 	public String toString(){
 		return name;
 	}
 	
 	public int numLocalDerivative(){
-		return groupLocalDerivatives.size();
+		return localDerivatives.size();
 	}
 	
 	// returns the maximum of the leghths of the names of the local derivatives.
@@ -20,7 +37,7 @@ public class Group {
 		
 		int max = 0 ; 
 		
-		for (LocalDerivative derivative : groupLocalDerivatives){
+		for (LocalDerivative derivative : localDerivatives){
 			if (derivative.length() > max){
 				max = derivative.length();
 			}
@@ -29,4 +46,5 @@ public class Group {
 		return max;
 		
 	}
+
 }
