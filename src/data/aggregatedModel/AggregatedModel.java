@@ -26,7 +26,7 @@ public class AggregatedModel{
 		this.groups = groups;
 		
 		// initialising the model displayer.
-		display = new Display(stateDescriptor,actions,groups);
+		display = new Display(this);
 	}
 	
 	public AggregatedModel(){
