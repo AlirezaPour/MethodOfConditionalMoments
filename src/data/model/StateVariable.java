@@ -30,4 +30,16 @@ public class StateVariable {
 	public String toString(){
 		return localDerivative.toString();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		StateVariable fvariable = (StateVariable) obj;
+		
+		if (	(this.group).equals(fvariable.getGroup()) 	&& 	(this.localDerivative).equals(fvariable.getLocalDerivative()) 	){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 }

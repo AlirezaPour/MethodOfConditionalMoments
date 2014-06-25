@@ -7,8 +7,6 @@ public class Transition {
 	AggregatedState target;
 	double rate ; 
 	
-	
-	
 	public Transition(){
 		
 	}

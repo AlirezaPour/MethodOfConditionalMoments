@@ -62,6 +62,9 @@ public class AggregatedAction {
 		this.jumpVectorPlus = jumpVectorPlus;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 	
 }

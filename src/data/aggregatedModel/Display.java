@@ -402,7 +402,7 @@ public class Display {
 	
 	public static void main(String args[]){
 		
-		ArrayList<Group> groups = new ArrayList<Group>();
+		/*ArrayList<Group> groups = new ArrayList<Group>();
 		
 		// group 1 
 		LocalDerivative serverIdle = new LocalDerivative("Server_idle");
@@ -565,6 +565,7 @@ public class Display {
 		
 		// show the different things in the model
 		System.out.printf(display.showModel());
+		*/
 		
 	}
 	

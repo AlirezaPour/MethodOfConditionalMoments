@@ -46,5 +46,19 @@ public class Group {
 		return max;
 		
 	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Group fgroup = (Group) obj;
+		if (       (this.name).equals(fgroup.getName())          ){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 }
