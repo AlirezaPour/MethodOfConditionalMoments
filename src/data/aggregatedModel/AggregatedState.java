@@ -112,9 +112,8 @@ public class AggregatedState extends NumericalVector{
 		super();
 	}
 	
-	/*public String toString(){
-		
-	}*/
+	
+	
 	
 	
 }

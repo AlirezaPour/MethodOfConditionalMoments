@@ -71,7 +71,8 @@ public class Explorer {
 		transition.setStart(state);
 					
 		// I dont know what I should do here. 
-		transition.setRate(0);
+		double rate = state.getRateOf(action, descriptor, groups);
+		transition.setRate(rate);
 					
 		// setting the target
 		AggregatedState target = nextState(state, action);

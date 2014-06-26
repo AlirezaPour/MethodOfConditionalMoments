@@ -6,6 +6,7 @@ import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
 import data.aggregatedModel.Display;
+import data.aggregatedModel.Explorer;
 import data.model.Group;
 import data.model.JumpVector;
 import data.model.LocalDerivative;
@@ -78,7 +79,7 @@ public class ClientServerAggregatedModel {
 		//descriptor.add(Ct);
 
 		// setting the populations in initial state 
-		int popServerIdle = 2 ; 
+		int popServerIdle = 3 ; 
 		int popServerLog = 0; 
 		int popServerBrok = 0;
 		
@@ -273,6 +274,12 @@ public class ClientServerAggregatedModel {
 		//System.out.printf(display.showActions(model.getAggActions()));
 		
 		System.out.printf(display.showModel());
+		Explorer explorer = new Explorer(model);
+		ArrayList<AggregatedState> states = new ArrayList<>();
+		states.addAll(explorer.generateStates());
+		
+		System.out.printf("states space:\n\n\n");
+		System.out.printf(display.showStates(states));
 		
 	}
 }

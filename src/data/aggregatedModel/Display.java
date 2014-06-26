@@ -12,6 +12,10 @@ import data.model.StateVariable;
 
 public class Display {
 	
+	private int maxStateNumericalRepresentation = 10;
+	private int maxActionNameLength = 10;
+	private int maxRateValueLength = 10;
+	
 	private  int spaceAfterGroupDivider = 3;
 	private  int spaceBeforeGroupDivider = 3;
 	
@@ -42,6 +46,169 @@ public class Display {
 		this.descriptor = model.getAggStateDescriptor();
 		this.actions = model.getAggActions();
 		this.groups = model.getGroups();
+	}
+	
+	public String showTransitions(ArrayList<Transition> transitions){
+		String output = "";
+		
+		Iterator<Transition> iter = transitions.iterator();
+		
+		output += showTransitionHeader() ; 
+		
+		output += "\n";
+		
+		// length of the header
+		int length = 5 * localDerDivider.length() + 2 * maxStateNumericalRepresentation  +  maxActionNameLength + maxRateValueLength ;
+		
+		output += "\n";
+		
+		Transition transition;
+		while(iter.hasNext()){
+			transition = iter.next();
+			output += underline(length);
+			output += showTransitionContent(transition);
+			output += "\n";
+		}
+		
+		
+		
+		return output ; 
+	
+	}
+	
+	public String showTransition(Transition transition){
+		String output = showTransitionHeader();
+		
+		// length of the header
+		int length = 5 * localDerDivider.length() + 2 * maxStateNumericalRepresentation  +  maxActionNameLength + maxRateValueLength ;
+		output += underline(length);
+		
+		output += "\n";
+		
+		output += showTransitionContent(transition);
+
+		return output;
+	}
+	
+	public String showTransitionContent(Transition transition){
+		String output = "";
+		
+		output += localDerDivider ; 
+
+		AggregatedState start = transition.getStart(); 
+		String startNumericalVector = showNumericalRepresentation(start);
+		String format = "%-" + maxStateNumericalRepresentation + "s";
+		output += String.format(format, startNumericalVector);
+		
+		output += localDerDivider ;
+		
+		AggregatedState target = transition.getStart(); 
+		String targetNumericalVector = showNumericalRepresentation(target);
+		output += String.format(format, targetNumericalVector);
+		
+		output += localDerDivider ;
+		
+		format = "%-" + maxActionNameLength + "s";
+		AggregatedAction action = transition.getAction(); 
+		output += String.format(format, action.getName());
+		
+		output += localDerDivider ;
+		
+		format = "%-" + maxRateValueLength + "s" ;
+		double rate = transition.getRate();
+		output += String.format(format, rate);
+		
+		output += localDerDivider ;
+		
+		return output;
+	}
+	
+	public String showTransitionHeader(){
+		String output = "";
+		output += "Transition";
+		
+		output += "\n";
+		
+		int length = 5 * localDerDivider.length() + 2 * maxStateNumericalRepresentation  +  maxActionNameLength + maxRateValueLength ;
+		output += underline(length);
+		
+		output += localDerDivider ; 
+		String format = "%-" + maxStateNumericalRepresentation + "s";
+		output += String.format(format, "Start");
+		
+		output += localDerDivider ;
+		output += String.format(format, "Target");
+
+		output += localDerDivider ;
+		
+		format = "%-" + maxActionNameLength + "s";
+		output += String.format(format, "Action");
+		
+		output += localDerDivider ;
+		
+		format = "%-" + maxRateValueLength + "s";
+		output += String.format(format, "Rate");
+		
+		output += localDerDivider ;
+		
+		return output;
+	}
+	
+	public String showNumericalRepresentation(AggregatedState state){
+		String output = "";
+		
+		
+		Iterator<Group> iter = groups.iterator();
+		
+		// first group
+		Group group = iter.next();
+		output += "<";
+		output += showNumericalRepresentation(state, group);
+		
+		while (iter.hasNext()){
+			
+			group = iter.next();
+		//	output += groupDivider;
+			output +=  showNumericalRepresentation(state, group);
+			
+		}
+		
+		output += ">";
+		
+		return output;
+	}
+	
+	public String showNumericalRepresentation(AggregatedState state, Group group){
+		String output = "";
+		
+		ArrayList<LocalDerivative> derivatives = group.getGroupLocalDerivatives();
+		Iterator<LocalDerivative> iter = derivatives.iterator();
+		
+		// the first derivative
+		LocalDerivative derivative = iter.next();		
+		
+		output += showNumericalRepresentation(state,group,derivative);
+		
+		while(iter.hasNext()){
+			derivative = iter.next();
+			output += ",";
+			output += showNumericalRepresentation(state, group, derivative);
+		}
+		
+		
+		return output;
+	}
+	
+	public String showNumericalRepresentation(AggregatedState state, Group group, LocalDerivative derivative){
+		String output = "";
+		
+		StateVariable variable = descriptor.getCorrespondingStateVariable(group, derivative);
+		int value = state.get(variable).intValue();
+		
+		output += value;
+		
+		return output;
+		
 	}
 	
 	// displaying the groups and the line under the group titles.
@@ -328,7 +495,8 @@ public class Display {
 		String output = "";
 		output += showNumericalVectorManyGroups(model, state, groups);
 		output += spaces(spaceBeforeStateIdentifier);
-		output += state.getStateIdentifier();
+		//output += state.getStateIdentifier();
+		output += showNumericalRepresentation(state);
 		return output ;
 	}
 	public String showStates (ArrayList<AggregatedState> states){
