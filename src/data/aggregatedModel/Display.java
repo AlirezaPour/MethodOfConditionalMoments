@@ -290,6 +290,11 @@ public class Display {
 		output += underline(spaceForImpactType);
 		output += showUnderlineManyGroups(groups);
 		
+		// the symbolic apparent rate of the action 
+		output += "\n\n";
+		output += "The symbolic apparent rate : ";
+		output += action.getSymbolicRateOf(descriptor, groups);
+		
 		return output;
 	}
 	public String showActions (ArrayList<AggregatedAction> actions){

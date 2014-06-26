@@ -14,8 +14,23 @@ import data.model.StateVariable;
 
 public class ClientServerAggregatedModel {
 	
+	/* 
+	 * 
+	 * The stages for defining a model and initialising the data types
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
+	
 	
 	public static AggregatedModel getAggregatedClientServerModel(){
+		
+		double r_s = 2; 
+		double r_l = 5; 
+		double r_b = 7; 
+		double r_f = 11;
 		
 		// constructing the group Servers
 		
@@ -216,6 +231,20 @@ public class ClientServerAggregatedModel {
 		fix.setJumpVectorPlus(fixJumpVectorPlus);
 			
 		actions.add(fix);
+		
+		// setting the apparent rate data. For each local derivative and action type the derivative enables, specify the rate at which the action is enabled.
+		
+		// local derivative Server_idle and the action request
+		serverIdle.getActionRates().put(request, r_s);
+		
+		// local derivative Server_idle and the action break
+		serverIdle.getActionRates().put(brk, r_b);
+		
+		// local derivative Server_logging
+		serverLog.getActionRates().put(log, r_l);
+		
+		// local derivative Server_broken
+		serverBrk.getActionRates().put(fix, r_f);
 			
 		// constructing the model
 		AggregatedModel model = new AggregatedModel();

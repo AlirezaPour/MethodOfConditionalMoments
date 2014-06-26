@@ -28,7 +28,7 @@ public class StateVariable {
 	}
 	
 	public String toString(){
-		return localDerivative.toString();
+		return group.getName() + "." + localDerivative.toString();
 	}
 	
 	@Override
@@ -42,4 +42,6 @@ public class StateVariable {
 		}
 		
 	}
+	
+	
 }

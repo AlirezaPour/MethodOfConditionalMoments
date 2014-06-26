@@ -1,9 +1,12 @@
 package data.aggregatedModel;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
+import data.model.Group;
 import data.model.JumpVector;
 import data.model.Rate;
+import data.model.StateDescriptor;
 import data.model.StateVariable;
 
 public class AggregatedAction {
@@ -65,6 +68,62 @@ public class AggregatedAction {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+
+	public ArrayList<Group> getEnablingGroups(ArrayList<Group> allGroups){
+			
+		ArrayList<Group> enablingGroups = new ArrayList<Group>();
+		
+		for(Group group : allGroups){
+			if (group.getActions().contains(this)){
+				enablingGroups.add(group);
+			}
+		}
+		
+		return enablingGroups;
+	}
+	
+	
+	public String getSymbolicRateOf(StateDescriptor descriptor , ArrayList<Group> allGroups){
+
+		ArrayList<Group> enablingGroups = getEnablingGroups(allGroups);
+		
+		String rateExpression = "";
+
+		Group group;
+		
+		int numberOfCooperatingGroups = enablingGroups.size();
+
+		if (numberOfCooperatingGroups == 1 ){
+		// the action is individual
+			group = enablingGroups.get(0);
+			rateExpression = group.getSymbolicRateOf(descriptor, this);
+			return rateExpression;
+			
+		}
+		if (numberOfCooperatingGroups > 1 ){
+		// the action is shared			
+			rateExpression = "min( ";
+					
+			Iterator<Group> iter = enablingGroups.iterator();	
+			group = iter.next();
+			rateExpression += group.getSymbolicRateOf(descriptor, this);
+			
+			while(iter.hasNext()){
+				rateExpression += " , ";
+				group = iter.next();
+				rateExpression += group.getSymbolicRateOf(descriptor, this);		
+			}
+			
+			rateExpression += " )";
+		}
+		
+
+		
+		
+	
+		return rateExpression;
+	
 	}
 	
 }

@@ -1,9 +1,8 @@
 package data.aggregatedModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-
+import data.model.Group;
 import data.model.NumericalVector;
 import data.model.StateDescriptor;
 import data.model.StateVariable;
@@ -20,6 +19,28 @@ public class AggregatedState extends NumericalVector{
 		
 	}
 
+	public double getRateOf(AggregatedAction action, StateDescriptor descriptor , ArrayList<Group> allGroups){
+		double rate = Double.MAX_VALUE;
+		
+		ArrayList<Group> enablingGroups = action.getEnablingGroups(allGroups);
+		
+		double rateAtGroup;
+		for (Group group : enablingGroups){
+			rateAtGroup = group.getRateOf(this, descriptor, action);
+			rate = minimum (rate,rateAtGroup);			
+		}
+	
+		return rate;
+	}
+	
+	
+	
+	public double minimum(double a , double b ){
+		if (a <= b) return a ;
+		if (b < a) return b ;
+		return 0;
+	}
+	
 	public boolean doesEnable(AggregatedAction action){
 		
 		boolean isEnabled = true;
@@ -82,7 +103,6 @@ public class AggregatedState extends NumericalVector{
 		return stateIdentifier;
 	}
 
-
 	public void setStateIdentifier(String stateIdentifier) {
 		this.stateIdentifier = stateIdentifier;
 	}
@@ -91,8 +111,6 @@ public class AggregatedState extends NumericalVector{
 	public AggregatedState() {
 		super();
 	}
-	
-	
 	
 	/*public String toString(){
 		
