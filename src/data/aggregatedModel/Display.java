@@ -55,7 +55,7 @@ public class Display {
 		
 		output += showTransitionHeader() ; 
 		
-		output += "\n";
+		//output += "\n";
 		
 		// length of the header
 		int length = 5 * localDerDivider.length() + 2 * maxStateNumericalRepresentation  +  maxActionNameLength + maxRateValueLength ;
@@ -66,6 +66,7 @@ public class Display {
 		while(iter.hasNext()){
 			transition = iter.next();
 			output += underline(length);
+			output += "\n";
 			output += showTransitionContent(transition);
 			output += "\n";
 		}
@@ -78,6 +79,8 @@ public class Display {
 	
 	public String showTransition(Transition transition){
 		String output = showTransitionHeader();
+		
+		output += "\n";
 		
 		// length of the header
 		int length = 5 * localDerDivider.length() + 2 * maxStateNumericalRepresentation  +  maxActionNameLength + maxRateValueLength ;
@@ -102,7 +105,7 @@ public class Display {
 		
 		output += localDerDivider ;
 		
-		AggregatedState target = transition.getStart(); 
+		AggregatedState target = transition.getTarget(); 
 		String targetNumericalVector = showNumericalRepresentation(target);
 		output += String.format(format, targetNumericalVector);
 		
@@ -131,6 +134,8 @@ public class Display {
 		
 		int length = 5 * localDerDivider.length() + 2 * maxStateNumericalRepresentation  +  maxActionNameLength + maxRateValueLength ;
 		output += underline(length);
+		
+		output += "\n";
 		
 		output += localDerDivider ; 
 		String format = "%-" + maxStateNumericalRepresentation + "s";

@@ -49,7 +49,7 @@ public class Explorer {
 	// given a state, returns the states reachable from this state
  	public ArrayList<AggregatedState> nextStates(AggregatedState state){
 		
-		ArrayList<AggregatedState> nextStates = new ArrayList<>();
+		ArrayList<AggregatedState> nextStates = new ArrayList<AggregatedState>();
 		ArrayList<AggregatedAction> enabledActions = actionsEnabledAt(state);
 		
 		for(AggregatedAction action : enabledActions){
