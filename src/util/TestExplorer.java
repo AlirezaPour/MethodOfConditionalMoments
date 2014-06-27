@@ -14,10 +14,34 @@ import data.model.StateVariable;
 
 public class TestExplorer {
 
-	public static void main(String[] args) {
+	
+	/*public static void main(String[] args) {
 
 		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
 		Explorer explorer = new Explorer(model);
+		ArrayList<AggregatedState> states = explorer.generateStateSpace();
+		
+		
+		String output = "";
+		for( AggregatedState state : states){
+			
+			output += model.getDisplay().showNumericalRepresentation(state);
+			output += " : ";
+			
+			for (AggregatedState incomingState : state.getIncomingStates()){
+				
+				output += model.getDisplay().showNumericalRepresentation(incomingState);
+				output += " , ";
+				
+			}
+			
+			output += "\n\n";
+			
+		}
+		
+		System.out.printf(output);
+		
+		System.out.printf("\n\n");
 		
 		//AggregatedState state = getArbitraryState(model);
 		
@@ -29,7 +53,7 @@ public class TestExplorer {
 		//System.out.printf(model.getDisplay().showActions(actions));
 		
 		// test nextState
-		AggregatedAction action = getArbitraryAction(model, "fix");
+		//AggregatedAction action = getArbitraryAction(model, "fix");
 		
 		//AggregatedState nextState = explorer.nextState(state, action);
 		//System.out.printf(model.getDisplay().showState(nextState));
@@ -67,7 +91,74 @@ public class TestExplorer {
 		return action;
 	}
 	
+	*/
+	
+	public static void main (String args[]){
+		boolean output = checkStateSpaceGeneration2();
+		System.out.printf(Boolean.toString(output));
+	}
+	
+	public static boolean checkStateSpaceGeneration(){
+		
+		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
+		Explorer explorer = new Explorer(model);
+		
+		boolean output = true;
+		
+		ArrayList<AggregatedState> states = explorer.generateStateSpace();
+		
+		for (AggregatedState state : states){
+			
+			// we get the current state.
+			ArrayList<AggregatedState> nextStates = state.getReachableStates();
+			
+			for (AggregatedState nextState : nextStates){
+				
+				ArrayList<AggregatedState> incomingStates = nextState.getIncomingStates(); 
+				
+				if (	!	(	incomingStates.contains(state)	)	){
+					return false; 
+				}
+				
+			}
+			
+		}
+		
+		return true; 
+	}
 
+	public static boolean checkStateSpaceGeneration2(){
+		
+		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
+		
+		Explorer explorer = new Explorer(model);
+		
+		boolean output = true;
+		
+		ArrayList<AggregatedState> states = explorer.generateStateSpace();
+		
+		for (AggregatedState state : states){
+			
+			// we get the current state.
+			ArrayList<AggregatedState> incomingStates = state.getIncomingStates();
+			
+			for (AggregatedState incomingState : incomingStates){
+				
+				ArrayList<AggregatedState> reachableStates = incomingState.getReachableStates(); 
+				
+				if (	!	(	reachableStates.contains(state)	)	){
+					return false; 
+				}
+				
+			}
+			
+		}
+		
+		
+		return true;
+
+		
+	}
 	
 	
 }

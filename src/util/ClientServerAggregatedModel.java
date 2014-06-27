@@ -20,7 +20,7 @@ public class ClientServerAggregatedModel {
 	 * The stages for defining a model and initialising the data types
 	 * 
 	 * 
-	 * 
+	 *
 	 * 
 	 * 
 	 * */
@@ -28,10 +28,10 @@ public class ClientServerAggregatedModel {
 	
 	public static AggregatedModel getAggregatedClientServerModel(){
 		
-		double r_s = 2; 
-		double r_l = 5; 
-		double r_b = 7; 
-		double r_f = 11;
+		double r_s = 2  ; 
+		double r_l = 5  ; 
+		double r_b = 7  ; 
+		double r_f = 11 ;
 		
 		// constructing the group Servers
 		

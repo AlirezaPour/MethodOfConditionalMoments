@@ -1,5 +1,7 @@
 package data.aggregatedModel;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import data.model.Group;
 import data.model.StateDescriptor;
 import data.model.StateVariable;
@@ -125,10 +127,114 @@ public class Explorer {
  			// add the necessary states to the agenda for future exploration. 
  			agenda.addAll(toBeAddedToAgenda);
  			
- 			
  		}
  		
  		return explored;
  	}
+ 	
+ 	
+ 	// generates the state space. 
+ 	
+ 	public ArrayList<AggregatedState> generateStateSpace(){
+ 			
+ 		ArrayList<AggregatedState> explored = new ArrayList<AggregatedState>();
+ 		ArrayList<AggregatedState> agenda = new ArrayList<AggregatedState>();
+ 		
+ 		ArrayList<AggregatedState> toBeAddedToAgenda ;
+ 		ArrayList<AggregatedState> toBeAddedToAgendaUnified;
+ 		
+ 		// adding the initial state
+ 		agenda.add(model.getAggInitialState());
+ 		
+ 		AggregatedState state ; 
+ 		
+ 		while (   !(	agenda.isEmpty()	)	)	{
+ 			state = agenda.get(0);
+ 			agenda.remove(state);
+ 			
+ 			// this state has been explored.
+ 			explored.add(state);	
+ 			
+ 			toBeAddedToAgenda = nextStates(state);	// the instances of states return are not exactly the instances previously stored in explored. 
+ 			
+ 			toBeAddedToAgendaUnified = unifyNextStatesWithExplored(toBeAddedToAgenda,explored);
+ 			
+ 			// each of these states are added to the current states reachable state
+ 			state.getReachableStates().addAll(toBeAddedToAgendaUnified);
+ 			
+ 			for (AggregatedState reachableState : toBeAddedToAgendaUnified){
+ 				reachableState.getIncomingStates().add(state);
+ 			}
+ 			
+ 			// remove states that have been explored.
+ 			toBeAddedToAgendaUnified.remove(state);
+ 			toBeAddedToAgendaUnified.removeAll(explored);
+ 			toBeAddedToAgendaUnified.removeAll(agenda);
+ 			
+ 			// add the necessary states to the agenda for future exploration. 
+ 			agenda.addAll(toBeAddedToAgendaUnified);
+ 			
+ 		}
+ 		
+ 		return explored;
+ 		
+  	}
+ 	
+ 	public ArrayList<AggregatedState> unifyNextStatesWithExplored(ArrayList<AggregatedState> newStates , ArrayList<AggregatedState> explored){
+ 		// replace the states in the newState with the one that is present in the explored. 
+ 		// here we modify the new states
+ 		// therefore avoiding the construction of a new ArrayList<state>
+ 		
+ 		ArrayList<AggregatedState> unifiedNewStates = new ArrayList<AggregatedState>();
+ 		
+ 		AggregatedState unifiedState ;
+ 		for (AggregatedState newState : newStates){
+ 			
+ 			int index = explored.indexOf(newState);
+ 			
+ 			
+ 			if (index >= 0){	// the explored array list contains the state
+ 				 	unifiedState = explored.get(index);
+ 				 	unifiedNewStates.add(unifiedState);
+ 			}else if (index == -1 ){
+ 					unifiedNewStates.add(newState);
+ 			}
+ 		
+ 		}
+ 		
+ 		
+ 		return unifiedNewStates;
+ 		
+ 		
+ 	}
+ 	
+ 	public ArrayList<Transition> getStartTargetTransitions (AggregatedState start, AggregatedState target){
+ 		ArrayList<Transition> relevantTransitions = new ArrayList<Transition>();
+ 		
+ 		ArrayList<Transition> allTransitions = getTransitions(start);
+ 		
+ 		for(Transition transition : allTransitions){
+ 			
+ 			if (transition.getStart().equals(start)   && transition.getTarget().equals(target)){
+ 				relevantTransitions.add(transition);
+ 			}
+ 			
+ 		}
+ 		
+ 		return relevantTransitions;
+ 	}
+ 	
+ 	
+ 	public double totalTransitionRate(AggregatedState start, AggregatedState target){
+		double rate = 0 ;
+		
+		ArrayList<Transition> relevantTransitions = getStartTargetTransitions(start, target);
+		
+		for(Transition transition : relevantTransitions){
+			rate = rate + transition.getRate();
+		}
+		
+		return rate; 
+	}
  	
 }

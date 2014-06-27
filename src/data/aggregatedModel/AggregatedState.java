@@ -10,12 +10,33 @@ import data.model.StateVariable;
 public class AggregatedState extends NumericalVector{
 	
 	private String stateIdentifier;
+	private ArrayList<AggregatedState> incomingStates ; 
+	private ArrayList<AggregatedState> reachableStates;
 	
+	public ArrayList<AggregatedState> getIncomingStates() {
+		return incomingStates;
+	}
+
+	public void setIncomingStates(ArrayList<AggregatedState> incomingStates) {
+		this.incomingStates = incomingStates;
+	}
+
+	public ArrayList<AggregatedState> getReachableStates() {
+		return reachableStates;
+	}
+
+	public void setReachableStates(ArrayList<AggregatedState> reachableStates) {
+		this.reachableStates = reachableStates;
+	}
+
 	public AggregatedState(StateDescriptor desciptor){
 
 		for(StateVariable variable : desciptor){
 			put(variable, 0);
 		}
+		
+		incomingStates = new ArrayList<AggregatedState>();
+		reachableStates = new ArrayList<AggregatedState>();
 		
 	}
 
@@ -32,8 +53,6 @@ public class AggregatedState extends NumericalVector{
 	
 		return rate;
 	}
-	
-	
 	
 	public double minimum(double a , double b ){
 		if (a <= b) return a ;
@@ -107,11 +126,10 @@ public class AggregatedState extends NumericalVector{
 		this.stateIdentifier = stateIdentifier;
 	}
 
-
 	public AggregatedState() {
-		super();
+		incomingStates = new ArrayList<AggregatedState>();
+		reachableStates = new ArrayList<AggregatedState>();
 	}
-	
 	
 	
 	

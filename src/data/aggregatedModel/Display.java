@@ -48,6 +48,11 @@ public class Display {
 		this.groups = model.getGroups();
 	}
 	
+	public String showStateSpace(){
+		String output = "";
+		return output; 
+	}
+	
 	public String showTransitions(ArrayList<Transition> transitions){
 		String output = "";
 		
