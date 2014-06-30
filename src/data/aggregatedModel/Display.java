@@ -752,4 +752,85 @@ public class Display {
 		
 	}
 	
+	
+public String storeStateSpace(ArrayList<AggregatedState> states){
+	
+		Explorer explorer = new Explorer(model);
+
+		String output = "";
+		
+		// give each state an identifier.
+		int identifier = 1; 
+		for (AggregatedState state : states){
+			state.setStateId(identifier);
+			identifier++; 
+		}
+		
+		// store the list of states.
+		output += storeStates(states);
+		
+		output += "\n\n\n";
+		
+		ArrayList<Transition> transitions;
+		for (AggregatedState state : states){
+			transitions = explorer.getTransitions(state);
+			output += storeTransitions(transitions);
+		}
+		
+		return output ; 
+	 
+	}
+	
+	// 
+	public String storeStates(ArrayList<AggregatedState> states){
+		String output = "";
+		
+		for (AggregatedState state : states){
+			output += storeOneState(state);
+			output += "\n";
+		}
+		
+		return output ; 
+	}
+	
+	public String storeOneState(AggregatedState state){
+ 		String output = "";
+ 		
+ 		output += state.getStateId(); 
+ 		output += "\t\t";
+ 		output += showNumericalRepresentation(state);
+ 	
+ 		return output; 
+ 	}
+	
+	public String storeTransitions(ArrayList<Transition> transitions){
+		String output = "";
+		for (Transition tr : transitions){
+			output += storeOneTransition(tr);
+			output += "\n";
+		}
+		return output;
+	}
+	
+	public String storeOneTransition (Transition transition){
+		String output = "";
+		
+		AggregatedState state = transition.getStart(); 
+		int id = state.getStateId();
+		
+		output += Integer.toString(id);
+		output += "\t\t";
+		
+		state = transition.getTarget();
+		id = state.getStateId();
+		output +=Integer.toBinaryString(id);
+		output += "\t\t";
+		
+		double rate = transition.getRate();
+		output += Double.toString(rate);
+		
+		return output; 
+	}
+ 	
+	
 }

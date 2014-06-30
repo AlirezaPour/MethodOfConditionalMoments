@@ -10,8 +10,18 @@ import data.model.StateVariable;
 public class AggregatedState extends NumericalVector{
 	
 	private String stateIdentifier;
+	private int stateId;
+	public int getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(int stateId) {
+		this.stateId = stateId;
+	}
+
 	private ArrayList<AggregatedState> incomingStates ; 
 	private ArrayList<AggregatedState> reachableStates;
+	
 	
 	public ArrayList<AggregatedState> getIncomingStates() {
 		return incomingStates;
@@ -130,6 +140,7 @@ public class AggregatedState extends NumericalVector{
 		incomingStates = new ArrayList<AggregatedState>();
 		reachableStates = new ArrayList<AggregatedState>();
 	}
+	
 	
 	
 	

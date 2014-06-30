@@ -93,10 +93,10 @@ public class TestExplorer {
 	
 	*/
 	
-	public static void main (String args[]){
+	/*public static void main (String args[]){
 		boolean output = checkStateSpaceGeneration2();
 		System.out.printf(Boolean.toString(output));
-	}
+	}*/
 	
 	public static boolean checkStateSpaceGeneration(){
 		
@@ -160,5 +160,40 @@ public class TestExplorer {
 		
 	}
 	
-	
+	public static AggregatedState getStateFromStateSpace (AggregatedModel model, int si, int sl, int sb){
+
+		Explorer explorer = new Explorer(model);
+		
+		// the values for the state variables.
+		AggregatedState state = new AggregatedState();
+		
+		StateVariable Si = model.getAggStateDescriptor().getCorrespondingStateVariable(new Group("Servers",null), new LocalDerivative("Server_idle"));
+		state.put(Si, si);
+		
+		StateVariable Sl = model.getAggStateDescriptor().getCorrespondingStateVariable(new Group("Servers",null), new LocalDerivative("Server_log"));
+		state.put(Sl, sl);
+		
+		StateVariable Sb = model.getAggStateDescriptor().getCorrespondingStateVariable(new Group("Servers",null), new LocalDerivative("Server_brk"));
+		state.put(Sb, sb);
+		
+		// find the state in the state space which have these values.
+		ArrayList<AggregatedState> allStates = explorer.generateStateSpace();
+		
+		for (AggregatedState st : allStates){
+			if (st.equals(state)) return st;
+		}
+		
+		return null;
+		
+	}
+
+	public static void main(String args[]){
+		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
+		Explorer explorer = new Explorer(model);
+		AggregatedState state1 = getStateFromStateSpace(model,0,0,3);
+		AggregatedState state2 = getStateFromStateSpace(model,1,1,1);
+		double rate = explorer.totalTransitionRate(state1, state2);
+		System.out.printf("%f", rate);
+		
+	}
 }
