@@ -46,4 +46,15 @@ public class AggregatedStateSpace {
 		if (!(explored.contains(state))) return false;
 		return true;
 	}
+	
+	public void addToExplored(AggregatedState st){
+		explored.add(st);
+		ArrayList<Transition> transitions = new ArrayList<Transition>();
+		transitionBank.put(st, transitions);
+	}
+
+	public void addToTransitionBank(AggregatedState state, Transition tr) {
+		transitionBank.get(state).add(tr);
+	}
+	
 }

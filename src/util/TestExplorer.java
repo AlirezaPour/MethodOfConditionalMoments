@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
+import data.aggregatedModel.AggregatedStateSpace;
 import data.aggregatedModel.Display;
 import data.aggregatedModel.Explorer;
 import data.model.Group;
@@ -15,11 +16,12 @@ import data.model.StateVariable;
 public class TestExplorer {
 
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 
 		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
 		Explorer explorer = new Explorer(model);
-		ArrayList<AggregatedState> states = explorer.generateStateSpace();
+		AggregatedStateSpace sp = explorer.generateStateSpaceCompleteVersion();
+		ArrayList<AggregatedState> states = sp.getExplored();
 		
 		
 		String output = "";
@@ -28,9 +30,9 @@ public class TestExplorer {
 			output += model.getDisplay().showNumericalRepresentation(state);
 			output += " : ";
 			
-			for (AggregatedState incomingState : state.getIncomingStates()){
+			for (AggregatedState outgoingState : state.getReachableStates()){
 				
-				output += model.getDisplay().showNumericalRepresentation(incomingState);
+				output += model.getDisplay().showNumericalRepresentation(outgoingState);
 				output += " , ";
 				
 			}
@@ -63,8 +65,8 @@ public class TestExplorer {
 		//System.out.printf(model.getDisplay().showStates(nextStates));
 		
 		// test generateStates
-		ArrayList<AggregatedState> allStates = explorer.generateStates();
-		System.out.printf(model.getDisplay().showStates(allStates));
+		//ArrayList<AggregatedState> allStates = explorer.generateStates();
+		//System.out.printf(model.getDisplay().showStates(allStates));
 		
 	}
 	
@@ -91,7 +93,7 @@ public class TestExplorer {
 		return action;
 	}
 	
-	*/
+
 	
 	/*public static void main (String args[]){
 		boolean output = checkStateSpaceGeneration2();
@@ -187,7 +189,7 @@ public class TestExplorer {
 		
 	}
 
-	public static void main(String args[]){
+	/*public static void main(String args[]){
 		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
 		Explorer explorer = new Explorer(model);
 		AggregatedState state1 = getStateFromStateSpace(model,0,0,3);
@@ -195,5 +197,5 @@ public class TestExplorer {
 		double rate = explorer.totalTransitionRate(state1, state2);
 		System.out.printf("%f", rate);
 		
-	}
+	}*/
 }

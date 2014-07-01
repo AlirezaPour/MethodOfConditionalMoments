@@ -48,7 +48,7 @@ public class Display {
 		this.groups = model.getGroups();
 	}
 	
-	public String showStateSpace(){
+	public String showStateSpace(AggregatedStateSpace sp){
 		String output = "";
 		return output; 
 	}
@@ -753,10 +753,12 @@ public class Display {
 	}
 	
 	
-public String storeStateSpace(ArrayList<AggregatedState> states){
+public String storeStateSpace(AggregatedStateSpace sp){
 	
-		Explorer explorer = new Explorer(model);
+		//Explorer explorer = new Explorer(model);
 
+		ArrayList<AggregatedState> states = sp.getExplored();
+		
 		String output = "";
 		
 		// give each state an identifier.
@@ -771,11 +773,12 @@ public String storeStateSpace(ArrayList<AggregatedState> states){
 		
 		output += "\n\n\n";
 		
-		ArrayList<Transition> transitions;
+	/*	ArrayList<Transition> transitions;
 		for (AggregatedState state : states){
 			transitions = explorer.getTransitions(state);
 			output += storeTransitions(transitions);
 		}
+		*/
 		
 		return output ; 
 	 

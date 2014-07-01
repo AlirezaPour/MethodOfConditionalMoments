@@ -135,58 +135,68 @@ public class Explorer {
  	
  	public AggregatedStateSpace generateStateSpaceCompleteVersion(){
  		
- 		AggregatedStateSpace aggregatedStateSpace = new AggregatedStateSpace();
+ 		AggregatedStateSpace sp = new AggregatedStateSpace();
  		
  		ArrayList<AggregatedState> agenda = new ArrayList<AggregatedState>();
  		agenda.add(model.getAggInitialState());
  		
- 		
  		AggregatedState state ;
  		AggregatedState target;
- 		ArrayList<Transition> transitions;
  		
  		// as we cover the agenda, we construct the aggregated state space.
  		while (		 !	(	agenda.isEmpty()	) 	){
+ 			
  			state = agenda.get(0);
- 
- 			transitions = getTransitions(state);
  			
- 			for (Transition transition:  transitions){
- 				
- 				processOneTransition(aggregatedStateSpace, state, transition);
- 				
- 				// 	should the target be added to the agenda?
- 				target = transition.getTarget();
- 	 			if (   !(agenda.contains(target)) &&  !(aggregatedStateSpace.getExplored().contains(target)) ){
- 	 				agenda.add(target);
- 	 			}
-
- 			}
+ 			sp.addToExplored(state);
  			
- 			agenda.remove(state); 			
+ 			expand(sp,agenda,state);
  			
  		}
  		
- 		return aggregatedStateSpace;
+ 		return sp;
  		
  	}
  	
- 	public AggregatedStateSpace processOneTransition(AggregatedStateSpace sp, AggregatedState state, Transition tr){
+ 	
+ 	public void expand(AggregatedStateSpace sp , ArrayList<AggregatedState> agenda, AggregatedState state){
  		
- 		// first, add the transition to the transition bank 
- 		sp.getTransitionBank().get(state).add(tr);
+ 		ArrayList<Transition> transitions;
+ 		transitions = getTransitions(state);
+ 		expand(sp,agenda,state,transitions);
+ 		agenda.remove(state);
+ 	}
+ 	
+ 	public void expand (AggregatedStateSpace sp , ArrayList<AggregatedState> agenda, AggregatedState state, ArrayList<Transition> transitions){
+ 		for (Transition transition : transitions){
+ 			expand(sp, agenda, state, transition);
+ 		}
+ 	}
+ 	
+ 	public void expand (AggregatedStateSpace sp , ArrayList<AggregatedState> agenda, AggregatedState state, Transition tr){
  		
- 		// add the state to the explored.
- 		sp.getExplored().add(state);
- 
- 		// set the pointers for the states involved in the transition
+ 		// uniformise the transition
+ 		tr = uniformiseTransition(sp, agenda, tr);
+ 		
+ 		AggregatedState target = tr.getTarget();
+ 		
+ 		// add the transition to the bank
+ 		sp.addToTransitionBank(state,tr);
+ 		
+ 		// unpadte references in the start and target states
  		state.getReachableStates().add(tr.target);
  		tr.target.getIncomingStates().add(state);
  		
- 		return sp;
+ 		// adjust the agenda
+ 		if (	!(sp.getExplored().contains(target))	&&	!(agenda.contains(target))			){
+ 	
+ 			agenda.add(target);
+ 			
+ 		}
+ 		
  	}
  	
- 	public Transition uniformiseTransition ( AggregatedStateSpace sp , Transition transition){
+ 	public Transition uniformiseTransition ( AggregatedStateSpace sp , ArrayList<AggregatedState> agenda,Transition transition){
  		AggregatedState target = transition.getTarget();
  		
  		ArrayList<AggregatedState> explored = sp.getExplored();
@@ -195,6 +205,14 @@ public class Explorer {
  			
  			int index = explored.indexOf(target);
  			AggregatedState newTarget = explored.get(index);
+ 			transition.setTarget(newTarget);
+ 			
+ 		}
+ 		
+ 		if (agenda.contains(target)){
+ 			
+ 			int index = agenda.indexOf(target);
+ 			AggregatedState newTarget = agenda.get(index);
  			transition.setTarget(newTarget);
  			
  		}
