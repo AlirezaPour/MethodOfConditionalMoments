@@ -15,16 +15,19 @@ import data.model.StateVariable;
 
 public class TestExplorer {
 
+	/*
 	
 	public static void main(String[] args) {
 
 		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
 		Explorer explorer = new Explorer(model);
 		AggregatedStateSpace sp = explorer.generateStateSpaceCompleteVersion();
-		ArrayList<AggregatedState> states = sp.getExplored();
+		String output = model.getDisplay().storeStateSpace(sp);
 		
 		
-		String output = "";
+		
+		// checking the incoming and reachable states;
+		/*String output = "";
 		for( AggregatedState state : states){
 			
 			output += model.getDisplay().showNumericalRepresentation(state);
@@ -69,6 +72,7 @@ public class TestExplorer {
 		//System.out.printf(model.getDisplay().showStates(allStates));
 		
 	}
+	*/
 	
 	public static AggregatedState getArbitraryState(AggregatedModel model){
 	
@@ -179,7 +183,7 @@ public class TestExplorer {
 		state.put(Sb, sb);
 		
 		// find the state in the state space which have these values.
-		ArrayList<AggregatedState> allStates = explorer.generateStateSpace();
+		ArrayList<AggregatedState> allStates = explorer.generateStateSpaceCompleteVersion().getExplored();
 		
 		for (AggregatedState st : allStates){
 			if (st.equals(state)) return st;
@@ -188,14 +192,17 @@ public class TestExplorer {
 		return null;
 		
 	}
-
-	/*public static void main(String args[]){
+	
+	public static void main(String args[]){
 		AggregatedModel model = ClientServerAggregatedModel.getAggregatedClientServerModel();
 		Explorer explorer = new Explorer(model);
-		AggregatedState state1 = getStateFromStateSpace(model,0,0,3);
+		AggregatedStateSpace sp = explorer.generateStateSpaceCompleteVersion();
+		AggregatedState state1 = getStateFromStateSpace(model,0,2,1);
 		AggregatedState state2 = getStateFromStateSpace(model,1,1,1);
-		double rate = explorer.totalTransitionRate(state1, state2);
+		double rate = explorer.totalTransitionRate(sp,state1, state2);
 		System.out.printf("%f", rate);
 		
-	}*/
+	}
+
+	
 }

@@ -293,12 +293,10 @@ public class Explorer {
  		
  	}
  	
- 	public ArrayList<Transition> getStartTargetTransitions (AggregatedState start, AggregatedState target){
+ 	public ArrayList<Transition> getStartTargetTransitions (ArrayList<Transition> allTransitions , AggregatedState start, AggregatedState target){
  		
  		ArrayList<Transition> relevantTransitions = new ArrayList<Transition>();
- 		
- 		ArrayList<Transition> allTransitions = getTransitions(start);
- 		
+ 		 		
  		for(Transition transition : allTransitions){
  			
  			if (transition.getStart().equals(start)   && transition.getTarget().equals(target)){
@@ -312,11 +310,15 @@ public class Explorer {
  	}
  	
  	
- 	public double totalTransitionRate(AggregatedState start, AggregatedState target){
+ 	public double totalTransitionRate(AggregatedStateSpace sp, AggregatedState start, AggregatedState target){
  		
 		double rate = 0 ;
 		
-		ArrayList<Transition> relevantTransitions = getStartTargetTransitions(start, target);
+		ArrayList<Transition> allTransitionsFromStart = sp.getTransitionBank().get(start);
+		
+		ArrayList<Transition> relevantTransitions = getStartTargetTransitions(allTransitionsFromStart,start, target);
+		
+		if (relevantTransitions == null) return 0;
 		
 		for(Transition transition : relevantTransitions){
 			rate = rate + transition.getRate();

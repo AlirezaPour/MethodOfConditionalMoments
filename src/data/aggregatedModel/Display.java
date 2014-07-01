@@ -759,7 +759,7 @@ public String storeStateSpace(AggregatedStateSpace sp){
 
 		ArrayList<AggregatedState> states = sp.getExplored();
 		
-		String output = "";
+		String output = "States:\n\n\n";
 		
 		// give each state an identifier.
 		int identifier = 1; 
@@ -769,21 +769,68 @@ public String storeStateSpace(AggregatedStateSpace sp){
 		}
 		
 		// store the list of states.
+		
+		
 		output += storeStates(states);
 		
 		output += "\n\n\n";
 		
-	/*	ArrayList<Transition> transitions;
-		for (AggregatedState state : states){
-			transitions = explorer.getTransitions(state);
-			output += storeTransitions(transitions);
-		}
-		*/
+		output += "Transitions:\n\n";
+		
+		output += storeTransitionBank(sp);
 		
 		return output ; 
 	 
 	}
+
+	public String storeTransitionBank (AggregatedStateSpace sp){
+		String output = "" ;
+		
+		ArrayList<AggregatedState> states = sp.getExplored();
+		ArrayList<Transition> transitions;
+		
+		for (AggregatedState state : states){
+			
+			transitions = sp.getTransitionBank().get(state);
+			output += storeTransitionsForState(transitions);
+			
+			
+		}
+		
+		return output; 
+	}
 	
+	
+	public String storeTransitionsForState(ArrayList<Transition> transitions){
+		String output = "";
+		
+		AggregatedState start, target;
+		double rate;
+		AggregatedAction action;
+		
+		for (Transition tr : transitions){
+			
+			start = tr.getStart();
+			target = tr.getTarget();
+			rate = tr.getRate();
+			action= tr.getAction();
+			
+			output += start.getStateId() ;
+			output += "\t" ;
+			
+			output += target.getStateId() ;
+			output += "\t" ;
+			
+			output += Double.toString(rate);
+			output += "\t" ;
+			
+			output += action.getName();
+			output += "\n" ;	
+			
+		}
+		
+		return output;
+	}
 	// 
 	public String storeStates(ArrayList<AggregatedState> states){
 		String output = "";
