@@ -1,6 +1,7 @@
 package data.aggregatedModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import data.model.StateDescriptor;
 import data.model.Group; 
@@ -16,6 +17,8 @@ public class AggregatedModel{
 	
 	private Display display;
 	
+	private HashMap<String, Integer> constants;
+	
 	
 	public Display getDisplay (){
 		return this.display;
@@ -28,16 +31,26 @@ public class AggregatedModel{
 	public AggregatedModel(StateDescriptor stateDescriptor, 
 							AggregatedState initialState,
 							ArrayList<AggregatedAction> actions,
-							ArrayList<Group> groups)	 {
+							ArrayList<Group> groups,
+							HashMap<String, Integer> constants)	 {
 		this.stateDescriptor = stateDescriptor;
 		this.initialState = initialState;
 		this.actions = actions;
 		this.groups = groups;
+		this.constants = constants;
 		
 		// initialising the model displayer.
 		display = new Display(this);
 	}
 	
+	public HashMap<String, Integer> getConstants() {
+		return constants;
+	}
+
+	public void setConstants(HashMap<String, Integer> constants) {
+		this.constants = constants;
+	}
+
 	public AggregatedModel(){
 		
 	}

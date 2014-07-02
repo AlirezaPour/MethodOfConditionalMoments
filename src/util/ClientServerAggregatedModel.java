@@ -1,6 +1,7 @@
 package util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
@@ -27,6 +28,14 @@ public class ClientServerAggregatedModel {
 	
 	
 	public static AggregatedModel getAggregatedClientServerModel(){
+		
+		// the constants
+		
+		HashMap<String, Integer> constants = new HashMap<String,Integer>();
+		constants.put("r_s", 2);
+		constants.put("r_l", 5);
+		constants.put("r_b", 7);
+		constants.put("r_f", 11);
 		
 		double r_s = 2  ; 
 		double r_l = 5  ; 
@@ -253,12 +262,14 @@ public class ClientServerAggregatedModel {
 		model.setAggStateDescriptor(descriptor);
 		model.setAggActions(actions);
 		model.setAggInitialState(initialState);
+		model.setConstants(constants);
 		Display display = new Display(model);
 		model.setDisplay(display);
 	
 		return model;
 	}
 
+	/*
 	public static void main(String args[]){
 		AggregatedModel model = getAggregatedClientServerModel();
 		Display display = model.getDisplay();
@@ -282,4 +293,6 @@ public class ClientServerAggregatedModel {
 		System.out.printf(display.showStates(states));
 		
 	}
+	*/
+	
 }

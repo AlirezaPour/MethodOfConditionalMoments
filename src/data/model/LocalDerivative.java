@@ -13,6 +13,8 @@ public class LocalDerivative {
 	// this represents the action types that the local derivative enables.
 	HashMap<AggregatedAction, Double> actionRates;
 	
+	HashMap<AggregatedAction, String > parameterName;
+	
 	public HashMap<AggregatedAction, Double> getActionRates() {
 		return actionRates;
 	}

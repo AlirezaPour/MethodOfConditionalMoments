@@ -15,7 +15,7 @@ public class AggregatedAction {
 	private JumpVector jumpVector;
 	private JumpVector jumpVectorMinus;
 	private JumpVector jumpVectorPlus ;
-	private Rate rate;
+	
 	
 	public boolean isEnabledAt(AggregatedState state){
 		boolean isEnabled = true;
