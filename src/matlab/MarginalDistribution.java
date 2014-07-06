@@ -25,6 +25,7 @@ public class MarginalDistribution {
 	
 	
 	public String constructStatesMaps(){
+		
 		String output = "";
 		
 		ArrayList<AggregatedState> states = stateSpace.getExplored();
@@ -42,10 +43,13 @@ public class MarginalDistribution {
 		int id = state.getStateId();
 		output += Integer.toString(id);
 		
+		
+		
+		
 		return output;
 	}
 	
-	public String setParamters (){
+	public String constructConstants (){
 		
 		String output = "";
 		
@@ -76,7 +80,7 @@ public class MarginalDistribution {
 		Explorer explorer = new Explorer(model);
 		AggregatedStateSpace sp = explorer.generateStateSpaceCompleteVersion();
 		MarginalDistribution md = new MarginalDistribution(model, sp);
-		String output = md.setParamters();
+		String output = md.constructConstants();
 		System.out.printf(output);
 		
 		
