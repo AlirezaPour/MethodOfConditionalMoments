@@ -88,7 +88,7 @@ public class ClientServerAggregatedModel {
 		//descriptor.add(Ct);
 
 		// setting the populations in initial state 
-		int popServerIdle = 3 ; 
+		int popServerIdle = 2 ; 
 		int popServerLog = 0; 
 		int popServerBrok = 0;
 		
