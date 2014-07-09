@@ -13,7 +13,11 @@ public class LocalDerivative {
 	// this represents the action types that the local derivative enables.
 	HashMap<AggregatedAction, Double> actionRates;
 	
-	HashMap<AggregatedAction, String > parameterName;
+	HashMap<AggregatedAction, String > parameterNames;
+	
+	public HashMap<AggregatedAction, String> getParameterNames(){
+		return this.parameterNames;
+	}
 	
 	public HashMap<AggregatedAction, Double> getActionRates() {
 		return actionRates;
@@ -22,6 +26,7 @@ public class LocalDerivative {
 	public LocalDerivative(String name){
 		this.name = name;
 		actionRates = new HashMap<AggregatedAction, Double>();
+		parameterNames  = new HashMap<AggregatedAction, String>();
 	}
 	
 	public String toString(){
@@ -72,8 +77,8 @@ public class LocalDerivative {
 	}
 	
 	public String getSymbolicRateOf(AggregatedAction action){
-		Double constant = actionRates.get(action);
-		String output = constant.toString();
-		return output;
+		//Double constant = actionRates.get(action);
+		String parameterName = parameterNames.get(action);
+		return parameterName;
 	}
 }

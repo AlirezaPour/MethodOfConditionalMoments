@@ -6,11 +6,13 @@ import java.util.Iterator;
 
 import util.ClientServerAggregatedModel;
 
+import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
 import data.aggregatedModel.AggregatedStateSpace;
 import data.aggregatedModel.Display;
 import data.aggregatedModel.Explorer;
+import data.aggregatedModel.Transition;
 import data.model.Group;
 import data.model.LocalDerivative;
 import data.model.StateVariable;
@@ -34,7 +36,87 @@ public class MarginalDistribution {
 		this.stateSpace = sp;
 	}
 	
+	public String constructApparentRateFunctions(){
+		
+		String output = "";
+		
+		for (AggregatedAction action : model.getAggActions()){
+			output += constructApparentRateFunction(action);
+			output += "\n\n" ;
+		}
+		
+		return output ; 
+	}
 	
+	public String constructDerivativeFunction(ArrayList<AggregatedState> states){
+		String output = "";
+		return output ; 
+	}
+	
+	public String constructDerivativeFunction(ArrayList<AggregatedState> states,AggregatedState state){
+		String output = "";
+		
+		String outflux = constructDerivativeFunctionOutfluxTerms(states,state);
+		
+		String influx = constructDerivativeFunctionInfluxTerms(states,state);
+		
+		return output ; 
+	}
+	
+	public String constructDerivativeFunctionOutfluxTerms(ArrayList<AggregatedState> states,AggregatedState state){
+		
+		String output = "";
+		
+		ArrayList<Transition> transitions = stateSpace.getTransitionBank().get(state);
+		
+		for (Transition transition : transitions ){
+			output += " -" + constructDerivativeFunctionOutfluxTerm(states,state,transition) ;
+		}
+		
+		return output ;
+	}
+	
+	public String constructDerivativeFunctionOutfluxTerm(ArrayList<AggregatedState> states,AggregatedState start, Transition transition){
+		
+		String output = "";
+		
+		int index_start = states.indexOf(start);
+		String stateName = "st" + Integer.toString(index_start);
+		String actionName = transition.getAction().getName();
+		
+		output += String.format(" r_%s(%s) * y(%s)", actionName , stateName , index_start );
+		
+		return output ;
+		
+	}
+	
+	public String constructDerivativeFunctionInfluxTerms(ArrayList<AggregatedState> states,AggregatedState state){
+		
+		String output = "";
+		
+		
+		
+		return output ;
+		
+	} 
+	
+	
+	
+	public String constructApparentRateFunction(AggregatedAction action){
+		
+		String output = "function  rate = rate_";
+		
+		output += action.getName() + "(state)";
+		output += "\n\n";
+		
+		output += String.format("\trate = ( %s ) ;\n" , action.getSymbolicRateOfActionForMatlab(model.getAggStateDescriptor(), model.getGroups()) );	
+		
+		output += "\n";
+		output += "end";
+		
+		return output ;
+		
+	}
 	
 	public String runSolverStatement(){
 		String output = "[t,y] = ode15s(@derivatives,tspan,y0,options)" ; 
@@ -43,6 +125,78 @@ public class MarginalDistribution {
 	
 	public String constructInitialConditions(){
 		String output = "";
+		
+		
+		output += constructInitialValuesODEVariables();
+		
+		output += "y0 = [ " ; 
+		
+		ArrayList<AggregatedState> states = stateSpace.getExplored();
+		Iterator<AggregatedState> iter = states.iterator();
+		
+		AggregatedState state ; 
+		// first state 
+		state = iter.next();
+		output += "init_prob_st_" + state.getStateId();
+		
+		while(iter.hasNext()){
+			output += " ; " ;
+			state = iter.next();
+			output += "init_prob_st_" + state.getStateId();
+		}
+		
+		
+		
+		
+		
+		output += " ] ;" ;
+		
+		return output;
+	}
+	
+	public String constructInitialValueVector(Group group){
+		
+		String output = "";
+
+		ArrayList<LocalDerivative> derivatives = group.getGroupLocalDerivatives();
+		Iterator<LocalDerivative> iter = derivatives.iterator();
+		LocalDerivative derivative ; 
+		
+		// first variable.
+		derivative = iter.next(); 
+		output += "init_" + group.getName() + "_" + derivative.getName();
+		
+		while(iter.hasNext()){
+			output += " ; " ; 
+			derivative = iter.next();
+			output += "init_" + group.getName() + "_" + derivative.getName();
+		}
+		
+		return output ; 
+		
+	}
+	
+	
+	public String constructInitialValuesODEVariables(){
+		
+		String output = "" ; 
+		
+		ArrayList<AggregatedState> states = stateSpace.getExplored();
+		
+		for (AggregatedState state : states ){
+			
+			output += "init_prob_st_" + state.getStateId() + " = " ;
+			
+			if (state.equals(model.getAggInitialState())){
+				output += "1 ;" ;
+			}
+			else{
+				output += "0 ;" ;
+			}
+			
+			output += "\n";
+			
+		}
 		
 		return output;
 	}
@@ -229,7 +383,6 @@ public class MarginalDistribution {
 	}
 
 	
-	
 	public static void main(String args[]){
 		
 		// testing set parameter;
@@ -244,21 +397,45 @@ public class MarginalDistribution {
 				
 		MarginalDistribution md = new MarginalDistribution(model, sp);
 		
+		String myOutput = md.constructConstants();
+		System.out.printf(myOutput);
+		
+		System.out.printf("\n");
+		System.out.printf("\n");
+		
 		String output = md.constructStatesMaps();
 		System.out.printf(output); 
+		
+		System.out.printf("\n");
+		System.out.printf("\n");
 		
 		String output2 = md.constructTimeParameters();
 		System.out.printf(output2);
 		
 		System.out.printf("\n");
+		System.out.printf("\n");
 		
 		String output3 = md.constructSolverOptions();
 		System.out.printf(output3);
 		
-		if (sp.getExplored().contains(model.getAggInitialState())){
-			System.out.println("\nyes");
-			System.out.print(sp.getExplored().indexOf(model.getAggInitialState()));
-		}
+		System.out.printf("\n");
+		System.out.printf("\n");
+		
+		String output4 = md.constructInitialConditions();
+		System.out.printf(output4);
+		
+		System.out.printf("\n");
+		System.out.printf("\n");
+		
+		String output5 = md.runSolverStatement();
+		System.out.printf(output5);
+		
+		
+		System.out.printf("\n");
+		System.out.printf("\n");
+		
+		String output6 = md.constructApparentRateFunctions();
+		System.out.printf(output6);
 		
 	}
 	

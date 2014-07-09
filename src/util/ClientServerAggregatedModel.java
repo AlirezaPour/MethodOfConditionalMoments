@@ -246,15 +246,19 @@ public class ClientServerAggregatedModel {
 		
 		// local derivative Server_idle and the action request
 		serverIdle.getActionRates().put(request, r_s);
+		serverIdle.getParameterNames().put(request, "r_s");
 		
 		// local derivative Server_idle and the action break
 		serverIdle.getActionRates().put(brk, r_b);
+		serverIdle.getParameterNames().put(brk, "r_b");
 		
 		// local derivative Server_logging
 		serverLog.getActionRates().put(log, r_l);
+		serverLog.getParameterNames().put(log, "r_log");
 		
 		// local derivative Server_broken
 		serverBrk.getActionRates().put(fix, r_f);
+		serverBrk.getParameterNames().put(fix, "r_f");
 			
 		// constructing the model
 		AggregatedModel model = new AggregatedModel();

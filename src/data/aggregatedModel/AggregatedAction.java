@@ -126,4 +126,47 @@ public class AggregatedAction {
 	
 	}
 	
+	public String getSymbolicRateOfActionForMatlab(StateDescriptor descriptor , ArrayList<Group> allGroups){
+
+		ArrayList<Group> enablingGroups = getEnablingGroups(allGroups);
+		
+		String rateExpression = "";
+
+		Group group;
+		
+		int numberOfCooperatingGroups = enablingGroups.size();
+
+		if (numberOfCooperatingGroups == 1 ){
+		// the action is individual
+			group = enablingGroups.get(0);
+			rateExpression = group.getSymbolicRateOfActionForMatlab(descriptor, this);
+			return rateExpression;
+			
+		}
+		if (numberOfCooperatingGroups > 1 ){
+		// the action is shared			
+			rateExpression = "min( ";
+					
+			Iterator<Group> iter = enablingGroups.iterator();	
+			group = iter.next();
+			rateExpression += group.getSymbolicRateOfActionForMatlab(descriptor, this);
+			
+			while(iter.hasNext()){
+				rateExpression += " , ";
+				group = iter.next();
+				rateExpression += group.getSymbolicRateOfActionForMatlab(descriptor, this);		
+			}
+			
+			rateExpression += " )";
+		}
+		
+
+		
+		
+	
+		return rateExpression;
+	
+	}
+	
+	
 }

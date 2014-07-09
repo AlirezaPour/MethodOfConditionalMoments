@@ -165,6 +165,7 @@ public class Explorer {
  		transitions = getTransitions(state);
  		expand(sp,agenda,state,transitions);
  		agenda.remove(state);
+ 		
  	}
  	
  	public void expand (AggregatedStateSpace sp , ArrayList<AggregatedState> agenda, AggregatedState state, ArrayList<Transition> transitions){

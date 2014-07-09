@@ -53,6 +53,24 @@ public class Group {
 		return output; 
 	}
 	
+	public String getSymbolicRateOfActionForMatlab(StateDescriptor descriptor, AggregatedAction action){
+		String output = "";
+		
+		if (	!(getActions().contains(action))		){
+			return "Not Enabled";
+		}
+		
+		LocalDerivative enablingDerivative = getEnablingLocalDerivative(action);
+		String localRate = enablingDerivative.getSymbolicRateOf(action);
+		
+		StateVariable variable = descriptor.getCorrespondingStateVariable(this, enablingDerivative);
+		String varName = variable.toString();
+		
+		output = localRate + " * " + "state(" + varName + ")" ;
+		
+		return output; 
+	}
+	
 	public LocalDerivative getEnablingLocalDerivative (AggregatedAction action){
 		
 		for (LocalDerivative derivative : localDerivatives){
