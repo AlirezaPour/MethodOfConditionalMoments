@@ -11,6 +11,40 @@ public class AggregatedState extends NumericalVector{
 	
 	private String stateIdentifier;
 	private int stateId;
+	
+	private ArrayList<AggregatedState> incomingStates ; 
+	private ArrayList<AggregatedState> reachableStates;
+	
+	private ArrayList<Transition> inwardTransitions ;
+	
+	public AggregatedState(StateDescriptor desciptor){
+
+		for(StateVariable variable : desciptor){
+			put(variable, 0);
+		}
+		
+		incomingStates = new ArrayList<AggregatedState>();
+		reachableStates = new ArrayList<AggregatedState>();
+		
+		inwardTransitions = new ArrayList<Transition>();
+		
+	}
+	
+	public AggregatedState() {
+		incomingStates = new ArrayList<AggregatedState>();
+		reachableStates = new ArrayList<AggregatedState>();
+		inwardTransitions = new ArrayList<Transition>();
+		
+	}
+	
+	public ArrayList<Transition> getInwardTransitions(){
+		return this.inwardTransitions;
+	}
+	
+	public void setInwardTransitions(ArrayList<Transition> transitions){
+		this.inwardTransitions = transitions;
+	}
+	
 	public int getStateId() {
 		return stateId;
 	}
@@ -19,10 +53,6 @@ public class AggregatedState extends NumericalVector{
 		this.stateId = stateId;
 	}
 
-	private ArrayList<AggregatedState> incomingStates ; 
-	private ArrayList<AggregatedState> reachableStates;
-	
-	
 	public ArrayList<AggregatedState> getIncomingStates() {
 		return incomingStates;
 	}
@@ -39,16 +69,7 @@ public class AggregatedState extends NumericalVector{
 		this.reachableStates = reachableStates;
 	}
 
-	public AggregatedState(StateDescriptor desciptor){
-
-		for(StateVariable variable : desciptor){
-			put(variable, 0);
-		}
-		
-		incomingStates = new ArrayList<AggregatedState>();
-		reachableStates = new ArrayList<AggregatedState>();
-		
-	}
+	
 
 	public double getRateOf(AggregatedAction action, StateDescriptor descriptor , ArrayList<Group> allGroups){
 		double rate = Double.MAX_VALUE;
@@ -136,10 +157,7 @@ public class AggregatedState extends NumericalVector{
 		this.stateIdentifier = stateIdentifier;
 	}
 
-	public AggregatedState() {
-		incomingStates = new ArrayList<AggregatedState>();
-		reachableStates = new ArrayList<AggregatedState>();
-	}
+	
 	
 	
 	

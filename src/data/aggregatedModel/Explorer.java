@@ -141,8 +141,7 @@ public class Explorer {
  		agenda.add(model.getAggInitialState());
  		
  		AggregatedState state ;
- 		AggregatedState target;
- 		
+  		
  		// as we cover the agenda, we construct the aggregated state space.
  		while (		 !	(	agenda.isEmpty()	) 	){
  			
@@ -152,6 +151,15 @@ public class Explorer {
  			
  			expand(sp,agenda,state);
  			
+ 		}
+ 		
+ 		// give an index to each state.
+ 		
+ 		int index = 0  ;
+ 		
+ 		for (AggregatedState st : sp.getExplored()){
+ 			st.setStateId(index);
+ 			index++;
  		}
  		
  		return sp;
@@ -181,12 +189,13 @@ public class Explorer {
  		
  		AggregatedState target = tr.getTarget();
  		
- 		// add the transition to the bank
- 		sp.addToTransitionBank(state,tr);
- 		
- 		// unpadte references in the start and target states
+ 		// add the transition to the banks
+ 		sp.addToOutgoingTransitionBank(state,tr);
+		
+ 		// upadte references in the start and target states
  		state.getReachableStates().add(tr.target);
  		tr.target.getIncomingStates().add(state);
+ 		target.getInwardTransitions().add(tr);
  		
  		// adjust the agenda
  		if (	!(sp.getExplored().contains(target))	&&	!(agenda.contains(target))			){
@@ -315,7 +324,7 @@ public class Explorer {
  		
 		double rate = 0 ;
 		
-		ArrayList<Transition> allTransitionsFromStart = sp.getTransitionBank().get(start);
+		ArrayList<Transition> allTransitionsFromStart = sp.getOutgoingTransitionBank().get(start);
 		
 		ArrayList<Transition> relevantTransitions = getStartTargetTransitions(allTransitionsFromStart,start, target);
 		

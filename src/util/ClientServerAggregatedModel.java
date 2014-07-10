@@ -254,7 +254,7 @@ public class ClientServerAggregatedModel {
 		
 		// local derivative Server_logging
 		serverLog.getActionRates().put(log, r_l);
-		serverLog.getParameterNames().put(log, "r_log");
+		serverLog.getParameterNames().put(log, "r_l");
 		
 		// local derivative Server_broken
 		serverBrk.getActionRates().put(fix, r_f);

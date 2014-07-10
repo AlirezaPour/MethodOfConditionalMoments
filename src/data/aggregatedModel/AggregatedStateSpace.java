@@ -8,21 +8,29 @@ import data.model.StateDescriptor;
 public class AggregatedStateSpace {
 	
 	private ArrayList<AggregatedState> explored; 
-	public HashMap<AggregatedState, ArrayList<Transition>> getTransitionBank() {
-		return transitionBank;
+	
+	private HashMap<AggregatedState, ArrayList<Transition>> outGoingTransitionBank;
+	//private HashMap<AggregatedState, ArrayList<Transition>> incomingTransitionBank;
+	
+
+	public HashMap<AggregatedState, ArrayList<Transition>> getOutgoingTransitionBank() {
+		return outGoingTransitionBank;
 	}
 
-	public void setTransitionBank(
+	public void setOutgoingTransitionBank(
 			HashMap<AggregatedState, ArrayList<Transition>> transitionBank) {
-		this.transitionBank = transitionBank;
+		this.outGoingTransitionBank = transitionBank;
 	}
 
 
-	private HashMap<AggregatedState, ArrayList<Transition>> transitionBank;
+	
+
+	
 	
 	public AggregatedStateSpace(){
 		explored = new ArrayList<AggregatedState>();
-		transitionBank = new HashMap<AggregatedState, ArrayList<Transition>>();
+		outGoingTransitionBank = new HashMap<AggregatedState, ArrayList<Transition>>();
+		
 	}
 
 	public ArrayList<AggregatedState> getExplored() {
@@ -48,13 +56,21 @@ public class AggregatedStateSpace {
 	}
 	
 	public void addToExplored(AggregatedState st){
+		
 		explored.add(st);
-		ArrayList<Transition> transitions = new ArrayList<Transition>();
-		transitionBank.put(st, transitions);
+		
+		ArrayList<Transition> outgoingTransitions = new ArrayList<Transition>();
+		outGoingTransitionBank.put(st, outgoingTransitions);
+		
+		ArrayList<Transition> incomingTransitions = new ArrayList<Transition>();
+		outGoingTransitionBank.put(st, incomingTransitions);
+		
 	}
 
-	public void addToTransitionBank(AggregatedState state, Transition tr) {
-		transitionBank.get(state).add(tr);
+	public void addToOutgoingTransitionBank(AggregatedState state, Transition tr) {
+		outGoingTransitionBank.get(state).add(tr);
 	}
+	
+	
 	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
+import data.aggregatedModel.AggregatedStateSpace;
 import data.aggregatedModel.Explorer;
 
 public class TestSaveStateSpace {
@@ -16,9 +17,9 @@ public class TestSaveStateSpace {
 		
 		Explorer explorer = new Explorer(model);
 		
-		ArrayList<AggregatedState> states = explorer.generateStateSpace(); 
-
-		String output = model.getDisplay().storeStateSpace(states);
+		AggregatedStateSpace sp = explorer.generateStateSpaceCompleteVersion();
+		
+		String output = model.getDisplay().storeStateSpace(sp);
 		
 		System.out.printf(output);
 	}

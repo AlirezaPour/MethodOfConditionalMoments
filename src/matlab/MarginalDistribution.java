@@ -1,5 +1,7 @@
 package matlab;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,20 +38,73 @@ public class MarginalDistribution {
 		this.stateSpace = sp;
 	}
 	
-	public String constructApparentRateFunctions(){
+	
+	public String constructOverAllFunction(){
 		
-		String output = "";
+		String output = "function marginal_distribution\n\n";
 		
-		for (AggregatedAction action : model.getAggActions()){
-			output += constructApparentRateFunction(action);
-			output += "\n\n" ;
-		}
+		// constants
+		output += constructConstants();
+		output += "\n\n";
 		
-		return output ; 
+		// definition of aggregated states
+		output +=  constructStatesMaps();
+		
+		// time information
+		output += constructTimeParameters(); 
+		output += "\n\n";
+		
+		// initial probability distribution 
+		output += constructInitialConditions() ;
+		output += "\n\n";
+		
+		// solver options
+		output += constructSolverOptions();
+		output += "\n\n";
+		
+		// running solver
+		output += runSolverStatement(); 
+		output += "\n\n";
+		
+		// apparent rate functions
+		output += constructApparentRateFunctions(); 
+		
+		// derivative functions
+		output += constructDerivativeFunction(stateSpace.getExplored()); 
+		
+		output += "\n\n";
+		output += "end";
+				
+		return output; 
+		
 	}
 	
 	public String constructDerivativeFunction(ArrayList<AggregatedState> states){
-		String output = "";
+		
+		String output = "function dydt = derivatives(t,y) \n\n ";
+		
+		output += "\tdydt = [";
+		
+		Iterator<AggregatedState> iter = states.iterator();
+		
+		// first state
+		AggregatedState state = iter.next() ; 
+		output += constructDerivativeFunction(states,state);
+		output += "\n";
+		
+		// next states
+		while(iter.hasNext()){
+			output += "\t\t";
+			state = iter.next() ; 
+			output +=  constructDerivativeFunction(states,state);
+			output += "\n";
+		}
+		
+		output += "\t ] ; " ;
+		output += "\n";
+		
+		output += "end";
+		
 		return output ; 
 	}
 	
@@ -60,6 +115,8 @@ public class MarginalDistribution {
 		
 		String influx = constructDerivativeFunctionInfluxTerms(states,state);
 		
+		output = outflux + influx ; 
+		
 		return output ; 
 	}
 	
@@ -67,7 +124,7 @@ public class MarginalDistribution {
 		
 		String output = "";
 		
-		ArrayList<Transition> transitions = stateSpace.getTransitionBank().get(state);
+		ArrayList<Transition> transitions = stateSpace.getOutgoingTransitionBank().get(state);
 		
 		for (Transition transition : transitions ){
 			output += " -" + constructDerivativeFunctionOutfluxTerm(states,state,transition) ;
@@ -80,11 +137,11 @@ public class MarginalDistribution {
 		
 		String output = "";
 		
-		int index_start = states.indexOf(start);
-		String stateName = "st" + Integer.toString(index_start);
+		int index_start = (states.indexOf(start));
+		String stateName = "st" + start.getStateId();
 		String actionName = transition.getAction().getName();
 		
-		output += String.format(" r_%s(%s) * y(%s)", actionName , stateName , index_start );
+		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start );
 		
 		return output ;
 		
@@ -94,12 +151,44 @@ public class MarginalDistribution {
 		
 		String output = "";
 		
+		ArrayList<Transition> transitions = state.getInwardTransitions(); 
+		
+		for (Transition transition : transitions ){
+			output += " +" + constructDerivativeFunctionInfluxTerm(states,state,transition) ;
+		}
 		
 		
 		return output ;
 		
 	} 
 	
+	public String constructDerivativeFunctionInfluxTerm(ArrayList<AggregatedState> states,AggregatedState state, Transition tr){
+		
+		String output = "";
+		
+		AggregatedState start = tr.getStart();
+		int index_start = states.indexOf(start);
+		
+		String stateName = "st" + start.getStateId();
+		String actionName = tr.getAction().getName();
+		
+		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start );
+		
+		return output ;
+		
+	}
+	
+	public String constructApparentRateFunctions(){
+		
+		String output = "";
+		
+		for (AggregatedAction action : model.getAggActions()){
+			output += constructApparentRateFunction(action);
+			output += "\n\n" ;
+		}
+		
+		return output ; 
+	}
 	
 	
 	public String constructApparentRateFunction(AggregatedAction action){
@@ -119,7 +208,7 @@ public class MarginalDistribution {
 	}
 	
 	public String runSolverStatement(){
-		String output = "[t,y] = ode15s(@derivatives,tspan,y0,options)" ; 
+		String output = "[t,y] = ode15s(@derivatives,tspan,y0,options);" ; 
 		return output ; 
 	}
 	
@@ -128,6 +217,7 @@ public class MarginalDistribution {
 		
 		
 		output += constructInitialValuesODEVariables();
+		output += "\n";
 		
 		output += "y0 = [ " ; 
 		
@@ -144,10 +234,6 @@ public class MarginalDistribution {
 			state = iter.next();
 			output += "init_prob_st_" + state.getStateId();
 		}
-		
-		
-		
-		
 		
 		output += " ] ;" ;
 		
@@ -233,13 +319,6 @@ public class MarginalDistribution {
 		
 		ArrayList<AggregatedState> states = stateSpace.getExplored();
 			
-		// give each state an identifier.
-		int identifier = 1; 
-		for (AggregatedState state : states ){
-			state.setStateId(identifier);
-			identifier++; 
-		}
-		
 		output += constructKeyManyGroups(model.getGroups());
 		output += "\n\n";
 		
@@ -259,7 +338,7 @@ public class MarginalDistribution {
 		firstLine += "\n";
 			
 		int id = state.getStateId();
-		String secondLine = "st" + Integer.toString(id) + " = containers.Map(k,v)" ;
+		String secondLine = "st" + Integer.toString(id) + " = containers.Map(k,v);" ;
 		
 		String output = firstLine + secondLine;
 		return output;
@@ -383,6 +462,24 @@ public class MarginalDistribution {
 	}
 
 	
+	
+	public void storeMatlabFile(){
+		String content = constructOverAllFunction();
+		
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("marginal_distribution_generated.m");
+		} catch (FileNotFoundException e) {
+			System.out.printf("\n\nCould not save marginal_distribution.m");
+			e.printStackTrace();
+		}
+		
+		out.println(content);
+		out.close();
+			
+	}
+	
+	
 	public static void main(String args[]){
 		
 		// testing set parameter;
@@ -397,45 +494,7 @@ public class MarginalDistribution {
 				
 		MarginalDistribution md = new MarginalDistribution(model, sp);
 		
-		String myOutput = md.constructConstants();
-		System.out.printf(myOutput);
-		
-		System.out.printf("\n");
-		System.out.printf("\n");
-		
-		String output = md.constructStatesMaps();
-		System.out.printf(output); 
-		
-		System.out.printf("\n");
-		System.out.printf("\n");
-		
-		String output2 = md.constructTimeParameters();
-		System.out.printf(output2);
-		
-		System.out.printf("\n");
-		System.out.printf("\n");
-		
-		String output3 = md.constructSolverOptions();
-		System.out.printf(output3);
-		
-		System.out.printf("\n");
-		System.out.printf("\n");
-		
-		String output4 = md.constructInitialConditions();
-		System.out.printf(output4);
-		
-		System.out.printf("\n");
-		System.out.printf("\n");
-		
-		String output5 = md.runSolverStatement();
-		System.out.printf(output5);
-		
-		
-		System.out.printf("\n");
-		System.out.printf("\n");
-		
-		String output6 = md.constructApparentRateFunctions();
-		System.out.printf(output6);
+		md.storeMatlabFile();
 		
 	}
 	

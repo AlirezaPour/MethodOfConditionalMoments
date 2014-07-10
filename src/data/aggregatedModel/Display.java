@@ -760,30 +760,28 @@ public String storeStateSpace(AggregatedStateSpace sp){
 		ArrayList<AggregatedState> states = sp.getExplored();
 		
 		String output = "States:\n\n\n";
-		
-		// give each state an identifier.
-		int identifier = 1; 
-		for (AggregatedState state : states){
-			state.setStateId(identifier);
-			identifier++; 
-		}
-		
+				
 		// store the list of states.
-		
 		
 		output += storeStates(states);
 		
-		output += "\n\n\n";
+		output += "\n\n";
 		
-		output += "Transitions:\n\n";
+		output += "Outward Transitions:\n\n";
 		
-		output += storeTransitionBank(sp);
+		output += storeOutwardTransitionBank(sp);
+		
+		output += "\n\n";
+		
+		output += "Inward Transitions:\n\n";
+		
+		output += storeInwardTransitions(sp);
 		
 		return output ; 
 	 
 	}
 
-	public String storeTransitionBank (AggregatedStateSpace sp){
+	public String storeOutwardTransitionBank (AggregatedStateSpace sp){
 		String output = "" ;
 		
 		ArrayList<AggregatedState> states = sp.getExplored();
@@ -791,7 +789,7 @@ public String storeStateSpace(AggregatedStateSpace sp){
 		
 		for (AggregatedState state : states){
 			
-			transitions = sp.getTransitionBank().get(state);
+			transitions = sp.getOutgoingTransitionBank().get(state);
 			output += storeTransitionsForState(transitions);
 			
 			
@@ -800,6 +798,70 @@ public String storeStateSpace(AggregatedStateSpace sp){
 		return output; 
 	}
 	
+	
+	public String storeInwardTransitions (AggregatedStateSpace sp){
+		String output = "" ;
+		
+		ArrayList<AggregatedState> states = sp.getExplored();
+		
+		for (AggregatedState state : states){
+			
+			output += storeInwardTransitions(sp,state);
+		
+		}
+		
+		return output; 
+	}
+	
+	
+	public String storeInwardTransitions (AggregatedStateSpace sp, AggregatedState state){
+		String output = "";
+		
+		ArrayList<Transition> transitions = state.getInwardTransitions();
+		
+		for (Transition tr: transitions){
+			output += storeInwardTransitions (sp,state,tr);
+			output += "\n";
+		}
+		
+		return output;
+	}
+	
+	public String storeInwardTransitions (AggregatedStateSpace sp, AggregatedState state, Transition tr){
+		
+		String output = "";
+		
+		AggregatedState start, target;
+		double rate;
+		AggregatedAction action;
+		
+		
+		start = tr.getStart();
+		target = tr.getTarget();
+		rate = tr.getRate();
+		action= tr.getAction();
+		
+		// target should be the same as state
+		if (!(state.equals(target))){
+			return "Error";
+		}
+			
+		output += start.getStateId() ;
+		output += "\t" ;
+		
+		output += target.getStateId() ;
+		output += "\t" ;
+			
+		output += Double.toString(rate);
+		output += "\t" ;
+			
+		output += action.getName();
+	
+			
+		
+		
+		return output;
+	}
 	
 	public String storeTransitionsForState(ArrayList<Transition> transitions){
 		String output = "";
