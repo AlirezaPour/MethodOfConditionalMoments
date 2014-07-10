@@ -154,8 +154,8 @@ public class Explorer {
  		}
  		
  		// give an index to each state.
- 		
- 		int index = 0  ;
+ 		// start with index 1
+ 		int index = 1  ;
  		
  		for (AggregatedState st : sp.getExplored()){
  			st.setStateId(index);

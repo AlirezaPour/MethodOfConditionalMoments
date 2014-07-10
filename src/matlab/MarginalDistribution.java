@@ -141,7 +141,7 @@ public class MarginalDistribution {
 		String stateName = "st" + start.getStateId();
 		String actionName = transition.getAction().getName();
 		
-		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start );
+		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start+1 );
 		
 		return output ;
 		
@@ -172,7 +172,7 @@ public class MarginalDistribution {
 		String stateName = "st" + start.getStateId();
 		String actionName = tr.getAction().getName();
 		
-		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start );
+		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start+1 );
 		
 		return output ;
 		
@@ -295,11 +295,12 @@ public class MarginalDistribution {
 	
 	public String constructSolverOptions(){
 		String output = "";
-		output += String.format("options=odeset('Mass',@mass,'RelTol',%s,'AbsTol',%s);", Double.toString(relError),relErrorVector()); 	
+		output += String.format("options=odeset('Mass',@mass,'RelTol',%s,'AbsTol',%s);", Double.toString(relError),absErrorVector()); 	
 		return output; 
 	}
 	
-	public String relErrorVector(){
+	public String absErrorVector(){
+		// this needs to be corrected.
 		String output = "[";
 		
 		for (Group group : model.getGroups()){
@@ -428,13 +429,15 @@ public class MarginalDistribution {
 		// the first derivaitive
 		LocalDerivative dr = iter.next();
 		
-		StateVariable variable = model.getAggStateDescriptor().getCorrespondingStateVariable(group, dr);
-		output = "'"+variable.toString()+"'";
+		//StateVariable variable = model.getAggStateDescriptor().getCorrespondingStateVariable(group, dr);
+		
+		output = "'" + group.getName() + "_" + dr.getName()+"'";
 		
 		while (iter.hasNext()){
 			dr = iter.next();
-			variable = model.getAggStateDescriptor().getCorrespondingStateVariable(group, dr);
-			output += ","	+	"'"	+	variable.toString()	+	"'"	;
+			output += " , ";
+			//variable = model.getAggStateDescriptor().getCorrespondingStateVariable(group, dr);
+			output += "'" + group.getName() + "_" + dr.getName()+"'"	;
 		}
 		
 		return output;
@@ -493,6 +496,10 @@ public class MarginalDistribution {
 		System.out.printf(output1);*/
 				
 		MarginalDistribution md = new MarginalDistribution(model, sp);
+		
+		String output = md.constructOverAllFunction();
+		
+		System.out.printf(output);
 		
 		md.storeMatlabFile();
 		

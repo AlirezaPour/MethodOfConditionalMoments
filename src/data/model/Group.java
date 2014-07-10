@@ -63,10 +63,12 @@ public class Group {
 		LocalDerivative enablingDerivative = getEnablingLocalDerivative(action);
 		String localRate = enablingDerivative.getSymbolicRateOf(action);
 		
-		StateVariable variable = descriptor.getCorrespondingStateVariable(this, enablingDerivative);
-		String varName = variable.toString();
+		//StateVariable variable = descriptor.getCorrespondingStateVariable(this, enablingDerivative);
+		//String varName = variable.toString();
 		
-		output = localRate + " * " + "state(" + varName + ")" ;
+		String varName = this.getName() + "_" + enablingDerivative.getName() ;
+		
+		output = localRate + " * " + "state('" + varName + "')" ;
 		
 		return output; 
 	}
