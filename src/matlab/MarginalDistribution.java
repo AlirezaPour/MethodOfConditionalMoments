@@ -33,12 +33,32 @@ public class MarginalDistribution {
 	double relError = 1e-10;
 	double absError = 1e-6;
 	
+	int numberOfVariables ;
+	
 	public MarginalDistribution(AggregatedModel model, AggregatedStateSpace sp){
 		this.model = model;
 		this.stateSpace = sp;
+		this.numberOfVariables = stateSpace.getExplored().size();
 	}
 	
 	
+	public void storeMatlabFile(){
+		String content = constructOverAllFunction();
+		
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("marginal_distribution_generated.m");
+		} catch (FileNotFoundException e) {
+			System.out.printf("\n\nCould not save marginal_distribution.m");
+			e.printStackTrace();
+		}
+		
+		out.println(content);
+		out.close();
+			
+	}
+
+
 	public String constructOverAllFunction(){
 		
 		String output = "function marginal_distribution\n\n";
@@ -70,7 +90,11 @@ public class MarginalDistribution {
 		output += constructApparentRateFunctions(); 
 		
 		// derivative functions
-		output += constructDerivativeFunction(stateSpace.getExplored()); 
+		output += constructDerivativeFunction(stateSpace.getExplored());
+		output += "\n\n";
+		
+		output += constructMassFunction();
+		output += "\n\n";
 		
 		output += "\n\n";
 		output += "end";
@@ -79,28 +103,42 @@ public class MarginalDistribution {
 		
 	}
 	
+	public String constructMassFunction(){
+		
+		String output = "function M = mass(t,y)";
+		output += "\n\n";
+		
+		output += String.format("\tM = zeros(%d,%d);", numberOfVariables, numberOfVariables );
+		output += "\n";
+		
+		for (int i = 1 ; i <= numberOfVariables ; i ++){
+			output += String.format("\tM(%d,%d)=1;\n", i , i);
+		}
+		
+		output += "\n";
+		output += "end";
+		return output ;
+		
+	}
+	
 	public String constructDerivativeFunction(ArrayList<AggregatedState> states){
 		
 		String output = "function dydt = derivatives(t,y) \n\n ";
 		
-		output += "\tdydt = [";
-		
+		output += String.format("\tdydt = zeros(%d,1);",numberOfVariables);
+		output += "\n\n";
+				
 		Iterator<AggregatedState> iter = states.iterator();
-		
-		// first state
-		AggregatedState state = iter.next() ; 
-		output += constructDerivativeFunction(states,state);
-		output += "\n";
-		
+		AggregatedState state;
+			
 		// next states
 		while(iter.hasNext()){
-			output += "\t\t";
+			output += "\t";
 			state = iter.next() ; 
-			output +=  constructDerivativeFunction(states,state);
+			output +=  constructDerivativeFunction(states,state) + ";";
 			output += "\n";
 		}
 		
-		output += "\t ] ; " ;
 		output += "\n";
 		
 		output += "end";
@@ -109,13 +147,13 @@ public class MarginalDistribution {
 	}
 	
 	public String constructDerivativeFunction(ArrayList<AggregatedState> states,AggregatedState state){
-		String output = "";
+		String output = String.format("dydt(%d)=",states.indexOf(state)+1);
 		
 		String outflux = constructDerivativeFunctionOutfluxTerms(states,state);
 		
 		String influx = constructDerivativeFunctionInfluxTerms(states,state);
 		
-		output = outflux + influx ; 
+		output += outflux + influx ; 
 		
 		return output ; 
 	}
@@ -300,15 +338,14 @@ public class MarginalDistribution {
 	}
 	
 	public String absErrorVector(){
-		// this needs to be corrected.
+		
 		String output = "[";
 		
-		for (Group group : model.getGroups()){
-			for(LocalDerivative derivative : group.getGroupLocalDerivatives()){
-				output += Double.toString(absError);
-				output += " "; 
-			}
+		for (AggregatedState state : stateSpace.getExplored()){
+			output += Double.toString(absError);
+			output += " ";
 		}
+		
 		
 		output += "]";
 		return output;
@@ -465,21 +502,20 @@ public class MarginalDistribution {
 	}
 
 	
+	////////////////////////////////////////////////////////////////
+	///// plotting capabilities
+	////////////////////////////////////////////////////////////////
 	
-	public void storeMatlabFile(){
-		String content = constructOverAllFunction();
+	public String constructPlots(){
+		String output = "";
 		
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter("marginal_distribution_generated.m");
-		} catch (FileNotFoundException e) {
-			System.out.printf("\n\nCould not save marginal_distribution.m");
-			e.printStackTrace();
-		}
+		return output; 
+	}
+	
+	public String constructPlots(AggregatedState state){
+		String output = "";
 		
-		out.println(content);
-		out.close();
-			
+		return output; 
 	}
 	
 	

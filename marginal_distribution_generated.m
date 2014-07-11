@@ -37,7 +37,7 @@ init_prob_st_6 = 0 ;
 
 y0 = [ init_prob_st_1 ; init_prob_st_2 ; init_prob_st_3 ; init_prob_st_4 ; init_prob_st_5 ; init_prob_st_6 ] ;
 
-options=odeset('Mass',@mass,'RelTol',1.0E-10,'AbsTol',[1.0E-6 1.0E-6 1.0E-6 ]);
+options=odeset('Mass',@mass,'RelTol',1.0E-10,'AbsTol',[1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 ]);
 
 [t,y] = ode15s(@derivatives,tspan,y0,options);
 
@@ -67,13 +67,29 @@ end
 
 function dydt = derivatives(t,y) 
 
- 	dydt = [ - rate_request(st1) * y(1) - rate_break(st1) * y(1) + rate_log(st2) * y(2) + rate_fix(st3) * y(3)
-		 - rate_request(st2) * y(2) - rate_log(st2) * y(2) - rate_break(st2) * y(2) + rate_request(st1) * y(1) + rate_log(st4) * y(4) + rate_fix(st5) * y(5)
-		 - rate_request(st3) * y(3) - rate_break(st3) * y(3) - rate_fix(st3) * y(3) + rate_break(st1) * y(1) + rate_log(st5) * y(5) + rate_fix(st6) * y(6)
-		 - rate_log(st4) * y(4) + rate_request(st2) * y(2)
-		 - rate_log(st5) * y(5) - rate_fix(st5) * y(5) + rate_break(st2) * y(2) + rate_request(st3) * y(3)
-		 - rate_fix(st6) * y(6) + rate_break(st3) * y(3)
-	 ] ; 
+ 	dydt = zeros(6,1);
+
+	dydt(1)= - rate_request(st1) * y(1) - rate_break(st1) * y(1) + rate_log(st2) * y(2) + rate_fix(st3) * y(3);
+	dydt(2)= - rate_request(st2) * y(2) - rate_log(st2) * y(2) - rate_break(st2) * y(2) + rate_request(st1) * y(1) + rate_log(st4) * y(4) + rate_fix(st5) * y(5);
+	dydt(3)= - rate_request(st3) * y(3) - rate_break(st3) * y(3) - rate_fix(st3) * y(3) + rate_break(st1) * y(1) + rate_log(st5) * y(5) + rate_fix(st6) * y(6);
+	dydt(4)= - rate_log(st4) * y(4) + rate_request(st2) * y(2);
+	dydt(5)= - rate_log(st5) * y(5) - rate_fix(st5) * y(5) + rate_break(st2) * y(2) + rate_request(st3) * y(3);
+	dydt(6)= - rate_fix(st6) * y(6) + rate_break(st3) * y(3);
+
 end
+
+function M = mass(t,y)
+
+	M = zeros(6,6);
+	M(1,1)=1;
+	M(2,2)=1;
+	M(3,3)=1;
+	M(4,4)=1;
+	M(5,5)=1;
+	M(6,6)=1;
+
+end
+
+
 
 end
