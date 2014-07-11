@@ -96,6 +96,12 @@ public class MarginalDistribution {
 		output += constructMassFunction();
 		output += "\n\n";
 		
+		output += constructPlots();
+		output += "\n\n";
+		
+		output += constructSaveToCSV();
+		output += "\n\n";
+		
 		output += "\n\n";
 		output += "end";
 				
@@ -503,17 +509,73 @@ public class MarginalDistribution {
 
 	
 	////////////////////////////////////////////////////////////////
-	///// plotting capabilities
+	///// plotting capabilities - saving into CSV files capability
 	////////////////////////////////////////////////////////////////
 	
 	public String constructPlots(){
 		String output = "";
+
+		for (AggregatedState state : stateSpace.getExplored()){
+			output += constructPlots(state);
+			output += "\n\n";
+		}
 		
 		return output; 
 	}
 	
+	
+	public String constructSaveToCSV(){
+		
+		String output = "for i=1:length(t)";
+		output += "\n";
+		
+		output += String.format("\toutput(i,1) = t(i);");
+		output += "\n";
+		
+		output += "end" ;
+		output += "\n\n";
+		
+		for(AggregatedState state : stateSpace.getExplored()){
+			output += constructSaveToCSV(state);
+			output += "\n\n";
+		}
+		
+		return output; 
+		
+	}
+	
+	public String constructSaveToCSV(AggregatedState state){
+		String output = "for i=1:length(t)";
+		output += "\n";
+		
+		output += String.format("\toutput(i,2) = y(i,%d);", state.getStateId());
+		output += "\n";
+		
+		output += "end" ;
+		output += "\n";
+		
+		output += String.format("csvwrite('P(st%d).dat',output);",state.getStateId());
+		
+		
+		
+		return output;
+	}
+	
+	
 	public String constructPlots(AggregatedState state){
-		String output = "";
+		String output = "figure;";
+		output += "\n";
+		
+		output += String.format("plot(t,y(:,%d),'-b','DisplayName','P_{t}(St%d)')", state.getStateId(), state.getStateId());
+		output += "\n";
+		
+		output += "legend('-DynamicLegend');";
+		output += "\n";
+		
+		output += "legend('Location', 'BestOutside');";
+		output += "\n";
+		
+		output += "grid on;"; 
 		
 		return output; 
 	}

@@ -1,3 +1,4 @@
 .settings
 bin
 bin/*
+marginal_distribution_generated.m
