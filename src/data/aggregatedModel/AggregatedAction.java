@@ -3,13 +3,14 @@ package data.aggregatedModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import data.model.Action;
 import data.model.Group;
 import data.model.JumpVector;
 import data.model.Rate;
 import data.model.StateDescriptor;
 import data.model.StateVariable;
 
-public class AggregatedAction {
+public class AggregatedAction extends Action {
 
 	private String name;
 	private JumpVector jumpVector;

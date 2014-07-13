@@ -32,6 +32,7 @@ public class OriginalModel{
 	
 	private StateDescriptor stateDescriptorSmallGroups;
 	private StateDescriptor stateDescriptorLargeGroups; 
+	
 	private ArrayList<OriginalAction> actionsSmall;
 	private ArrayList<OriginalAction> actionsSmallAndLarge;
 	private ArrayList<OriginalAction> actionsLarge;
@@ -256,6 +257,7 @@ public class OriginalModel{
 	
 	// for one action, this method returns the category where this action belongs.
 	private actionCategory getActionCategory(OriginalAction action){
+		
 		JumpVector jumpVector = action.getJumpVectorMinus();
 		
 		boolean involvedSmallGroups = false ;
