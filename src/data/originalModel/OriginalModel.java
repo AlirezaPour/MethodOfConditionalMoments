@@ -1,17 +1,15 @@
 package data.originalModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-
+import data.originalModel.Display;
 import data.aggregatedModel.AggregatedAction;
-import data.aggregatedModel.AggregatedModel;
-import data.aggregatedModel.AggregatedState;
-import data.model.Action;
-import data.model.Group;
-import data.model.JumpVector;
-import data.model.State;
-import data.model.StateDescriptor;
-import data.model.StateVariable;
+import data.general.Group;
+import data.general.JumpVector;
+import data.general.LocalDerivative;
+import data.general.StateDescriptor;
+import data.general.StateVariable;
 
 // this class captures the notion of a 
 // LSRB model where the groups are 
@@ -20,37 +18,54 @@ import data.model.StateVariable;
 
 public class OriginalModel{
 	
-	// instance variables set by the parser
 	
 	private StateDescriptor stateDescriptor;
-	private State initialState;
-	private ArrayList<OriginalAction> actions;
-	private ArrayList<Group> largeGroups; 
-	private ArrayList<Group> smallGroups;
-	
-	// instance variables derived by considering the initial instance variables.
-	
 	private StateDescriptor stateDescriptorSmallGroups;
 	private StateDescriptor stateDescriptorLargeGroups; 
 	
+	private OriginalState initialState;
+	
+	private ArrayList<OriginalAction> actions;
 	private ArrayList<OriginalAction> actionsSmall;
 	private ArrayList<OriginalAction> actionsSmallAndLarge;
 	private ArrayList<OriginalAction> actionsLarge;
 	
+	private ArrayList<Group> largeGroups; 
+	private ArrayList<Group> smallGroups;
+	private HashMap<String, Integer> constants;
+	
+	private Display display;
+	
+	
+	public Display getDisplay() {
+		return display;
+	}
+
+	public void setDisplay(Display display) {
+		this.display = display;
+	}
+
 	public OriginalModel (	StateDescriptor stateDescriptor, 
-						  	State initialState,
+						  	OriginalState initialState,
 						  	ArrayList<OriginalAction> actions, 
 						  	ArrayList<Group> largeGroups,
-						  	ArrayList<Group> smallGroups)   {
+						  	ArrayList<Group> smallGroups,
+						  	HashMap<String, Integer> constants)   {
 		
 		this.stateDescriptor = stateDescriptor;
 		this.initialState = initialState;
 		this.actions = actions;
 		this.largeGroups = largeGroups;
 		this.smallGroups = smallGroups;
+		this.constants = constants;
 		
-		setStateDescriptorSmallGroups();
-		setStateDescriptorLargeGroups();
+		this.stateDescriptorSmallGroups = generateStateDescriptorSmallGroups();
+		this.stateDescriptorLargeGroups = generateStateDescriptorLargeGroups();
+		
+		// updating the order in the state descriptor;
+		this.stateDescriptor = stateDescriptorSmallGroups;
+		this.stateDescriptor.addAll(stateDescriptorLargeGroups);
+		
 		setActionsInCategories();
 		
 	}
@@ -63,6 +78,7 @@ public class OriginalModel{
 	
 	// this method implements our aggregation steps 
 	// constructs an instance of the aggregatedModel from this model. 
+	/*
 	public AggregatedModel consTructAggregatedModel(){
 		
 		
@@ -82,12 +98,12 @@ public class OriginalModel{
 		return aggModel;
 		
 	}
-	
-	private AggregatedState deriveAggregatedInitialState(StateDescriptor stateDescriptor){
+	*/
+	private OriginalState deriveAggregatedInitialState(StateDescriptor stateDescriptor){
 		
 		Iterator<StateVariable> iter = stateDescriptor.iterator();
 		
-		AggregatedState aggInitialState = new AggregatedState(stateDescriptor);
+		OriginalState aggInitialState = new OriginalState(stateDescriptor);
 		
 		StateVariable variable ;
 		Integer population;
@@ -171,11 +187,11 @@ public class OriginalModel{
 		this.stateDescriptor = stateDescriptor;
 	}
 
-	public State getInitialState() {
+	public OriginalState getInitialState() {
 		return initialState;
 	}
 
-	public void setInitialState(State initialState) {
+	public void setInitialState(OriginalState initialState) {
 		this.initialState = initialState;
 	}
 
@@ -203,39 +219,77 @@ public class OriginalModel{
 		this.smallGroups = smallGroups;
 	}
 	
-
-	private void setStateDescriptorSmallGroups(){
-		StateDescriptor stateDescriptorSmallGroups = new StateDescriptor();
+	private StateDescriptor generateStateDescriptorSmallGroups(){
+		StateDescriptor sDSG = new StateDescriptor();
 		
-		Group group;
+		Group group; 
+		StateDescriptor temp;
 		
-		for(StateVariable variable : stateDescriptor){
-			group = variable.getGroup();
-			if(smallGroups.contains(group)){
-				stateDescriptorSmallGroups.add(variable);
-			}
+		Iterator<Group> iter = smallGroups.iterator();
+		while(iter.hasNext()){
+			group = iter.next();
+			temp = generateStateDescriptorSmallGroups(group);
+			sDSG.addAll(temp);
 		}
-		this.stateDescriptorSmallGroups = stateDescriptorSmallGroups;
+		
+		return sDSG; 
 	}
 	
-	private void setStateDescriptorLargeGroups(){
+	private StateDescriptor generateStateDescriptorSmallGroups(Group group){
+		StateDescriptor sd = new StateDescriptor();
 		
-		StateDescriptor stateDescriptorLargeGroups = new StateDescriptor();
+		ArrayList<LocalDerivative> lds = group.getGroupLocalDerivatives(); 
 		
-		Group group;
-		
-		for(StateVariable variable : stateDescriptor){
-			group = variable.getGroup();
-			if(largeGroups.contains(group)){
-				stateDescriptorLargeGroups.add(variable);
-			}
+		StateVariable var; 
+		for(LocalDerivative ld : lds){
+			var = stateDescriptor.getCorrespondingStateVariable(group, ld);
+			sd.add(var);
 		}
-		this.stateDescriptorLargeGroups = stateDescriptorLargeGroups;
+		
+		return sd;
+	}
+	
+	private StateDescriptor generateStateDescriptorLargeGroups(){
+		
+		StateDescriptor sd = new StateDescriptor();
+		
+		StateDescriptor temp;
+		
+		for (Group group : largeGroups){
+			temp = generateStateDescriptorLargeGroups(group);
+			sd.addAll(temp);
+		}
+		
+		return sd;
 		
 	}
+	
+	private StateDescriptor generateStateDescriptorLargeGroups(Group group){
+		
+		StateDescriptor sd = new StateDescriptor();
+
+		ArrayList<LocalDerivative> ldrs = group.getGroupLocalDerivatives();
+		
+		StateVariable var ;
+		
+		for(LocalDerivative dr : ldrs){
+			var = stateDescriptor.getCorrespondingStateVariable(group, dr);
+			sd.add(var);
+		}
+		
+		return sd;
+		
+	}
+	
+	
 	
 	// use the actions state variable and populate the state variables actionSmall, actionsSmallLarge and actionsLarge
 	private void setActionsInCategories(){
+		
+		actionsLarge = new ArrayList<OriginalAction>();
+		actionsSmall = new ArrayList<OriginalAction>();
+		actionsSmallAndLarge = new ArrayList<OriginalAction>();
+		
 		for (OriginalAction action : actions){
 			actionCategory category = getActionCategory(action);
 			switch (category) {

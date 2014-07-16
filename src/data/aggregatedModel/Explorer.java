@@ -2,9 +2,10 @@ package data.aggregatedModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import data.model.Group;
-import data.model.StateDescriptor;
-import data.model.StateVariable;
+import data.general.Transition;
+import data.general.Group;
+import data.general.StateDescriptor;
+import data.general.StateVariable;
 
 
 public class Explorer {

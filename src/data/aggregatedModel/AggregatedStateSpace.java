@@ -3,7 +3,8 @@ package data.aggregatedModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import data.model.StateDescriptor;
+import data.general.Transition;
+import data.general.StateDescriptor;
 
 public class AggregatedStateSpace {
 	

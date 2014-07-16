@@ -3,9 +3,9 @@ package util;
 import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
-import data.model.Group;
-import data.model.LocalDerivative;
-import data.model.StateVariable;
+import data.general.Group;
+import data.general.LocalDerivative;
+import data.general.StateVariable;
 
 public class TestApparentRateSingleGroup {
 

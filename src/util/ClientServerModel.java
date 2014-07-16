@@ -1,43 +1,40 @@
 package util;
 
+import data.originalModel.Display;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import data.aggregatedModel.AggregatedAction;
-import data.aggregatedModel.AggregatedModel;
-import data.aggregatedModel.AggregatedState;
-import data.aggregatedModel.Display;
-import data.model.Action;
-import data.model.Group;
-import data.model.JumpVector;
-import data.model.LocalDerivative;
-import data.model.Model;
-import data.model.StateDescriptor;
-import data.model.StateVariable;
+import data.general.LocalDerivative;
+import data.general.Group;
+import data.general.JumpVector;
+import data.general.StateDescriptor;
+import data.general.StateVariable;
+import data.originalModel.OriginalAction;
 import data.originalModel.OriginalModel;
+import data.originalModel.OriginalState;
 
 public class ClientServerModel {
 
 	
 	public static OriginalModel getClientServerModel(){
 		
-		
 		// the constants
-		
 		HashMap<String, Integer> constants = new HashMap<String,Integer>();
 		constants.put("r_s", 2);
 		constants.put("r_l", 5);
 		constants.put("r_b", 7);
 		constants.put("r_f", 11);
 		constants.put("r_t", 13);
+		constants.put("passive",10000000);
 				
 		double r_s = 2  ; 
 		double r_l = 5  ; 
 		double r_b = 7  ; 
 		double r_f = 11 ;
 		double r_t = 13 ; 
+		double passive = 10000000.0;
 				
-				// constructing the group Servers
+		// constructing the group Servers
 				
 		ArrayList<Group> groups = new ArrayList<Group>();
 		ArrayList<Group> smallGroups = new ArrayList<Group>();
@@ -103,7 +100,7 @@ public class ClientServerModel {
 				
 				
 		// creating the initial state		
-		AggregatedState initialState = new AggregatedState();
+		OriginalState initialState = new OriginalState();
 				
 		initialState.put(Si, popServerIdle);
 		initialState.put(Sl, popServerLog);
@@ -113,10 +110,10 @@ public class ClientServerModel {
 		initialState.setStateIdentifier("initial state");
 				
 		// constructing the actions.
-		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<OriginalAction> actions = new ArrayList<OriginalAction>();
 				
 		// creating the action request 
-		Action request = new Action();
+		OriginalAction request = new OriginalAction();
 		request.setName("request");
 				
 		JumpVector reqJumpVector = new JumpVector();
@@ -150,15 +147,15 @@ public class ClientServerModel {
 				
 				
 		// creating the action log 
-		Action log = new Action();
+		OriginalAction log = new OriginalAction();
 		log.setName("log");
 						
 		JumpVector logJumpVector = new JumpVector();
 		logJumpVector.put(Si, +1);
 		logJumpVector.put(Sl, -1);
 		logJumpVector.put(Sb, 0);
-		reqJumpVector.put(Ct, +1);
-		reqJumpVector.put(Cr, -1);
+		logJumpVector.put(Ct, +1);
+		logJumpVector.put(Cr, -1);
 						
 		log.setJumpVector(logJumpVector);
 					
@@ -166,8 +163,8 @@ public class ClientServerModel {
 		logJumpVectorMinus.put(Si, 0);
 		logJumpVectorMinus.put(Sl, 1);
 		logJumpVectorMinus.put(Sb, 0);
-		reqJumpVectorMinus.put(Ct, 0);
-		reqJumpVectorMinus.put(Cr, 0);
+		logJumpVectorMinus.put(Ct, 0);
+		logJumpVectorMinus.put(Cr, 0);
 					
 		log.setJumpVectorMinus(logJumpVectorMinus);
 				
@@ -183,7 +180,7 @@ public class ClientServerModel {
 		actions.add(log);
 				
 		// creating the action brk 
-		Action brk = new Action();
+		OriginalAction brk = new OriginalAction();
 		brk.setName("break");
 						
 		JumpVector brkJumpVector = new JumpVector();
@@ -216,7 +213,7 @@ public class ClientServerModel {
 		actions.add(brk);
 				
 		// creating the action fix 
-		Action fix = new Action();
+		OriginalAction fix = new OriginalAction();
 		fix.setName("fix");
 						
 		JumpVector fixJumpVector = new JumpVector();
@@ -248,46 +245,76 @@ public class ClientServerModel {
 					
 		actions.add(fix);
 		
+		// creating action think
+		OriginalAction think = new OriginalAction();
+		fix.setName("think");
+						
+		JumpVector thinkJumpVector = new JumpVector();
+		thinkJumpVector.put(Si, 0);
+		thinkJumpVector.put(Sl, 0);
+		thinkJumpVector.put(Sb, 0);
+		thinkJumpVector.put(Ct, +1);
+		thinkJumpVector.put(Cr, -1);
+						
+		think.setJumpVector(thinkJumpVector);
+					
+		JumpVector thinkJumpVectorMinus = new JumpVector();
+		thinkJumpVectorMinus.put(Si, 0);
+		thinkJumpVectorMinus.put(Sl, 0);
+		thinkJumpVectorMinus.put(Sb, 0);
+		thinkJumpVectorMinus.put(Ct, 1);
+		thinkJumpVectorMinus.put(Cr, 0);
+					
+		think.setJumpVectorMinus(thinkJumpVectorMinus);
+				
+		JumpVector thinkJumpVectorPlus = new JumpVector();
+		thinkJumpVectorPlus.put(Si, 0);
+		thinkJumpVectorPlus.put(Sl, 0);
+		thinkJumpVectorPlus.put(Sb, 0);
+		thinkJumpVectorPlus.put(Ct, 0);
+		thinkJumpVectorPlus.put(Cr, +1);
+						
+		think.setJumpVectorPlus(thinkJumpVectorPlus);
+					
+		actions.add(think);
+		
+		
 		// setting the apparent rate data. For each local derivative and action type the derivative enables, specify the rate at which the action is enabled.
 				
 		// local derivative Server_idle and the action request
 		serverIdle.getActionRates().put(request, r_s);
-				serverIdle.getParameterNames().put(request, "r_s");
+		serverIdle.getParameterNames().put(request, "r_s");
 				
-				// local derivative Server_idle and the action break
-				serverIdle.getActionRates().put(brk, r_b);
-				serverIdle.getParameterNames().put(brk, "r_b");
+		// local derivative Server_idle and the action break
+		serverIdle.getActionRates().put(brk, r_b);
+		serverIdle.getParameterNames().put(brk, "r_b");
 				
-				// local derivative Server_logging
-				serverLog.getActionRates().put(log, r_l);
-				serverLog.getParameterNames().put(log, "r_l");
+		// local derivative Server_logging
+		serverLog.getActionRates().put(log, r_l);
+		serverLog.getParameterNames().put(log, "r_l");
 				
-				// local derivative Server_broken
-				serverBrk.getActionRates().put(fix, r_f);
-				serverBrk.getParameterNames().put(fix, "r_f");
+		// local derivative Server_broken
+		serverBrk.getActionRates().put(fix, r_f);
+		serverBrk.getParameterNames().put(fix, "r_f");
 					
-				// constructing the model
-				AggregatedModel model = new AggregatedModel();
-				model.setGroups(groups);
-				model.setAggStateDescriptor(descriptor);
-				model.setAggActions(actions);
-				model.setAggInitialState(initialState);
-				model.setConstants(constants);
-				Display display = new Display(model);
-				model.setDisplay(display);
+		// local derivative Client_think
+		clientThink.getActionRates().put(think, r_t);
+		clientThink.getParameterNames().put(think, "r_t");
+		
+		clientReq.getActionRates().put(request, passive);
+		clientReq.getParameterNames().put(request, "passive");
+		
+		// constructing the model
+		OriginalModel model = new OriginalModel (descriptor,initialState,actions,largeGroups,smallGroups,constants);
+		
+		Display display = new Display(model);
+		model.setDisplay(display);
 			
-				return model;
-		
-		
+		return model;
 		
 	}
 	
 	
-	public static void main(String[] args) {
-		
-
-		
-		
-	}
+	
 
 }

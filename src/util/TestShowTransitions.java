@@ -6,10 +6,10 @@ import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
 import data.aggregatedModel.Explorer;
-import data.aggregatedModel.Transition;
-import data.model.Group;
-import data.model.LocalDerivative;
-import data.model.StateVariable;
+import data.general.Transition;
+import data.general.Group;
+import data.general.LocalDerivative;
+import data.general.StateVariable;
 
 public class TestShowTransitions {
 

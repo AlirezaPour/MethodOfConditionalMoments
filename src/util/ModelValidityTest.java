@@ -1,6 +1,6 @@
 package util;
 
-import data.model.Model;
+import data.general.Model;
 
 public class ModelValidityTest {
 

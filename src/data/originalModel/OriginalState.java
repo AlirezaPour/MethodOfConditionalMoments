@@ -1,40 +1,44 @@
-package data.aggregatedModel;
+package data.originalModel;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import data.aggregatedModel.AggregatedAction;
+import data.aggregatedModel.AggregatedState;
 import data.general.Transition;
 import data.general.Group;
 import data.general.State;
 import data.general.StateDescriptor;
 import data.general.StateVariable;
 
-public class AggregatedState extends State{
-	
+
+public class OriginalState extends State {
+
 	private String stateIdentifier;
 	private int stateId;
 	
-	private ArrayList<AggregatedState> incomingStates ; 
-	private ArrayList<AggregatedState> reachableStates;
+	private ArrayList<OriginalState> incomingStates ; 
+	private ArrayList<OriginalState> reachableStates;
 	
 	private ArrayList<Transition> inwardTransitions ;
 	
-	public AggregatedState(StateDescriptor desciptor){
+	public OriginalState(StateDescriptor desciptor){
 
 		for(StateVariable variable : desciptor){
 			put(variable, 0);
 		}
 		
-		incomingStates = new ArrayList<AggregatedState>();
-		reachableStates = new ArrayList<AggregatedState>();
+		incomingStates = new ArrayList<OriginalState>();
+		reachableStates = new ArrayList<OriginalState>();
 		
 		inwardTransitions = new ArrayList<Transition>();
 		
 	}
 	
-	public AggregatedState() {
-		incomingStates = new ArrayList<AggregatedState>();
-		reachableStates = new ArrayList<AggregatedState>();
+	public OriginalState() {
+		incomingStates = new ArrayList<OriginalState>();
+		reachableStates = new ArrayList<OriginalState>();
 		inwardTransitions = new ArrayList<Transition>();
 		
 	}
@@ -55,19 +59,19 @@ public class AggregatedState extends State{
 		this.stateId = stateId;
 	}
 
-	public ArrayList<AggregatedState> getIncomingStates() {
+	public ArrayList<OriginalState> getIncomingStates() {
 		return incomingStates;
 	}
 
-	public void setIncomingStates(ArrayList<AggregatedState> incomingStates) {
+	public void setIncomingStates(ArrayList<OriginalState> incomingStates) {
 		this.incomingStates = incomingStates;
 	}
 
-	public ArrayList<AggregatedState> getReachableStates() {
+	public ArrayList<OriginalState> getReachableStates() {
 		return reachableStates;
 	}
 
-	public void setReachableStates(ArrayList<AggregatedState> reachableStates) {
+	public void setReachableStates(ArrayList<OriginalState> reachableStates) {
 		this.reachableStates = reachableStates;
 	}
 
@@ -159,10 +163,4 @@ public class AggregatedState extends State{
 		this.stateIdentifier = stateIdentifier;
 	}
 
-	
-	
-	
-	
-	
-	
 }

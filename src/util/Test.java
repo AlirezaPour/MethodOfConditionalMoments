@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import javax.management.modelmbean.DescriptorSupport;
 
-import data.model.Group;
-import data.model.LocalDerivative;
-import data.model.StateDescriptor;
-import data.model.StateVariable;
+import data.general.Group;
+import data.general.LocalDerivative;
+import data.general.StateDescriptor;
+import data.general.StateVariable;
 
 public class Test {
 

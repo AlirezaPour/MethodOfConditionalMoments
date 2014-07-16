@@ -8,10 +8,10 @@ import data.aggregatedModel.AggregatedState;
 import data.aggregatedModel.AggregatedStateSpace;
 import data.aggregatedModel.Display;
 import data.aggregatedModel.Explorer;
-import data.model.Group;
-import data.model.LocalDerivative;
-import data.model.StateDescriptor;
-import data.model.StateVariable;
+import data.general.Group;
+import data.general.LocalDerivative;
+import data.general.StateDescriptor;
+import data.general.StateVariable;
 
 public class TestExplorer {
 
