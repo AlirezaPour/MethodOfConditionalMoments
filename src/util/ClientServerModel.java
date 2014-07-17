@@ -154,8 +154,8 @@ public class ClientServerModel {
 		logJumpVector.put(Si, +1);
 		logJumpVector.put(Sl, -1);
 		logJumpVector.put(Sb, 0);
-		logJumpVector.put(Ct, +1);
-		logJumpVector.put(Cr, -1);
+		logJumpVector.put(Ct, 0);
+		logJumpVector.put(Cr, 0);
 						
 		log.setJumpVector(logJumpVector);
 					
@@ -247,7 +247,7 @@ public class ClientServerModel {
 		
 		// creating action think
 		OriginalAction think = new OriginalAction();
-		fix.setName("think");
+		think.setName("think");
 						
 		JumpVector thinkJumpVector = new JumpVector();
 		thinkJumpVector.put(Si, 0);

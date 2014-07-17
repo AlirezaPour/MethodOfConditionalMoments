@@ -32,6 +32,7 @@ public class OriginalModel{
 	
 	private ArrayList<Group> largeGroups; 
 	private ArrayList<Group> smallGroups;
+	
 	private HashMap<String, Integer> constants;
 	
 	private Display display;
@@ -52,18 +53,18 @@ public class OriginalModel{
 						  	ArrayList<Group> smallGroups,
 						  	HashMap<String, Integer> constants)   {
 		
-		this.stateDescriptor = stateDescriptor;
 		this.initialState = initialState;
 		this.actions = actions;
 		this.largeGroups = largeGroups;
 		this.smallGroups = smallGroups;
 		this.constants = constants;
 		
-		this.stateDescriptorSmallGroups = generateStateDescriptorSmallGroups();
-		this.stateDescriptorLargeGroups = generateStateDescriptorLargeGroups();
+		this.stateDescriptorSmallGroups = generateStateDescriptorSmallGroups(stateDescriptor);
+		this.stateDescriptorLargeGroups = generateStateDescriptorLargeGroups(stateDescriptor);
 		
-		// updating the order in the state descriptor;
-		this.stateDescriptor = stateDescriptorSmallGroups;
+		// creating a state descriptor with a defined order.
+		this.stateDescriptor =  new StateDescriptor();
+		this.stateDescriptor.addAll(stateDescriptorSmallGroups);
 		this.stateDescriptor.addAll(stateDescriptorLargeGroups);
 		
 		setActionsInCategories();
@@ -76,107 +77,9 @@ public class OriginalModel{
 		return null;
 	}
 	
-	// this method implements our aggregation steps 
-	// constructs an instance of the aggregatedModel from this model. 
-	/*
-	public AggregatedModel consTructAggregatedModel(){
-		
-		
-		// derive initial aggregated state.
-		AggregatedState aggInitialState;
-		aggInitialState = deriveAggregatedInitialState(stateDescriptorSmallGroups);
-		
-		// derive the actions related to the aggregated model. 
-		ArrayList<OriginalAction> actionsSmallUnionSmallLarge = new ArrayList<>() ;
-		actionsSmallUnionSmallLarge.addAll(actionsSmall);
-		actionsSmallUnionSmallLarge.addAll(actionsSmallAndLarge);
-		ArrayList<AggregatedAction> aggregatedActions = aggregateActions(actionsSmallUnionSmallLarge);
-
-		// construct the aggregated model. 
-		AggregatedModel aggModel = new AggregatedModel(stateDescriptorSmallGroups,aggInitialState,aggregatedActions,smallGroups);
-		
-		return aggModel;
-		
-	}
-	*/
-	private OriginalState deriveAggregatedInitialState(StateDescriptor stateDescriptor){
-		
-		Iterator<StateVariable> iter = stateDescriptor.iterator();
-		
-		OriginalState aggInitialState = new OriginalState(stateDescriptor);
-		
-		StateVariable variable ;
-		Integer population;
-		
-		while(iter.hasNext()){
-			
-			variable = iter.next();
-			population = initialState.get(variable);
-			
-			aggInitialState.put(variable, population);
-			
-		}
-
-		return aggInitialState;
-	}
-		 
-	public ArrayList<AggregatedAction> aggregateActions(ArrayList<OriginalAction> actions){
-		
-		ArrayList<AggregatedAction> aggregatedActions = new ArrayList<>();
-		
-		Iterator<OriginalAction> iter = actions.iterator();
-
-		OriginalAction action;
-		AggregatedAction aggregatedAction; 
-		
-		while(iter.hasNext()){
-			action = iter.next();
-			aggregatedAction = aggregateAction(action);
-			aggregatedActions.add(aggregatedAction);
-		}
-
-		return aggregatedActions;
-
-	}
 	
-	public AggregatedAction aggregateAction(OriginalAction action){
-		
-		AggregatedAction aggAction = new AggregatedAction();
-		aggAction.setName(action.getName());
-		
-		JumpVector aggJumpVector = new JumpVector();
-		JumpVector aggJumpVectorMinus = new JumpVector();
-		JumpVector aggJumpVectorPlus = new JumpVector();
-		
-		
-		Iterator<StateVariable> iter = action.getJumpVector().keySet().iterator();
-		
-		StateVariable variable;
-		Group group;
-		Integer impact;
-		Integer impactPlus;
-		Integer impactMinus;
-		
-		while(iter.hasNext()){
-			variable = iter.next();
-			group = variable.getGroup();
-			if (smallGroups.contains(group)){
-				impact = action.getImpactOn(variable);
-				impactMinus = action.getImpactMinusOn(variable);
-				impactPlus = action.getImpactPlusOn(variable);
-				
-				aggJumpVector.put(variable, impact);
-				aggJumpVectorMinus.put(variable, impactMinus);
-				aggJumpVectorPlus.put(variable, impactPlus);
-			}
-		}
-		
-		aggAction.setJumpVector(aggJumpVector);
-		aggAction.setJumpVectorMinus(aggJumpVectorMinus);
-		aggAction.setJumpVectorPlus(aggJumpVectorPlus);
-		
-		return aggAction;
-	}
+	
+	
 
 		
 	public StateDescriptor getStateDescriptor() {
@@ -219,7 +122,7 @@ public class OriginalModel{
 		this.smallGroups = smallGroups;
 	}
 	
-	private StateDescriptor generateStateDescriptorSmallGroups(){
+	private StateDescriptor generateStateDescriptorSmallGroups(StateDescriptor stateDescriptor){
 		StateDescriptor sDSG = new StateDescriptor();
 		
 		Group group; 
@@ -228,14 +131,14 @@ public class OriginalModel{
 		Iterator<Group> iter = smallGroups.iterator();
 		while(iter.hasNext()){
 			group = iter.next();
-			temp = generateStateDescriptorSmallGroups(group);
+			temp = generateStateDescriptorSmallGroups(stateDescriptor,group);
 			sDSG.addAll(temp);
 		}
 		
 		return sDSG; 
 	}
 	
-	private StateDescriptor generateStateDescriptorSmallGroups(Group group){
+	private StateDescriptor generateStateDescriptorSmallGroups(StateDescriptor stateDescriptor,Group group){
 		StateDescriptor sd = new StateDescriptor();
 		
 		ArrayList<LocalDerivative> lds = group.getGroupLocalDerivatives(); 
@@ -249,14 +152,14 @@ public class OriginalModel{
 		return sd;
 	}
 	
-	private StateDescriptor generateStateDescriptorLargeGroups(){
+	private StateDescriptor generateStateDescriptorLargeGroups(StateDescriptor stateDescriptor){
 		
 		StateDescriptor sd = new StateDescriptor();
 		
 		StateDescriptor temp;
 		
 		for (Group group : largeGroups){
-			temp = generateStateDescriptorLargeGroups(group);
+			temp = generateStateDescriptorLargeGroups(stateDescriptor,group);
 			sd.addAll(temp);
 		}
 		
@@ -264,7 +167,7 @@ public class OriginalModel{
 		
 	}
 	
-	private StateDescriptor generateStateDescriptorLargeGroups(Group group){
+	private StateDescriptor generateStateDescriptorLargeGroups(StateDescriptor stateDescriptor , Group group){
 		
 		StateDescriptor sd = new StateDescriptor();
 
@@ -336,6 +239,57 @@ public class OriginalModel{
 		if (involvedSmallGroups == true & involvedLargeGroups== false) return actionCategory.SMALL;
 		
 		return null;
+	}
+
+	public ArrayList<OriginalAction> getActionsSmall() {
+		return actionsSmall;
+	}
+
+	public void setActionsSmall(ArrayList<OriginalAction> actionsSmall) {
+		this.actionsSmall = actionsSmall;
+	}
+
+	public ArrayList<OriginalAction> getActionsSmallAndLarge() {
+		return actionsSmallAndLarge;
+	}
+
+	public void setActionsSmallAndLarge(
+			ArrayList<OriginalAction> actionsSmallAndLarge) {
+		this.actionsSmallAndLarge = actionsSmallAndLarge;
+	}
+
+	public ArrayList<OriginalAction> getActionsLarge() {
+		return actionsLarge;
+	}
+
+	public void setActionsLarge(ArrayList<OriginalAction> actionsLarge) {
+		this.actionsLarge = actionsLarge;
+	}
+
+	public StateDescriptor getStateDescriptorSmallGroups() {
+		return stateDescriptorSmallGroups;
+	}
+
+	public void setStateDescriptorSmallGroups(
+			StateDescriptor stateDescriptorSmallGroups) {
+		this.stateDescriptorSmallGroups = stateDescriptorSmallGroups;
+	}
+
+	public StateDescriptor getStateDescriptorLargeGroups() {
+		return stateDescriptorLargeGroups;
+	}
+
+	public void setStateDescriptorLargeGroups(
+			StateDescriptor stateDescriptorLargeGroups) {
+		this.stateDescriptorLargeGroups = stateDescriptorLargeGroups;
+	}
+
+	public HashMap<String, Integer> getConstants() {
+		return constants;
+	}
+
+	public void setConstants(HashMap<String, Integer> constants) {
+		this.constants = constants;
 	}
 		
 	

@@ -8,9 +8,7 @@ import data.originalModel.OriginalModel;
 
 public class TestOriginalModel {
 
-	
 	public static void main(String[] args) {
-	
 		
 		OriginalModel model = ClientServerModel.getClientServerModel();
 		
@@ -18,7 +16,7 @@ public class TestOriginalModel {
 		
 		ArrayList<OriginalAction> actions = model.getActions();
 		
-		String output = display.showActions(actions);
+		String output = display.showModel();
 		
 		System.out.println(output);
 

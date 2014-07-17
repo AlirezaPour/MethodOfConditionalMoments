@@ -38,21 +38,36 @@ public class Display {
 	
 	
 	private OriginalModel model;
+	
 	private StateDescriptor descriptor ; 
+	private StateDescriptor stateDescriptorSmallGroups;
+	private StateDescriptor stateDescriptorLargeGroups; 
+	
 	private ArrayList<OriginalAction> actions;
+	private ArrayList<OriginalAction> actionsSmall;
+	private ArrayList<OriginalAction> actionsSmallAndLarge;
+	private ArrayList<OriginalAction> actionsLarge;
 	
 	private ArrayList<Group> groups;
 	private ArrayList<Group> smallGroups;
 	private ArrayList<Group> largeGroups;
 	
 	public Display(OriginalModel model){
+		
 		this.model = model;
 		this.descriptor = model.getStateDescriptor();
 		this.actions = model.getActions();
+		
 		this.smallGroups = model.getSmallGroups();
 		this.largeGroups = model.getLargeGroups();
-		this.groups = smallGroups;
+		
+		groups = new ArrayList<Group>();
+		this.groups.addAll(smallGroups);
 		groups.addAll(largeGroups);
+		
+		this.actionsSmall = model.getActionsSmall();
+		this.actionsLarge = model.getActionsLarge();
+		this.actionsSmallAndLarge = model.getActionsSmallAndLarge();
 		
 	}
 	
@@ -495,6 +510,17 @@ public class Display {
 		return output;
 	}
 	
+	public String showActionsName(ArrayList<OriginalAction> actions){
+		String output = "";
+		
+		for (OriginalAction action : actions){
+			output += action.getName() + "\n" ;
+		}
+		
+		return output; 
+	}
+	
+	
 	// displaying a state and array list of states 
 	public String showState (OriginalState state){
 		String output = "";
@@ -545,7 +571,7 @@ public class Display {
 
 	// displaying the state descriptor
 	// it inherently uses the class variable groups. therefore, no input is required to this method.
-	public String showStateDescriptor (){
+	/*public String showStateDescriptor (){
 		String output = "The state descriptor is: \n\n";
 		output += showUnderlineManyGroups(groups);
 		output += "\n";
@@ -557,22 +583,59 @@ public class Display {
 		output += "\n";
 		output += showUnderlineManyGroups(groups);
 		return output;
+	}*/
+	
+	public String showStateDescriptor (ArrayList<Group> groups){
+		
+		String output = "state descriptor: \n\n";
+		output += showUnderlineManyGroups(groups);
+		output += "\n";
+		output += showManyGroupsLables(groups);
+		output += "\n";
+		output += showUnderlineManyGroups(groups);
+		output += "\n";
+		output += showLocalDerivativesManyGroups(groups);
+		output += "\n";
+		output += showUnderlineManyGroups(groups);
+		return output;
+		
 	}
 
 	public String showModel(){
 		String output = "Model: \n\n";
 		
-		output += showStateDescriptor();
+		//output += showStateDescriptor(groups);
+		output += "small groups'\n";
+		output += showStateDescriptor(smallGroups);
+		output += "\n\n";
+		
+		output += "large groups'\n";
+		output += showStateDescriptor(largeGroups);
+		output += "\n\n";
+		
+		output += "all groups'\n";
+		output += showStateDescriptor(groups);
 		output += "\n\n";
 		
 		output += "The initial state is: \n\n";
 		output += showState(model.getInitialState());
 		output += "\n\n";
-		/*
+
+		output += "The actions related only to the small groups are: \n\n";
+		output += showActions(actionsSmall);
+		output += "\n\n";
+		
+		output += "The actions related only to the large groups are: \n\n";
+		output += showActions(actionsLarge);
+		output += "\n\n";
+		
+		output += "The actions related both to the small and large groups are: \n\n";
+		output += showActions(actionsSmallAndLarge);
+		output += "\n\n";
+		
 		output += "The actions are: \n\n";
 		output += showActions(model.getActions());
 		output += "\n\n";
-			*/	
 		
 		return output;
 	}
