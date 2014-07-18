@@ -2,13 +2,17 @@ package data.aggregatedModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import data.general.Group;
+import data.general.LocalDerivative;
 import data.general.StateDescriptor;
 import data.general.StateVariable;
 
 public class AggregatedModel{
 
+	private ArrayList<LocalDerivative> localDerivatives; 
+	
 	private StateDescriptor stateDescriptor; 
 	private AggregatedState initialState;
 	
@@ -106,6 +110,30 @@ public class AggregatedModel{
 				return action;
 			}
 		}
+		return null;
+	}
+
+	public ArrayList<LocalDerivative> getLocalDerivatives() {
+		return localDerivatives;
+	}
+
+	public void setLocalDerivatives(ArrayList<LocalDerivative> localDerivatives) {
+		this.localDerivatives = localDerivatives;
+	}
+
+	public LocalDerivative findLocalDerivativeByName(String fname){
+		Iterator<LocalDerivative> iter = localDerivatives.iterator();
+		
+		LocalDerivative derivative;
+		
+		while(iter.hasNext()){
+			derivative = iter.next();
+			
+			if (derivative.getName().equals(fname)){
+				return derivative;
+			}
+		}
+		
 		return null;
 	}
 	

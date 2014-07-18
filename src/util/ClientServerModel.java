@@ -34,6 +34,9 @@ public class ClientServerModel {
 		double r_t = 13 ; 
 		double passive = 10000000.0;
 				
+		// initialising local derivates
+		ArrayList<LocalDerivative> localDerivatives = new ArrayList<LocalDerivative>();
+		
 		// constructing the group Servers
 				
 		ArrayList<Group> groups = new ArrayList<Group>();
@@ -43,8 +46,14 @@ public class ClientServerModel {
 		// local derivatives for group Servers. (or all small groups)
 				
 		LocalDerivative serverIdle = new LocalDerivative("Server_idle");
+		localDerivatives.add(serverIdle);
+		
 		LocalDerivative serverLog = new LocalDerivative("Server_log");
+		localDerivatives.add(serverLog);
+		
 		LocalDerivative serverBrk = new LocalDerivative("Server_brk");
+		localDerivatives.add(serverBrk);
+		
 				
 		ArrayList<LocalDerivative> serverDerivatives = new ArrayList<LocalDerivative>();
 		serverDerivatives.add(serverIdle);
@@ -62,7 +71,11 @@ public class ClientServerModel {
 
 		// constructing group Clients (or all large groups)
 		LocalDerivative clientThink = new LocalDerivative("Client_think");
+		localDerivatives.add(clientThink);
+		
 		LocalDerivative clientReq = new LocalDerivative("Client_req");
+		localDerivatives.add(clientReq);
+		
 		ArrayList<LocalDerivative> clientDerivatives = new ArrayList<LocalDerivative>();
 		clientDerivatives.add(clientThink);
 		clientDerivatives.add(clientReq);

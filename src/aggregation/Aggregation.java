@@ -1,6 +1,7 @@
 package aggregation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import data.aggregatedModel.AggregatedAction;
@@ -23,15 +24,40 @@ public class Aggregation {
 	private OriginalModel originalModel;
 	private AggregatedModel aggregatedModel;
 	
-	public Aggregation(){
-		
+	public Aggregation(OriginalModel model){
+		this.originalModel = model;
 	}
 
+	public AggregatedModel runAggregationAlgorithm(){
+		
+		AggregatedModel aggModel = new AggregatedModel();		
+		
+		HashMap<String, Integer> constants = constructConstants(originalModel);
+		aggModel.setConstants(constants);
+		
+		ArrayList<Group> groups = constructGroups(originalModel);
+		aggModel.setGroups(groups);
+		
+		ArrayList<LocalDerivative> localDerivatives = constructNewLocalDerivatives(groups);
+		aggModel.setLocalDerivatives(localDerivatives);
+		
+		StateDescriptor descriptor = constructStateDescriptor(originalModel);
+		aggModel.setAggStateDescriptor(descriptor);
+		
+		AggregatedState state = deriveAggregatedInitialState(descriptor);
+		aggModel.setAggInitialState(state);
+		
+		ArrayList<OriginalAction> actions = originalModel.getActions();
+		ArrayList<AggregatedAction> aggActions = aggregateActions(descriptor,actions);
+		aggModel.setAggActions(aggActions);
+		
+		return aggModel;
+		
+	}
 	
 	
 	
-	
-	private AggregatedState deriveAggregatedInitialState(StateDescriptor stateDescriptor){
+	public AggregatedState deriveAggregatedInitialState(StateDescriptor stateDescriptor){
 		
 		AggregatedState aggInitialState = new AggregatedState(stateDescriptor);
 		
@@ -101,6 +127,16 @@ public class Aggregation {
 		
 	}
 	
+	public ArrayList<LocalDerivative> constructNewLocalDerivatives(ArrayList<Group> groups){
+		ArrayList<LocalDerivative> newDerivatives = new ArrayList<LocalDerivative>();
+		
+		for (Group group : groups){
+			newDerivatives.addAll(constructNewLocalDerivativesForGroup(group));
+		}
+		
+		return newDerivatives;
+	}
+	
 	public ArrayList<LocalDerivative> constructNewLocalDerivativesForGroup(Group group){
 		
 		ArrayList<LocalDerivative> newDerivatives = new ArrayList<LocalDerivative>();
@@ -134,9 +170,6 @@ public class Aggregation {
 		actionsSmallUnionSmallLarge.addAll(originalModel.getActionsSmallAndLarge());
 		ArrayList<AggregatedAction> aggregatedActions = aggregateActions(descriptor,actionsSmallUnionSmallLarge);
 		
-		// update the local derivatives. 
-		updateLocalDerivatives(StateDescriptor,actionsSmallUnionSmallLarge);		
-
 		// construct the aggregated model. 
 		//AggregatedModel aggModel = new AggregatedModel(stateDescriptorSmallGroups,aggInitialState,aggregatedActions,smallGroups);
 		
@@ -147,16 +180,7 @@ public class Aggregation {
 	}
 	
 	 
-	public void updateLocalDerivates(StateDescriptor descriptor){
-		
-		for(StateVariable var : descriptor){
-			updateLocalDerivates(var);
-		}
-	}
 	
-	public void updateLocalDerivative(StateVariable var){
-		
-	}
 	
 	public ArrayList<AggregatedAction> aggregateActions(StateDescriptor descriptor, ArrayList<OriginalAction> actions){
 		
@@ -213,9 +237,34 @@ public class Aggregation {
 		aggAction.setJumpVectorMinus(aggJumpVectorMinus);
 		aggAction.setJumpVectorPlus(aggJumpVectorPlus);
 		
+		// for this action, the aggregated action was constructed.
+		// update the local derivatives that the action is enabled at.
+		ArrayList<LocalDerivative> originalDerivatives = originalModel.getEnablingLocalDerivative(action);
+		 
+		LocalDerivative aggLocalDerivative;
+		Double rate;
+		String paramter;
+		
+		for (LocalDerivative originalDerivative : originalDerivatives){
+		
+			rate = originalDerivative.getActionRates().get(action);
+			paramter = originalDerivative.getParameterNames().get(action);
+			
+			String name = originalDerivative.getName();
+			aggLocalDerivative = aggregatedModel.findLocalDerivativeByName(name);
+			
+			aggLocalDerivative.getActionRates().put(aggAction, rate);
+			aggLocalDerivative.getParameterNames().put(aggAction, paramter);
+			
+		}
+		
 		return aggAction;
 	}
 	
+	public HashMap<String, Integer> constructConstants(OriginalModel originalModel){
+		HashMap<String, Integer> constants = originalModel.getConstants();
+		return constants;
+	}
 	
 	
 }

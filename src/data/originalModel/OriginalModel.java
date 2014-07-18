@@ -18,6 +18,7 @@ import data.general.StateVariable;
 
 public class OriginalModel{
 	
+	private ArrayList<LocalDerivative> localDerivatives;
 	
 	private StateDescriptor stateDescriptor;
 	private StateDescriptor stateDescriptorSmallGroups;
@@ -74,10 +75,45 @@ public class OriginalModel{
 	// returns the list of the state variables which 
 	// enable the action type given.
 	public ArrayList<StateVariable> getEnablingStateVariables(OriginalAction action){
-		return null;
+		
+		ArrayList<StateVariable> enablingVariables = new ArrayList<StateVariable>();
+	
+		for (StateVariable var : stateDescriptor){
+			
+			if ( action.getJumpVectorMinus().get(var) == 1 ){
+				enablingVariables.add(var);
+			}
+			
+		}
+		
+		return enablingVariables;
+		
 	}
 	
 	
+	// returns the list of local derivatives which are involved in enabling the action.
+	public ArrayList<LocalDerivative> getEnablingLocalDerivative(OriginalAction action){
+		
+		ArrayList<LocalDerivative> enablingDerivatives = new ArrayList<LocalDerivative>();
+
+		ArrayList<StateVariable> enablingVariables = getEnablingStateVariables(action);
+
+		
+		LocalDerivative derivative;
+		
+		for (StateVariable var : enablingVariables){
+			
+			derivative = var.getLocalDerivative();
+			
+			if (!( enablingDerivatives.contains(derivative))){
+				enablingDerivatives.add(derivative);
+			}
+			
+		}
+		
+		return enablingDerivatives;
+		
+	}
 	
 	
 
@@ -291,7 +327,29 @@ public class OriginalModel{
 	public void setConstants(HashMap<String, Integer> constants) {
 		this.constants = constants;
 	}
+
+	public ArrayList<LocalDerivative> getLocalDerivatives() {
+		return localDerivatives;
+	}
+
+	public void setLocalDerivatives(ArrayList<LocalDerivative> localDerivatives) {
+		this.localDerivatives = localDerivatives;
+	}
 		
-	
+	public LocalDerivative findLocalDerivativeByName(String fname){
+		Iterator<LocalDerivative> iter = localDerivatives.iterator();
+		
+		LocalDerivative derivative;
+		
+		while(iter.hasNext()){
+			derivative = iter.next();
+			
+			if (derivative.getName().equals(fname)){
+				return derivative;
+			}
+		}
+		
+		return null;
+	}
 	
 }
