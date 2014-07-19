@@ -2,6 +2,8 @@ package data.originalModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import data.general.Action;
 import data.general.Transition;
 import data.general.Group;
 import data.general.LocalDerivative;
@@ -69,6 +71,40 @@ public class Display {
 		this.actionsLarge = model.getActionsLarge();
 		this.actionsSmallAndLarge = model.getActionsSmallAndLarge();
 		
+	}
+	
+	public String showLocalDerivatives(ArrayList<data.general.LocalDerivative> derivatives){
+		String output = "";
+		
+		for (LocalDerivative derivative : derivatives){
+			output += showLocalDerivative(derivative);
+			output += "\n";
+		}
+		
+		return output ; 
+	}
+	
+	public String showLocalDerivative (LocalDerivative localDerivative){
+		String output = "";
+
+		output += "Local Derivative : " + localDerivative.getName() + " \n";
+		
+		Iterator<Action> iter = localDerivative.getActionRates().keySet().iterator();
+
+		OriginalAction action ;
+		while(iter.hasNext()){
+			
+			action = (OriginalAction) iter.next();
+
+			output += "\t" + action.getName() ;
+			output += "\t\t" + localDerivative.getActionRates().get(action) ;
+			output += "\t\t" + localDerivative.getParameterNames().get(action);
+			
+			output += "\n";
+			
+		}
+		
+		return output; 
 	}
 	
 	public String showStateSpace(OriginalStateSpace sp){
@@ -602,12 +638,18 @@ public class Display {
 	}
 
 	public String showModel(){
-		String output = "Model: \n\n";
+		String output = "Original Model: \n\n";
+		
+		output += "Local Derivatives\n";
+		output += showLocalDerivatives(model.getLocalDerivatives());
+		output += "\n\n";
+		
 		
 		//output += showStateDescriptor(groups);
 		output += "small groups'\n";
 		output += showStateDescriptor(smallGroups);
 		output += "\n\n";
+		
 		
 		output += "large groups'\n";
 		output += showStateDescriptor(largeGroups);

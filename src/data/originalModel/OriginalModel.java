@@ -47,13 +47,14 @@ public class OriginalModel{
 		this.display = display;
 	}
 
-	public OriginalModel (	StateDescriptor stateDescriptor, 
+	public OriginalModel (	ArrayList<LocalDerivative> localDerivatives, 
+							StateDescriptor stateDescriptor, 
 						  	OriginalState initialState,
 						  	ArrayList<OriginalAction> actions, 
 						  	ArrayList<Group> largeGroups,
 						  	ArrayList<Group> smallGroups,
 						  	HashMap<String, Integer> constants)   {
-		
+		this.localDerivatives = localDerivatives;
 		this.initialState = initialState;
 		this.actions = actions;
 		this.largeGroups = largeGroups;

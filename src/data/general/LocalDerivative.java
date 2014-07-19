@@ -15,6 +15,12 @@ public class LocalDerivative {
 	
 	HashMap<Action, String > parameterNames;
 	
+	public void setParameterNames(HashMap<Action, String> parameterNames) {
+		this.parameterNames = parameterNames;
+	}
+
+	
+	
 	public HashMap<Action, String> getParameterNames(){
 		return this.parameterNames;
 	}

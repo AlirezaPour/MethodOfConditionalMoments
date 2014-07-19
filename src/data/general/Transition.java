@@ -6,7 +6,7 @@ public class Transition {
 	
 	Action action;
 	State start;
-	State target;
+	public State target;
 	double rate ; 
 	
 	public Transition(){

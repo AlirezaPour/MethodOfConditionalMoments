@@ -47,6 +47,10 @@ public class AggregatedModel{
 		display = new Display(this);
 	}
 	
+	public AggregatedModel(){
+		display = new Display(this);
+	}
+	
 	public HashMap<String, Integer> getConstants() {
 		return constants;
 	}
@@ -55,9 +59,7 @@ public class AggregatedModel{
 		this.constants = constants;
 	}
 
-	public AggregatedModel(){
-		
-	}
+	
 
 	
 	/*

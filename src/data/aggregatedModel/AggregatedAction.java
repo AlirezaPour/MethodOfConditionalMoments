@@ -75,7 +75,8 @@ public class AggregatedAction extends Action {
 		ArrayList<Group> enablingGroups = new ArrayList<Group>();
 		
 		for(Group group : allGroups){
-			if (group.getActions().contains(this)){
+			ArrayList<Action> groupActions = group.getActions();
+			if (groupActions.contains(this)){
 				enablingGroups.add(group);
 			}
 		}

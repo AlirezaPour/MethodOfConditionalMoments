@@ -188,14 +188,14 @@ public class Explorer {
  		// uniformise the transition
  		tr = uniformiseTransition(sp, agenda, tr);
  		
- 		AggregatedState target = tr.getTarget();
+ 		AggregatedState target = (AggregatedState) tr.getTarget();
  		
  		// add the transition to the banks
  		sp.addToOutgoingTransitionBank(state,tr);
 		
  		// upadte references in the start and target states
- 		state.getReachableStates().add(tr.target);
- 		tr.target.getIncomingStates().add(state);
+ 		state.getReachableStates().add(target);
+ 		target.getIncomingStates().add(state);
  		target.getInwardTransitions().add(tr);
  		
  		// adjust the agenda
@@ -208,7 +208,7 @@ public class Explorer {
  	}
  	
  	public Transition uniformiseTransition ( AggregatedStateSpace sp , ArrayList<AggregatedState> agenda,Transition transition){
- 		AggregatedState target = transition.getTarget();
+ 		AggregatedState target = (AggregatedState) transition.getTarget();
  		
  		ArrayList<AggregatedState> explored = sp.getExplored();
  		

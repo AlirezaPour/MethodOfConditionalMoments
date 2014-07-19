@@ -2,13 +2,15 @@ package data.aggregatedModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import data.general.Action;
 import data.general.Transition;
 import data.general.Group;
-import data.general.JumpVector;
 import data.general.LocalDerivative;
 import data.general.NumericalVector;
 import data.general.StateDescriptor;
 import data.general.StateVariable;
+import data.originalModel.OriginalAction;
 
 public class Display {
 	
@@ -48,10 +50,54 @@ public class Display {
 		this.groups = model.getGroups();
 	}
 	
+	// this method updated the instance variables of the display
+	public void updateDisplayPrimitives(){
+		this.descriptor = model.getAggStateDescriptor();
+		this.actions = model.getAggActions();
+		this.groups = model.getGroups();
+	}
+	
 	public String showStateSpace(AggregatedStateSpace sp){
 		String output = "";
 		return output; 
 	}
+	
+	
+	public String showLocalDerivatives(ArrayList<data.general.LocalDerivative> derivatives){
+		String output = "";
+		
+		for (LocalDerivative derivative : derivatives){
+			output += showLocalDerivative(derivative);
+			output += "\n";
+		}
+		
+		return output ; 
+	}
+	
+	public String showLocalDerivative (LocalDerivative localDerivative){
+		String output = "";
+
+		output += "Local Derivative : " + localDerivative.getName() + " \n";
+		
+		Iterator<Action> iter = localDerivative.getActionRates().keySet().iterator();
+
+		AggregatedAction action ;
+		while(iter.hasNext()){
+			
+			action = (AggregatedAction) iter.next();
+
+			output += "\t" + action.getName() ;
+			output += "\t\t" + localDerivative.getActionRates().get(action) ;
+			output += "\t\t" + localDerivative.getParameterNames().get(action);
+			
+			output += "\n";
+			
+		}
+		
+		return output; 
+	}
+	
+	
 	
 	public String showTransitions(ArrayList<Transition> transitions){
 		String output = "";
@@ -103,21 +149,21 @@ public class Display {
 		
 		output += localDerDivider ; 
 
-		AggregatedState start = transition.getStart(); 
+		AggregatedState start = ( AggregatedState) transition.getStart(); 
 		String startNumericalVector = showNumericalRepresentation(start);
 		String format = "%-" + maxStateNumericalRepresentation + "s";
 		output += String.format(format, startNumericalVector);
 		
 		output += localDerDivider ;
 		
-		AggregatedState target = transition.getTarget(); 
+		AggregatedState target = ( AggregatedState) transition.getTarget(); 
 		String targetNumericalVector = showNumericalRepresentation(target);
 		output += String.format(format, targetNumericalVector);
 		
 		output += localDerDivider ;
 		
 		format = "%-" + maxActionNameLength + "s";
-		AggregatedAction action = transition.getAction(); 
+		AggregatedAction action = (AggregatedAction) transition.getAction(); 
 		output += String.format(format, action.getName());
 		
 		output += localDerDivider ;
@@ -550,7 +596,11 @@ public class Display {
 	}
 
 	public String showModel(){
-		String output = "Model: \n\n";
+		String output = "Aggregated Model: \n\n";
+		
+		output += "Local Derivatives\n";
+		output += showLocalDerivatives(model.getLocalDerivatives());
+		output += "\n\n";
 		
 		output += showStateDescriptor();
 		output += "\n\n";
@@ -558,6 +608,7 @@ public class Display {
 		output += "The initial state is: \n\n";
 		output += showState(model.getAggInitialState());
 		output += "\n\n";
+		
 		
 		output += "The actions are: \n\n";
 		output += showActions(model.getAggActions());
@@ -583,177 +634,10 @@ public class Display {
 		return output;
 	}
 	
-	public static void main(String args[]){
-		
-		/*ArrayList<Group> groups = new ArrayList<Group>();
-		
-		// group 1 
-		LocalDerivative serverIdle = new LocalDerivative("Server_idle");
-		LocalDerivative serverLogging = new LocalDerivative("Server_logging");
-		LocalDerivative serverBroken = new LocalDerivative("Server_broken");
-		ArrayList<LocalDerivative> serverDerivatives = new ArrayList<LocalDerivative>();
-		serverDerivatives.add(serverIdle);
-		serverDerivatives.add(serverLogging);
-		serverDerivatives.add(serverBroken);
-		Group servers = new Group("Servers",serverDerivatives );
-		
-		// group 2
-		LocalDerivative clientThinking = new LocalDerivative("Client_think");
-		LocalDerivative clientRequesting = new LocalDerivative("Client_req");
-		ArrayList<LocalDerivative> clientDerivatives = new ArrayList<LocalDerivative>();
-		clientDerivatives.add(clientThinking);
-		clientDerivatives.add(clientRequesting);
-		Group clients = new Group("Clients",clientDerivatives );
-		
-		groups.add(servers);
-		groups.add(clients);
-		
-		// creating the state variables
-		StateVariable Si = new StateVariable(servers, serverIdle);
-		StateVariable Sl = new StateVariable(servers, serverLogging);
-		StateVariable Sb = new StateVariable(servers, serverBroken);
-		
-		StateVariable Cr = new StateVariable(clients, clientRequesting);
-		StateVariable Ct = new StateVariable(clients, clientThinking);
-		
-		// put these state variables in a stateDescriptor
-		StateDescriptor descriptor = new StateDescriptor();
-		descriptor.add(Si);
-		descriptor.add(Sl);
-		descriptor.add(Sb);
-		descriptor.add(Cr);
-		descriptor.add(Ct);
-
-		
-		// setting the populations in state1 
-		int popServerIdle = 12 ; 
-		int popServerLog = 24; 
-		int popServerBrok = 36;
-		
-		int popClientThink = 2600 ; 
-		int popClientReq = 260;
-		
-		
-		// creating the state1		
-		AggregatedState state1 = new AggregatedState();
-		
-		state1.put(Si, popServerIdle);
-		state1.put(Sl, popServerLog);
-		state1.put(Sb, popServerBrok);
-		state1.put(Ct, popClientThink);
-		state1.put(Cr, popClientReq);
-		state1.setStateIdentifier("state1");
-		
-		// setting the populations in state1 
-		popServerIdle = 10 ; 
-		popServerLog = 20; 
-		popServerBrok = 30;
-				
-		popClientThink = 20000 ; 
-		popClientReq = 200;
-		
-		// creating the state2		
-		AggregatedState state2 = new AggregatedState();
-				
-		state2.put(Si, popServerIdle);
-		state2.put(Sl, popServerLog);
-		state2.put(Sb, popServerBrok);
-		state2.put(Ct, popClientThink);
-		state2.put(Cr, popClientReq);
-		state2.setStateIdentifier("state2");
-
-		
-		// creating a list of states. this would represent a flatten state space
-		ArrayList<AggregatedState> states = new ArrayList<AggregatedState>();
-		states.add(state1);
-		states.add(state2);
-		
-		// creating the action request 
-		AggregatedAction request = new AggregatedAction();
-		request.setName("Request");
-		
-		JumpVector reqJumpVector = new JumpVector();
-		reqJumpVector.put(Si, -1);
-		reqJumpVector.put(Sl, +1);
-		reqJumpVector.put(Sb, 0);
-		reqJumpVector.put(Ct, +1);
-		reqJumpVector.put(Cr, -1);
-		
-		request.setJumpVector(reqJumpVector);
-		
-		JumpVector reqJumpVectorMinus = new JumpVector();
-		reqJumpVectorMinus.put(Si, 1);
-		reqJumpVectorMinus.put(Sl, 0);
-		reqJumpVectorMinus.put(Sb, 0);
-		reqJumpVectorMinus.put(Ct, 0);
-		reqJumpVectorMinus.put(Cr, 1);
-		
-		request.setJumpVectorMinus(reqJumpVectorMinus);
-		
-		JumpVector reqJumpVectorPlus = new JumpVector();
-		reqJumpVectorPlus.put(Si, 0);
-		reqJumpVectorPlus.put(Sl, +1);
-		reqJumpVectorPlus.put(Sb, 0);
-		reqJumpVectorPlus.put(Ct, +1);
-		reqJumpVectorPlus.put(Cr, 0);
-		
-		request.setJumpVectorPlus(reqJumpVectorPlus);
-		
-		ArrayList<AggregatedAction> actions = new ArrayList<AggregatedAction>();
-		actions.add(request);
-		
-		// creating the action think
-		
-		// creating the action request 
-		AggregatedAction think = new AggregatedAction();
-		think.setName("think");
-				
-		JumpVector thinkJumpVector = new JumpVector();
-		thinkJumpVector.put(Si, 0);
-		thinkJumpVector.put(Sl, 0);
-		thinkJumpVector.put(Sb, 0);
-		thinkJumpVector.put(Ct, -1);
-		thinkJumpVector.put(Cr, +1);
-				
-		think.setJumpVector(thinkJumpVector);
-				
-		JumpVector thinkJumpVectorMinus = new JumpVector();
-		thinkJumpVectorMinus.put(Si, 0);
-		thinkJumpVectorMinus.put(Sl, 0);
-		thinkJumpVectorMinus.put(Sb, 0);
-		thinkJumpVectorMinus.put(Ct, 1);
-		thinkJumpVectorMinus.put(Cr, 0);
-				
-		think.setJumpVectorMinus(thinkJumpVectorMinus);
-				
-		JumpVector thinkJumpVectorPlus = new JumpVector();
-		thinkJumpVectorPlus.put(Si, 0);
-		thinkJumpVectorPlus.put(Sl, 0);
-		thinkJumpVectorPlus.put(Sb, 0);
-		thinkJumpVectorPlus.put(Ct, 0);
-		thinkJumpVectorPlus.put(Cr, 1);
-				
-		think.setJumpVectorPlus(thinkJumpVectorPlus);
-		
-		actions.add(think);	
-		
-		// constructing the model
-		AggregatedModel model = new AggregatedModel();
-		model.setGroups(groups);
-		model.setAggStateDescriptor(descriptor);
-		model.setAggActions(actions);
-		model.setAggInitialState(state1);
-		
-		Display display = new Display(model);
-		
-		// show the different things in the model
-		System.out.printf(display.showModel());
-		*/
-		
-	}
 	
 	
-public String storeStateSpace(AggregatedStateSpace sp){
+	
+	public String storeStateSpace(AggregatedStateSpace sp){
 	
 		//Explorer explorer = new Explorer(model);
 
@@ -836,10 +720,10 @@ public String storeStateSpace(AggregatedStateSpace sp){
 		AggregatedAction action;
 		
 		
-		start = tr.getStart();
-		target = tr.getTarget();
+		start = (AggregatedState) tr.getStart();
+		target = (AggregatedState) tr.getTarget();
 		rate = tr.getRate();
-		action= tr.getAction();
+		action= (AggregatedAction) tr.getAction();
 		
 		// target should be the same as state
 		if (!(state.equals(target))){
@@ -872,10 +756,10 @@ public String storeStateSpace(AggregatedStateSpace sp){
 		
 		for (Transition tr : transitions){
 			
-			start = tr.getStart();
-			target = tr.getTarget();
+			start = (AggregatedState) tr.getStart();
+			target = (AggregatedState) tr.getTarget();
 			rate = tr.getRate();
-			action= tr.getAction();
+			action= (AggregatedAction) tr.getAction();
 			
 			output += start.getStateId() ;
 			output += "\t" ;
@@ -927,13 +811,13 @@ public String storeStateSpace(AggregatedStateSpace sp){
 	public String storeOneTransition (Transition transition){
 		String output = "";
 		
-		AggregatedState state = transition.getStart(); 
+		AggregatedState state = (AggregatedState) transition.getStart(); 
 		int id = state.getStateId();
 		
 		output += Integer.toString(id);
 		output += "\t\t";
 		
-		state = transition.getTarget();
+		state = (AggregatedState) transition.getTarget();
 		id = state.getStateId();
 		output +=Integer.toBinaryString(id);
 		output += "\t\t";

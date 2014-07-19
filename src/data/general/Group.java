@@ -83,11 +83,16 @@ public class Group {
 	}
 	
 	public ArrayList<Action> getActions(){
+		
 		ArrayList<Action> actions = new ArrayList<Action>();
+		
 		ArrayList<Action> actionsByDerivative ;
+		
 		for (LocalDerivative derivative : localDerivatives){
+			
 			actionsByDerivative = derivative.getActions();
 			actions.addAll(actionsByDerivative);
+			
 		}
 		return actions;
 	}

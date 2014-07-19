@@ -7,6 +7,7 @@ import java.util.Iterator;
 import data.aggregatedModel.AggregatedAction;
 import data.aggregatedModel.AggregatedModel;
 import data.aggregatedModel.AggregatedState;
+import data.general.Action;
 import data.general.Group;
 import data.general.JumpVector;
 import data.general.LocalDerivative;
@@ -22,15 +23,15 @@ import data.originalModel.OriginalState;
 public class Aggregation {
 
 	private OriginalModel originalModel;
-	private AggregatedModel aggregatedModel;
+	private AggregatedModel aggModel;
 	
 	public Aggregation(OriginalModel model){
 		this.originalModel = model;
 	}
 
 	public AggregatedModel runAggregationAlgorithm(){
-		
-		AggregatedModel aggModel = new AggregatedModel();		
+			
+		aggModel = new AggregatedModel();		
 		
 		HashMap<String, Integer> constants = constructConstants(originalModel);
 		aggModel.setConstants(constants);
@@ -41,15 +42,21 @@ public class Aggregation {
 		ArrayList<LocalDerivative> localDerivatives = constructNewLocalDerivatives(groups);
 		aggModel.setLocalDerivatives(localDerivatives);
 		
-		StateDescriptor descriptor = constructStateDescriptor(originalModel);
+		StateDescriptor descriptor = constructStateDescriptor(originalModel,groups);
 		aggModel.setAggStateDescriptor(descriptor);
 		
 		AggregatedState state = deriveAggregatedInitialState(descriptor);
 		aggModel.setAggInitialState(state);
 		
-		ArrayList<OriginalAction> actions = originalModel.getActions();
-		ArrayList<AggregatedAction> aggActions = aggregateActions(descriptor,actions);
+		
+		ArrayList<OriginalAction> actionsSmallUnionSmallLarge = new ArrayList<OriginalAction>() ;
+		actionsSmallUnionSmallLarge.addAll(originalModel.getActionsSmall());
+		actionsSmallUnionSmallLarge.addAll(originalModel.getActionsSmallAndLarge());		
+		ArrayList<AggregatedAction> aggActions = aggregateActions(descriptor,actionsSmallUnionSmallLarge);
 		aggModel.setAggActions(aggActions);
+		
+		// updating the display of the aggregated model so that it has access to the new groups, actions, etc.
+		aggModel.getDisplay().updateDisplayPrimitives();
 		
 		return aggModel;
 		
@@ -64,12 +71,20 @@ public class Aggregation {
 		Iterator<StateVariable> iter = stateDescriptor.iterator();
 		
 		StateVariable variable ;
+		StateVariable originalVariable;
+		LocalDerivative ld;
+		Group group;
 		Integer population;
 		
 		while(iter.hasNext()){
 			
 			variable = iter.next();
-			population = originalModel.getInitialState().get(variable);
+			ld = variable.getLocalDerivative();
+			group = variable.getGroup();
+			originalVariable = originalModel.getStateDescriptor().getCorrespondingStateVariable(group, ld);
+			
+			OriginalState originalInitialState = originalModel.getInitialState();
+			population = originalInitialState.get(originalVariable);
 			
 			aggInitialState.put(variable, population);
 			
@@ -79,11 +94,10 @@ public class Aggregation {
 	}
 	
 	
-	public StateDescriptor constructStateDescriptor(OriginalModel model){
+	public StateDescriptor constructStateDescriptor(OriginalModel model, ArrayList<Group> groups){
 		
 		StateDescriptor descriptor = new StateDescriptor();
-		
-		ArrayList<Group> groups = constructGroups(originalModel);
+
 		
 		for (Group group : groups){
 			descriptor.addAll(constructStateDescriptor(originalModel,group));
@@ -127,16 +141,6 @@ public class Aggregation {
 		
 	}
 	
-	public ArrayList<LocalDerivative> constructNewLocalDerivatives(ArrayList<Group> groups){
-		ArrayList<LocalDerivative> newDerivatives = new ArrayList<LocalDerivative>();
-		
-		for (Group group : groups){
-			newDerivatives.addAll(constructNewLocalDerivativesForGroup(group));
-		}
-		
-		return newDerivatives;
-	}
-	
 	public ArrayList<LocalDerivative> constructNewLocalDerivativesForGroup(Group group){
 		
 		ArrayList<LocalDerivative> newDerivatives = new ArrayList<LocalDerivative>();
@@ -148,6 +152,13 @@ public class Aggregation {
 		for (LocalDerivative oldDerivative: oldDerivatives){
 			name = oldDerivative.getName();
 			newDerivative = new LocalDerivative(name);
+			
+			HashMap<Action, Double> actionRates = new HashMap<Action, Double>();
+			HashMap<Action, String> actionParamters = new HashMap<Action, String>();
+			
+			newDerivative.setActionRates(actionRates);
+			newDerivative.setParameterNames(actionParamters);
+			
 			newDerivatives.add(newDerivative);
 		}
 		
@@ -155,36 +166,19 @@ public class Aggregation {
 		
 	}
 	
-	public AggregatedModel consTructAggregatedModel(){
+	public ArrayList<LocalDerivative> constructNewLocalDerivatives(ArrayList<Group> groups){
+		ArrayList<LocalDerivative> newDerivatives = new ArrayList<LocalDerivative>();
 		
-		ArrayList<Group> groups = constructGroups(originalModel);
-		StateDescriptor descriptor = constructStateDescriptor(originalModel);
+		for (Group group : groups){
+			newDerivatives.addAll(group.getGroupLocalDerivatives());
+		}
 		
-		// derive initial aggregated state.
-		AggregatedState aggInitialState = deriveAggregatedInitialState(descriptor);;
-
-		
-		// derive the actions related to the aggregated model. 
-		ArrayList<OriginalAction> actionsSmallUnionSmallLarge = new ArrayList<OriginalAction>() ;
-		actionsSmallUnionSmallLarge.addAll(originalModel.getActionsSmall());
-		actionsSmallUnionSmallLarge.addAll(originalModel.getActionsSmallAndLarge());
-		ArrayList<AggregatedAction> aggregatedActions = aggregateActions(descriptor,actionsSmallUnionSmallLarge);
-		
-		// construct the aggregated model. 
-		//AggregatedModel aggModel = new AggregatedModel(stateDescriptorSmallGroups,aggInitialState,aggregatedActions,smallGroups);
-		
-		//return aggModel;
-		
-		return null;
-		
+		return newDerivatives;
 	}
-	
-	 
-	
 	
 	public ArrayList<AggregatedAction> aggregateActions(StateDescriptor descriptor, ArrayList<OriginalAction> actions){
 		
-		ArrayList<AggregatedAction> aggregatedActions = new ArrayList<>();
+		ArrayList<AggregatedAction> aggregatedActions = new ArrayList<AggregatedAction>();
 		
 		Iterator<OriginalAction> iter = actions.iterator();
 
@@ -223,9 +217,13 @@ public class Aggregation {
 			
 			variable = iter.next();
 			
-			impact = action.getImpactOn(variable);
-			impactMinus = action.getImpactMinusOn(variable);
-			impactPlus = action.getImpactPlusOn(variable);
+			// given the variable in the aggregated state descriptor, whats the variable in the 
+			// original state descriptor.
+			StateVariable originalVariable = unformiseVariable(variable);
+			
+			impact = action.getImpactOn(originalVariable);
+			impactMinus = action.getImpactMinusOn(originalVariable);
+			impactPlus = action.getImpactPlusOn(originalVariable);
 				
 			aggJumpVector.put(variable, impact);
 			aggJumpVectorMinus.put(variable, impactMinus);
@@ -240,7 +238,12 @@ public class Aggregation {
 		// for this action, the aggregated action was constructed.
 		// update the local derivatives that the action is enabled at.
 		ArrayList<LocalDerivative> originalDerivatives = originalModel.getEnablingLocalDerivative(action);
-		 
+		
+		// find the intersection of all local derivatives with the ones in the aggregated model.
+		originalDerivatives = uniformiseLocalDerivatives(originalDerivatives,aggModel.getLocalDerivatives());
+		
+		
+		
 		LocalDerivative aggLocalDerivative;
 		Double rate;
 		String paramter;
@@ -251,7 +254,7 @@ public class Aggregation {
 			paramter = originalDerivative.getParameterNames().get(action);
 			
 			String name = originalDerivative.getName();
-			aggLocalDerivative = aggregatedModel.findLocalDerivativeByName(name);
+			aggLocalDerivative = aggModel.findLocalDerivativeByName(name);
 			
 			aggLocalDerivative.getActionRates().put(aggAction, rate);
 			aggLocalDerivative.getParameterNames().put(aggAction, paramter);
@@ -259,6 +262,31 @@ public class Aggregation {
 		}
 		
 		return aggAction;
+	}
+	
+	// given a variable in the state descriptor of the aggregated model, 
+	// what is the equivalent state in the desciptor of the original model. 
+	public StateVariable unformiseVariable (StateVariable var){
+		LocalDerivative ld = var.getLocalDerivative();
+		Group group = var.getGroup();
+		
+		StateVariable originalVar = originalModel.getStateDescriptor().getCorrespondingStateVariable(group, ld);
+		return originalVar;
+	}
+	
+	public ArrayList<LocalDerivative> uniformiseLocalDerivatives(ArrayList<LocalDerivative> originalDerivatives, ArrayList<LocalDerivative> aggDerivatives){
+		
+		ArrayList<LocalDerivative> newOriginalDerivatives = new ArrayList<LocalDerivative>();
+	
+		for(LocalDerivative origDer : originalDerivatives){
+			
+			if(		aggDerivatives.contains(origDer)	){
+				newOriginalDerivatives.add(origDer);
+			}				
+		}
+		
+		return newOriginalDerivatives;
+		
 	}
 	
 	public HashMap<String, Integer> constructConstants(OriginalModel originalModel){

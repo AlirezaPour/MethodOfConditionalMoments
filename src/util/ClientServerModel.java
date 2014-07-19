@@ -25,14 +25,14 @@ public class ClientServerModel {
 		constants.put("r_b", 7);
 		constants.put("r_f", 11);
 		constants.put("r_t", 13);
-		constants.put("passive",10000000);
+		constants.put("passive",1000);
 				
 		double r_s = 2  ; 
 		double r_l = 5  ; 
 		double r_b = 7  ; 
 		double r_f = 11 ;
 		double r_t = 13 ; 
-		double passive = 10000000.0;
+		double passive = 1000.0;
 				
 		// initialising local derivates
 		ArrayList<LocalDerivative> localDerivatives = new ArrayList<LocalDerivative>();
@@ -318,7 +318,7 @@ public class ClientServerModel {
 		clientReq.getParameterNames().put(request, "passive");
 		
 		// constructing the model
-		OriginalModel model = new OriginalModel (descriptor,initialState,actions,largeGroups,smallGroups,constants);
+		OriginalModel model = new OriginalModel (localDerivatives,descriptor,initialState,actions,largeGroups,smallGroups,constants);
 		
 		Display display = new Display(model);
 		model.setDisplay(display);
