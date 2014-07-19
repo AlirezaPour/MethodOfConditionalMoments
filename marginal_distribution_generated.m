@@ -90,6 +90,80 @@ function M = mass(t,y)
 
 end
 
+figure;
+plot(t,y(:,1),'-b','DisplayName','P_{t}(St1)')
+legend('-DynamicLegend');
+legend('Location', 'BestOutside');
+grid on;
+
+figure;
+plot(t,y(:,2),'-b','DisplayName','P_{t}(St2)')
+legend('-DynamicLegend');
+legend('Location', 'BestOutside');
+grid on;
+
+figure;
+plot(t,y(:,3),'-b','DisplayName','P_{t}(St3)')
+legend('-DynamicLegend');
+legend('Location', 'BestOutside');
+grid on;
+
+figure;
+plot(t,y(:,4),'-b','DisplayName','P_{t}(St4)')
+legend('-DynamicLegend');
+legend('Location', 'BestOutside');
+grid on;
+
+figure;
+plot(t,y(:,5),'-b','DisplayName','P_{t}(St5)')
+legend('-DynamicLegend');
+legend('Location', 'BestOutside');
+grid on;
+
+figure;
+plot(t,y(:,6),'-b','DisplayName','P_{t}(St6)')
+legend('-DynamicLegend');
+legend('Location', 'BestOutside');
+grid on;
+
+
+
+for i=1:length(t)
+	output(i,1) = t(i);
+end
+
+for i=1:length(t)
+	output(i,2) = y(i,1);
+end
+csvwrite('P(st1).dat',output);
+
+for i=1:length(t)
+	output(i,2) = y(i,2);
+end
+csvwrite('P(st2).dat',output);
+
+for i=1:length(t)
+	output(i,2) = y(i,3);
+end
+csvwrite('P(st3).dat',output);
+
+for i=1:length(t)
+	output(i,2) = y(i,4);
+end
+csvwrite('P(st4).dat',output);
+
+for i=1:length(t)
+	output(i,2) = y(i,5);
+end
+csvwrite('P(st5).dat',output);
+
+for i=1:length(t)
+	output(i,2) = y(i,6);
+end
+csvwrite('P(st6).dat',output);
+
+
+
 
 
 end

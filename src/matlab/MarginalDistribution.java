@@ -183,7 +183,7 @@ public class MarginalDistribution {
 		
 		int index_start = (states.indexOf(start));
 		String stateName = "st" + start.getStateId();
-		String actionName = transition.getAction().getName();
+		String actionName = ((AggregatedAction)transition.getAction()).getName();
 		
 		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start+1 );
 		
@@ -210,11 +210,11 @@ public class MarginalDistribution {
 		
 		String output = "";
 		
-		AggregatedState start = tr.getStart();
+		AggregatedState start = (AggregatedState) tr.getStart();
 		int index_start = states.indexOf(start);
 		
 		String stateName = "st" + start.getStateId();
-		String actionName = tr.getAction().getName();
+		String actionName = ((AggregatedAction)tr.getAction()).getName();
 		
 		output += String.format(" rate_%s(%s) * y(%s)", actionName , stateName , index_start+1 );
 		
