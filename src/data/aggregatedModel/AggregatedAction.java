@@ -8,6 +8,7 @@ import data.general.Group;
 import data.general.JumpVector;
 import data.general.StateDescriptor;
 import data.general.StateVariable;
+import data.originalModel.OriginalAction;
 
 public class AggregatedAction extends Action {
 
@@ -16,7 +17,17 @@ public class AggregatedAction extends Action {
 	private JumpVector jumpVectorMinus;
 	private JumpVector jumpVectorPlus ;
 	
+	private OriginalAction originalAction;
 	
+	
+	public OriginalAction getOriginalAction() {
+		return originalAction;
+	}
+
+	public void setOriginalAction(OriginalAction originalAction) {
+		this.originalAction = originalAction;
+	}
+
 	public boolean isEnabledAt(AggregatedState state){
 		boolean isEnabled = true;
 		

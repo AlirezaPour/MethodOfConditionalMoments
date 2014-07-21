@@ -43,6 +43,8 @@ public class AggregatedState extends State{
 		return this.inwardTransitions;
 	}
 	
+	
+	
 	public void setInwardTransitions(ArrayList<Transition> transitions){
 		this.inwardTransitions = transitions;
 	}

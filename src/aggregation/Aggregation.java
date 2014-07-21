@@ -200,6 +200,7 @@ public class Aggregation {
 		AggregatedAction aggAction = new AggregatedAction();
 		
 		aggAction.setName(action.getName());
+		aggAction.setOriginalAction(action);
 		
 		JumpVector aggJumpVector = new JumpVector();
 		JumpVector aggJumpVectorMinus = new JumpVector();
