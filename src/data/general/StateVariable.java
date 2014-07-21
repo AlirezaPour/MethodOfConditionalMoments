@@ -44,5 +44,9 @@ public class StateVariable {
 		
 	}
 	
+	public String toStringForMatlab(){
+		return group.getName() + "_" + localDerivative.getName();
+	}
+	
 	
 }
