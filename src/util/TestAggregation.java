@@ -48,7 +48,7 @@ public class TestAggregation {
 		System.out.printf("\n\n\nRunning the conditional expectation generator\n\n\n");
 		
 		StateDescriptor stDesLargeGroups = origModel.getStateDescriptorLargeGroups();
-		ConditionalExpectation condExptGenerator = new ConditionalExpectation(origModel,sp, stDesLargeGroups);
+	/*	ConditionalExpectation condExptGenerator = new ConditionalExpectation(origModel,sp, stDesLargeGroups);
 	//	ArrayList<ODEVariable> odeVariables = condExptGenerator.getOdeVariables();
 		String output4 = condExptGenerator.display.showODEVariables();
 		System.out.printf(output4);
@@ -73,6 +73,7 @@ public class TestAggregation {
 		}
 		
 		System.out.printf(output5);
+		*/
 	}
 
 }
