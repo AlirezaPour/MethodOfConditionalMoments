@@ -109,7 +109,7 @@ public class ClientServerModel {
 		int popServerBrok = 0;
 		
 		int popClientThink = 2600 ; 
-		int popClientReq = 260;
+		int popClientReq = 120;
 				
 				
 		// creating the initial state		

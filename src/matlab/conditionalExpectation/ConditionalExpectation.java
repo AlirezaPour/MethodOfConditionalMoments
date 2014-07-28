@@ -39,7 +39,7 @@ public class ConditionalExpectation {
 	double relError = 1e-10;
 	double absError = 1e-6;
 	
-	public ConditionalExpectation(OriginalModel origModel,AggregatedStateSpace ssp, StateDescriptor stDesLargeGroups, AggregatedModel aggModel){
+	public ConditionalExpectation(OriginalModel origModel, StateDescriptor stDesLargeGroups, AggregatedModel aggModel, AggregatedStateSpace ssp){
 		this.origModel = origModel;
 		this.aggModel = aggModel;
 		odeVariables = constructODEVariables(ssp,stDesLargeGroups);
@@ -62,10 +62,12 @@ public class ConditionalExpectation {
 		output += constructTimeParameters(); 
 		output += "\n\n";
 		
-		// initial probability distribution 
-		output += constructInitialConditions() ;
+		// coming from initial probability distribution
+		// here we only put the name of the variables which need to be specified. the modeller
+		// is responsible for putting the right values here. 
+		output += constructInitialValuesODEVariables() ;
 		output += "\n\n";
-				
+	
 		
 		output += "\n\n";
 		output += "end";
@@ -73,44 +75,11 @@ public class ConditionalExpectation {
 		return output;
 	}
 	
-	public String constructInitialConditions(){
 		
-		String output = "";
-		
-		
-		output += constructInitialValuesODEVariablesProbabilities();
-		output += "\n";
-		
-		output += constructInitialValuesODEVariablesConditionalExpectation();
-		output += "\n";
-		
-		/*
-		
-		output += "y0 = [ " ; 
-		
-		ArrayList<AggregatedState> states = aggStateSpace.getExplored();
-		Iterator<AggregatedState> iter = states.iterator();
-		
-		AggregatedState state ; 
-		// first state 
-		state = iter.next();
-		output += "init_prob_st_" + state.getStateId();
-		
-		while(iter.hasNext()){
-			output += " ; " ;
-			state = iter.next();
-			output += "init_prob_st_" + state.getStateId();
-		}
-		
-		output += " ] ;" ;*/
-		
-		return output;
-	}
-	
 	public String constructInitialValuesODEVariables(){
 		
 		String output = "" ;
-		
+
 		for(ODEVariable odeVar : odeVariables){
 			
 			output += constructInitialValueODEVariable(odeVar);
@@ -145,7 +114,7 @@ public class ConditionalExpectation {
 			
 			ODEVariableConditionalExpectation odeVarCon = ((ODEVariableConditionalExpectation)odeVar);
 			
-			output += "init_" + odeVarCon.getName();
+			output += "init_" + odeVarCon.getName() + "=";
 			
 			AggregatedState subchain = odeVarCon.getState();
 			
@@ -499,11 +468,22 @@ public class ConditionalExpectation {
 
 		// initialising the conditional expectation generator
 		StateDescriptor stDesLargeGroups = origModel.getStateDescriptorLargeGroups();
-		ConditionalExpectation condExptGenerator = new ConditionalExpectation(origModel,sp,stDesLargeGroups,aggModel);
+		ConditionalExpectation condExptGenerator = new ConditionalExpectation(origModel,stDesLargeGroups,aggModel,sp);
 		
 		// producing the matlab file
 		String output = condExptGenerator.constructOverallFunction();
 		System.out.printf(output);
+		
+		
+		//-------------------------
+		// Test 1- showing the ODE variables.
+		//-------------------------
+		//String output1 = condExptGenerator.display.showODEVariables();
+		//System.out.printf(output1);
+		
+		
+		
+		
 		
 	}
 
