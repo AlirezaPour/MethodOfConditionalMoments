@@ -3,6 +3,7 @@ package data.originalModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import data.aggregatedModel.AggregatedAction;
 import data.general.Action;
 import data.general.Group;
 import data.general.JumpVector;
@@ -17,7 +18,18 @@ public class OriginalAction extends Action{
 	private JumpVector jumpVectorMinus;
 	private JumpVector jumpVectorPlus ;
 	
+	private AggregatedAction aggregatedVersion;
 	
+	
+	
+	public AggregatedAction getAggregatedVersion() {
+		return aggregatedVersion;
+	}
+
+	public void setAggregatedVersion(AggregatedAction aggregatedVersion) {
+		this.aggregatedVersion = aggregatedVersion;
+	}
+
 	public Integer getImpactOn(StateVariable variable){
 		return jumpVector.get(variable);
 	}
@@ -160,6 +172,47 @@ public class OriginalAction extends Action{
 	
 		return rateExpression;
 	
+	}
+	
+	public String getSymbolicRateOfActionForMatlabConditionalMoments(StateDescriptor descriptor , ArrayList<Group> allGroups){
+		
+		ArrayList<Group> enablingGroups = getEnablingGroups(allGroups);
+		
+		String rateExpression = "";
+
+		Group group;
+		
+		int numberOfCooperatingGroups = enablingGroups.size();
+
+		if (numberOfCooperatingGroups == 1 ){
+		// the action is individual
+			group = enablingGroups.get(0);
+			rateExpression = group.getSymbolicRateOfActionForMatlabConditionalForm(descriptor, this);
+			return rateExpression;
+			
+		}
+		if (numberOfCooperatingGroups > 1 ){
+		// the action is shared			
+			rateExpression = "min( ";
+					
+			Iterator<Group> iter = enablingGroups.iterator();	
+			group = iter.next();
+			rateExpression += group.getSymbolicRateOfActionForMatlabConditionalForm(descriptor, this);
+			
+			while(iter.hasNext()){
+				rateExpression += " , ";
+				group = iter.next();
+				rateExpression += group.getSymbolicRateOfActionForMatlabConditionalForm(descriptor, this);		
+			}
+			
+			rateExpression += " )";
+		}
+		
+
+		
+		
+	
+		return rateExpression;
 	}
 	
 }

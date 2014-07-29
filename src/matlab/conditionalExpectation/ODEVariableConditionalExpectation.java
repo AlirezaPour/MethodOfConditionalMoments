@@ -9,6 +9,8 @@ public class ODEVariableConditionalExpectation extends ODEVariable {
 	private int index ; 
 	private String expression ; 
 	private double initialValue;
+	private AggregatedState state;
+	private StateVariable variable;
 	
 	public double getInitialValue() {
 		return initialValue;
@@ -17,8 +19,7 @@ public class ODEVariableConditionalExpectation extends ODEVariable {
 		this.initialValue = initialValue;
 	}
 
-	private AggregatedState state;
-	private StateVariable variable;
+	
 	
 	
 	

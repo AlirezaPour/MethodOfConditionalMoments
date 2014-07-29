@@ -73,6 +73,26 @@ public class Group {
 		return output; 
 	}
 	
+	public String getSymbolicRateOfActionForMatlabConditionalForm(StateDescriptor descriptor, Action action){
+		String output = "";
+		
+		if (	!(getActions().contains(action))		){
+			return "Not Enabled";
+		}
+		
+		LocalDerivative enablingDerivative = getEnablingLocalDerivative(action);
+		String localRate = enablingDerivative.getSymbolicRateOf(action);
+		
+		//StateVariable variable = descriptor.getCorrespondingStateVariable(this, enablingDerivative);
+		//String varName = variable.toString();
+		
+		String varName = this.getName() + "_" + enablingDerivative.getName() ;
+		
+		output = localRate + " * " + "moments('" + varName + "')" ;
+		
+		return output; 
+	}
+	
 	public LocalDerivative getEnablingLocalDerivative (Action action){
 		
 		for (LocalDerivative derivative : localDerivatives){

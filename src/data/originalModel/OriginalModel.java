@@ -353,4 +353,11 @@ public class OriginalModel{
 		return null;
 	}
 	
+	public ArrayList<Group> getAllGroups(){
+		ArrayList<Group> allGroups = new  ArrayList<Group>();
+		allGroups.addAll(smallGroups);
+		allGroups.addAll(largeGroups);
+		return allGroups;
+	}
+	
 }

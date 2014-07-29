@@ -149,8 +149,7 @@ public class MarginalDistribution {
 		return output;
 	}
 
-	public String constructDerivativeFunction(
-			ArrayList<AggregatedState> states, AggregatedState state) {
+	public String constructDerivativeFunction(	ArrayList<AggregatedState> states, AggregatedState state) {
 		String output = String.format("dydt(%d)=", states.indexOf(state) + 1);
 
 		String outflux = constructDerivativeFunctionOutfluxTerms(states, state);

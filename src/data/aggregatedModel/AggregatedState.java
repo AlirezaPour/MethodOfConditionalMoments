@@ -3,6 +3,8 @@ package data.aggregatedModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import matlab.conditionalExpectation.ODEVariableProbability;
+
 import data.general.Transition;
 import data.general.Group;
 import data.general.State;
@@ -18,6 +20,9 @@ public class AggregatedState extends State{
 	private ArrayList<AggregatedState> reachableStates;
 	
 	private ArrayList<Transition> inwardTransitions ;
+	
+	// this ode variable captures the probability of being in this state.
+	private ODEVariableProbability odeVariableProbability;
 	
 	public AggregatedState(StateDescriptor desciptor){
 
@@ -159,6 +164,15 @@ public class AggregatedState extends State{
 
 	public void setStateIdentifier(String stateIdentifier) {
 		this.stateIdentifier = stateIdentifier;
+	}
+
+	public ODEVariableProbability getOdeVariableProbability() {
+		return odeVariableProbability;
+	}
+
+	public void setOdeVariableProbability(
+			ODEVariableProbability odeVariableProbability) {
+		this.odeVariableProbability = odeVariableProbability;
 	}
 
 	

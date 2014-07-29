@@ -57,6 +57,10 @@ public class ConditionalExpectation {
 		// definition of aggregated states
 		output += "\n\n";
 		output +=  constructStatesMaps(); 
+	
+		// the key for the odes capturing the conditional moments
+		output += constructKeyMomentsForOneSubChain();
+		output += "\n\n";
 		
 		// time information
 		output += constructTimeParameters(); 
@@ -68,6 +72,24 @@ public class ConditionalExpectation {
 		output += constructInitialValuesODEVariables() ;
 		output += "\n\n";
 	
+		// options for running the solver.
+		output += constructSolverOptions();
+		output += "\n\n";
+		
+		// running solver
+		output += runSolverStatement();
+		output += "\n\n";
+		
+		// apparent rate functions
+		output += constructKeyMomentsForOneSubChain();
+		output += "\n\n";
+		
+		output += constructApparentRateFunctions();
+		output += "\n\n";
+		
+		// derivative functions
+		output += constructDerivativeFunction();
+		output += "\n\n";
 		
 		output += "\n\n";
 		output += "end";
@@ -75,11 +97,313 @@ public class ConditionalExpectation {
 		return output;
 	}
 	
+	public String constructDerivativeFunction(){
+		String output = "function dydt = derivatives(t,y) \n\n ";
+
+		output += String.format("\tdydt = zeros(%d,1);", odeVariables.size());
+		output += "\n\n";
+
+		// for each derivative variable, this construct one expression. 
+		constructDerivativeExpressions();
 		
+		Iterator<ODEVariable> iter = odeVariables.iterator();
+		
+		ODEVariable var ;
+		String expression;
+		
+		// next states
+		while (iter.hasNext()) {
+			
+			var = iter.next();
+			// currently only the probability ode variables are supported.
+			if (var instanceof ODEVariableProbability){
+				output += "\t";
+				expression = ((ODEVariableProbability)var).getExpression();
+				output += expression + " ; " ;
+				output += "\n";
+			}
+									
+		}
+
+		output += "\n";
+
+		output += "end";
+
+		return output;
+		
+	}
+	
+	public void constructDerivativeExpressions(){
+		
+		String expression;
+		
+		for (ODEVariable variable : odeVariables){
+			
+			if (variable instanceof ODEVariableProbability){
+				expression = constructDerivativeExpression((ODEVariableProbability)variable);
+				((ODEVariableProbability)variable).setExpression(expression);
+			}
+			
+			if(variable instanceof ODEVariableConditionalExpectation){
+				expression = constructDerivativeExpression((ODEVariableConditionalExpectation)variable);
+				((ODEVariableConditionalExpectation)variable).setExpression(expression);
+			}
+			
+		}
+		
+	}
+	
+	public String constructDerivativeExpression(ODEVariableProbability variable){
+		
+		String output = "";
+		
+		//AggregatedState state = variable.getState();
+		
+		output += String.format("dydt(%d) = ",variable.getIndex());
+		
+		String outflux = constructDerivativeFunctionProbabilityVariableOutflux(variable);
+		
+		String influx = constructDerivativeFunctionProbabilityVariableInflux(variable);
+		
+		output = outflux + influx ;
+		
+		return output;
+		
+	}
+	
+	public String constructDerivativeFunctionProbabilityVariableInflux(ODEVariableProbability variable){
+		
+		String output = "";
+		
+		AggregatedState state = variable.getState();
+		
+		ArrayList<Transition> transitions = state.getInwardTransitions();
+		
+		for(Transition transition : transitions){
+			output += " +" + constructDerivativeFunctionProbabilityVariableInflux(variable,transition);
+		}
+		
+		return output;
+		
+	}
+	
+	public String constructDerivativeFunctionProbabilityVariableInflux(ODEVariableProbability variable, Transition transition){
+		
+		String output =" ";
+		
+		
+		// get the start. get the index of the variable which capture the probability of the starting state.
+		AggregatedState state = (AggregatedState) transition.getStart();
+		int startIndex = state.getOdeVariableProbability().getIndex();		
+		
+		String stateName = "st" + startIndex;
+		String actionName = ((AggregatedAction) transition.getAction()).getName();
+		
+		
+		output += String.format(" rate_%s(%s) * y(%s)", actionName, stateName,
+				startIndex);
+		
+		return output;
+		
+	}
+	
+	
+	public String constructDerivativeFunctionProbabilityVariableOutflux(ODEVariableProbability variable){
+		String output = "";
+		
+		AggregatedState state = variable.getState();
+		
+		ArrayList<Transition> transitions = aggStateSpace.getOutgoingTransitionBank().get(state);
+		
+		for (Transition transition : transitions){
+			output += " -" + constructDerivativeFunctionProbabilityVariableOutFlux(variable,transition); 
+		}
+		
+		return output;
+	}
+	
+	public String constructDerivativeFunctionProbabilityVariableOutFlux(ODEVariableProbability variable,Transition transition){
+		
+		String output = "";
+		
+		int index = variable.getIndex();
+		String stateName = "st" + index;
+		String actionName = ((AggregatedAction) transition.getAction()).getName();
+		
+		output += String.format(" rate_%s(%s) * y(%s)", actionName,stateName,index);
+		
+		return output;
+		
+	}
+	
+	public String constructDerivativeFunctionProbabilityVariableInFlux(ODEVariableProbability variable){
+		String output = "";
+		return output;
+	}
+	
+	public String constructDerivativeExpression(ODEVariableConditionalExpectation variable){
+		
+		String output = "";
+		
+		return output;
+		
+	}
+	
+	public String runSolverStatement(){
+		String output = "[t,y] = ode15s(@derivatives,tspan,y0,options);";
+		return output;
+	}
+	
+	public String constructKeyMomentsForOneSubChain(){
+		
+		String output = "conditionals_key = { " ;
+		
+		AggregatedState aggState = aggStateSpace.getExplored().get(0);
+		ArrayList<ODEVariableConditionalExpectation> conditionals = construOdeVariableConditionalExpectations(aggState, origModel.getStateDescriptorLargeGroups(), null);
+		Iterator<ODEVariableConditionalExpectation> iter = conditionals.iterator();
+		
+		// first variable.
+		ODEVariableConditionalExpectation conditional =  iter.next();
+		StateVariable stateVariable = conditional.getVariable();
+		String name = stateVariable.toStringForMatlab();
+		
+		output += "'" ;
+		output+= name;
+		output += "'";
+		
+		while(iter.hasNext()){
+			
+			output += " , ";
+			
+			conditional = iter.next();
+			
+			stateVariable = conditional.getVariable();
+			name = stateVariable.toStringForMatlab();
+			
+			output += "'" ;
+			output+= name;
+			output += "'";
+			
+		}
+		
+		
+		output += " } ;";
+		
+		return output;
+		
+	}
+	
+	public String constructApparentRateFunctions() {
+
+		// actionsSmall and actionsSmallAndLarge.
+		String output = "";
+
+		for (OriginalAction action : origModel.getActionsSmall()) {
+			output += constructApparentRateFunctionSmall(action);
+			output += "\n\n";
+		}
+		
+		for (OriginalAction action : origModel.getActionsSmallAndLarge()) {
+			output += constructApparentRateFunctionSmallAndLarge(action);
+			output += "\n\n";
+		}
+		
+		ArrayList<OriginalAction> actionsLarge = origModel.getActionsLarge();
+		for (OriginalAction action : actionsLarge){
+			output += constructApparentRateFunctionlLarge(action);
+			output += "\n\n";
+		}
+		
+		return output;
+	}
+	
+	public String constructApparentRateFunctionlLarge(OriginalAction action){
+				
+		String output = "function  rate = rate_";
+
+		output += action.getName() + "(moments)";
+		output += "\n\n";
+
+		output += "\tst_conditionals = containers.Map(conditionals_key,moments) ; " ; 
+		output += "\n\n";
+		
+		output += String.format(	"\trate = ( %s ) ;\n"	,	action.getSymbolicRateOfActionForMatlabConditionalMoments(	origModel.getStateDescriptor()	,	 origModel.getLargeGroups()	)	);
+
+		output += "\n";
+		output += "end";
+
+		return output;
+		
+		
+		
+	}
+	
+	public String constructApparentRateFunctionSmallAndLarge(OriginalAction action) {
+		// the rate expression should be produced by the aggregated model and not the original one.
+
+		String output = "function  rate = rate_";
+
+		output += action.getName() + "(state)";
+		output += "\n\n";
+
+		AggregatedAction aggAction = action.getAggregatedVersion();
+		
+		
+		
+		output += String.format(	"\trate = ( %s ) ;\n"	,	aggAction.getSymbolicRateOfActionForMatlab(	aggModel.getAggStateDescriptor()	,	 aggModel.getGroups()	)	);
+
+		output += "\n";
+		output += "end";
+
+		return output;
+
+	}
+	
+	public String constructApparentRateFunctionSmall(OriginalAction action) {
+
+		String output = "function  rate = rate_";
+
+		output += action.getName() + "(state)";
+		output += "\n\n";
+
+		output += String.format(	"\trate = ( %s ) ;\n"	,	action.getSymbolicRateOfActionForMatlab(	origModel.getStateDescriptor()	,	 origModel.getAllGroups()	)	);
+
+		output += "\n";
+		output += "end";
+
+		return output;
+
+	}
+
+	
+	public String constructSolverOptions(){
+		
+		String output = "";
+		output += String.format(
+				"options=odeset('Mass',@mass,'RelTol',%s,'AbsTol',%s);",
+				Double.toString(relError), absErrorVector());
+		return output;
+		
+	}
+	
+	public String absErrorVector() {
+
+		String output = "[";
+
+		for (ODEVariable var : odeVariables) {
+			output += Double.toString(absError);
+			output += " ";
+		}
+
+		output += "]";
+		return output;
+	}
+	
 	public String constructInitialValuesODEVariables(){
 		
 		String output = "" ;
 
+		// introducing the initial values in the matlab file.
 		for(ODEVariable odeVar : odeVariables){
 			
 			output += constructInitialValueODEVariable(odeVar);
@@ -87,10 +411,66 @@ public class ConditionalExpectation {
 	
 		}
 		
+		// constructing the vector of initial values in matlab.
+		output += "\n\n";
+		output += "y0 = [ " ; 
+		
+		
+		Iterator<ODEVariable> iter = odeVariables.iterator();
+		ODEVariable var;
+		
+		// first variable.
+		var = iter.next();
+		if(var instanceof ODEVariableProbability){
+			output += "init_" + ((ODEVariableProbability)var).getName();
+		}
+		if(var instanceof ODEVariableConditionalExpectation){
+			output += "init_" + ((ODEVariableConditionalExpectation)var).getName();
+		}
+
+		if (iter.hasNext()){
+			output += "  ;  ";
+		}
+		
+		if(var instanceof ODEVariableProbability){
+			output += "     % index " + ((ODEVariableProbability)var).getIndex();
+		}
+		if(var instanceof ODEVariableConditionalExpectation){
+			output += "     % index " + ((ODEVariableConditionalExpectation)var).getIndex();
+		}
+		
+		 
+		// next variables.
+		while(iter.hasNext()){
+			
+			var = iter.next();
+			
+			output += "\n";
+			
+			if(var instanceof ODEVariableProbability){
+				output += "init_" + ((ODEVariableProbability)var).getName();
+			}
+			if(var instanceof ODEVariableConditionalExpectation){
+				output += "init_" + ((ODEVariableConditionalExpectation)var).getName();
+			}
+
+			if (iter.hasNext()){
+				output += "  ;  ";
+			}
+			
+			if(var instanceof ODEVariableProbability){
+				output += "   %   index " + ((ODEVariableProbability)var).getIndex();
+			}
+			if(var instanceof ODEVariableConditionalExpectation){
+				output += "   %   index " + ((ODEVariableConditionalExpectation)var).getIndex();
+			}
+		}
+		
+		output += "   ]  ;";
+		
 		return output;
 		
 	}
-	
 	
 	public String constructInitialValueODEVariable(ODEVariable odeVar){
 		
@@ -103,9 +483,9 @@ public class ConditionalExpectation {
 			aggState = ((ODEVariableProbability) odeVar).getState();
 			
 			if (aggState.equals(aggModel.getAggInitialState())){
-				output += "=1";	
+				output += " = 1 ;";	
 			}else{
-				output += "=0";
+				output += " = 0 ;";
 			}
 			
 		}
@@ -114,7 +494,7 @@ public class ConditionalExpectation {
 			
 			ODEVariableConditionalExpectation odeVarCon = ((ODEVariableConditionalExpectation)odeVar);
 			
-			output += "init_" + odeVarCon.getName() + "=";
+			output += "init_" + odeVarCon.getName() + " = ";
 			
 			AggregatedState subchain = odeVarCon.getState();
 			
@@ -124,7 +504,7 @@ public class ConditionalExpectation {
 				output += value.toString() + ";" ;
 			}
 			else{
-				output += "0";
+				output += " 0 ; ";
 			}
 			
 		}
@@ -220,7 +600,6 @@ public class ConditionalExpectation {
 			
 		}
 			
-		
 		return odeVariables;
 		
 	}
@@ -239,9 +618,12 @@ public class ConditionalExpectation {
 			
 			odeVar = new ODEVariableConditionalExpectation();
 			
-			indexer.increaseIndex();
-			index = indexer.getIndex();
-			odeVar.setIndex(index);
+			if (indexer != null){
+				indexer.increaseIndex();
+				index = indexer.getIndex();
+				odeVar.setIndex(index);	
+			}
+			
 			
 			varName = "con_E_"+ variable.toStringForMatlab() + "_st_" + state.getStateId() ;
 			odeVar.setName(varName);
@@ -280,6 +662,7 @@ public class ConditionalExpectation {
 			odeVar.setName(name);
 			
 			odeVar.setState(state);
+			state.setOdeVariableProbability(odeVar);
 			
 			odeVariables.add(odeVar);
 			
@@ -472,7 +855,7 @@ public class ConditionalExpectation {
 		
 		// producing the matlab file
 		String output = condExptGenerator.constructOverallFunction();
-		System.out.printf(output);
+		System.out.println(output);
 		
 		
 		//-------------------------
