@@ -3,6 +3,7 @@ package data.aggregatedModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import matlab.conditionalExpectation.ODEVariableConditionalExpectation;
 import matlab.conditionalExpectation.ODEVariableProbability;
 
 import data.general.Transition;
@@ -23,6 +24,7 @@ public class AggregatedState extends State{
 	
 	// this ode variable captures the probability of being in this state.
 	private ODEVariableProbability odeVariableProbability;
+	private ArrayList<ODEVariableConditionalExpectation> odeVariablesConditionalExpectation;
 	
 	public AggregatedState(StateDescriptor desciptor){
 
@@ -35,6 +37,8 @@ public class AggregatedState extends State{
 		
 		inwardTransitions = new ArrayList<Transition>();
 		
+		odeVariablesConditionalExpectation = new ArrayList<ODEVariableConditionalExpectation>();
+		
 	}
 	
 	public AggregatedState() {
@@ -42,6 +46,8 @@ public class AggregatedState extends State{
 		reachableStates = new ArrayList<AggregatedState>();
 		inwardTransitions = new ArrayList<Transition>();
 		
+		odeVariablesConditionalExpectation = new ArrayList<ODEVariableConditionalExpectation>();
+
 	}
 	
 	public ArrayList<Transition> getInwardTransitions(){
@@ -173,6 +179,15 @@ public class AggregatedState extends State{
 	public void setOdeVariableProbability(
 			ODEVariableProbability odeVariableProbability) {
 		this.odeVariableProbability = odeVariableProbability;
+	}
+
+	public ArrayList<ODEVariableConditionalExpectation> getOdeVariablesConditionalExpectation() {
+		return odeVariablesConditionalExpectation;
+	}
+
+	public void setOdeVariablesConditionalExpectation(
+			ArrayList<ODEVariableConditionalExpectation> odeVariablesConditionalExpectation) {
+		this.odeVariablesConditionalExpectation = odeVariablesConditionalExpectation;
 	}
 
 	

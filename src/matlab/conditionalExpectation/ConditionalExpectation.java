@@ -91,10 +91,54 @@ public class ConditionalExpectation {
 		output += constructDerivativeFunction();
 		output += "\n\n";
 		
+		// mass function
+		output += constructMassFunction();
+		output += "\n\n";
+		
 		output += "\n\n";
 		output += "end";
 		
 		return output;
+	}
+	
+	
+	public String constructMassFunction() {
+
+		String output = "function M = mass(t,y)";
+		output += "\n\n";
+
+		int numberOfVariables = odeVariables.size();
+		
+		output += String.format("\tM = zeros(%d,%d);", numberOfVariables , numberOfVariables);
+		output += "\n";
+
+		for (ODEVariable variable : odeVariables) {
+
+			if (variable instanceof ODEVariableProbability){
+				
+				ODEVariableProbability varProbability = (ODEVariableProbability) variable;
+				
+				int index = varProbability.getIndex();
+				
+				output += String.format("\tM(%d,%d)=1;\n", index, index);
+				
+			}
+			
+			if(variable instanceof ODEVariableConditionalExpectation){
+				ODEVariableConditionalExpectation varConditional = (ODEVariableConditionalExpectation) variable;
+				
+				int index = varConditional.getIndex();
+				int indexSubchain = varConditional.getState().getOdeVariableProbability().getIndex();
+				output += String.format("\tM(%d,%d)=y(%d);\n", index, index, indexSubchain);
+				
+			}		
+			
+		}
+
+		output += "\n";
+		output += "end";
+		return output;
+
 	}
 	
 	public String constructDerivativeFunction(){
@@ -109,19 +153,29 @@ public class ConditionalExpectation {
 		Iterator<ODEVariable> iter = odeVariables.iterator();
 		
 		ODEVariable var ;
-		String expression;
+		String expression = "";
 		
 		// next states
 		while (iter.hasNext()) {
 			
 			var = iter.next();
 			// currently only the probability ode variables are supported.
+			
+			output += "\t";
+			
+			
 			if (var instanceof ODEVariableProbability){
-				output += "\t";
+				output += String.format("dydt(%d) = ",((ODEVariableProbability)var).getIndex());
 				expression = ((ODEVariableProbability)var).getExpression();
-				output += expression + " ; " ;
-				output += "\n";
 			}
+			
+			if (var instanceof ODEVariableConditionalExpectation){
+				output += String.format("dydt(%d) = ",((ODEVariableConditionalExpectation)var).getIndex());
+				expression = ((ODEVariableConditionalExpectation)var).getExpression();
+			}
+			
+			output += expression + " ; " ;
+			output += "\n";
 									
 		}
 
@@ -159,13 +213,13 @@ public class ConditionalExpectation {
 		
 		//AggregatedState state = variable.getState();
 		
-		output += String.format("dydt(%d) = ",variable.getIndex());
+		//output += String.format("dydt(%d) = ",variable.getIndex());
 		
 		String outflux = constructDerivativeFunctionProbabilityVariableOutflux(variable);
 		
 		String influx = constructDerivativeFunctionProbabilityVariableInflux(variable);
 		
-		output = outflux + influx ;
+		output += outflux + influx ;
 		
 		return output;
 		
@@ -245,8 +299,265 @@ public class ConditionalExpectation {
 		
 		String output = "";
 		
+		// the flow out of the moment due to the probability outflux from the related aggregated state.
+		output += constructConditionalMomentOutfluxDueToProbabilityOutflux(variable);
+		
+		// the flow out of the moment due to the outward Small and Small&Large transitions leaving the associated aggregated state.
+		output += constructConditionalMomentOutfluxDueToOutwardTransitions(variable);
+		
+		// the flow into the conditional moment due to the inward transitions enabled by ActionSmall and ActionSmallAndLarge
+		output += constructConditionalMomentInfluxDueToInwardTransitions(variable);
+		
+		// the flow into the conditional moment due to inward transition enabled by ActionsSmallLarge
+		output += constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(variable);
+		
+		// the flow into the conditional moment due to inward transitions enabled by ActionsLarge
+		output += constructConditionalMomentInfluxDueToInwardLargeOnlyTransitions(variable);
+		
+		
 		return output;
 		
+	}
+	
+	
+	public String constructConditionalMomentInfluxDueToInwardLargeOnlyTransitions(ODEVariableConditionalExpectation variable){
+		
+		String output = "";
+		
+		ArrayList<OriginalAction> allLargeActions = origModel.getActionsLarge();
+		
+		for(OriginalAction action : allLargeActions){
+			output += " + " ;
+			output += constructConditionalMomentInfluxDueToInwardLargeOnlyTransitions(variable,action);
+		}
+		
+		return output;
+		
+	}
+	
+	public String constructConditionalMomentInfluxDueToInwardLargeOnlyTransitions(ODEVariableConditionalExpectation variable, OriginalAction action){
+		
+		String output = "";
+		
+		AggregatedState state = variable.getState();
+		int probabilityIndex = state.getOdeVariableProbability().getIndex();
+		output += String.format("y(%d)", probabilityIndex);
+		
+		output += " * ";
+		
+		StateVariable stateVariable = variable.getVariable();
+		int impact = action.getImpactOn(stateVariable);
+		output += String.format("(%d)", impact);
+		
+		output += " * " ; 
+		
+		String conditionalMoments = getConditionalMomentsOf(state);
+	
+		output += String.format("rate_%s(%s)",action.getName(),conditionalMoments);
+		
+		return output;
+		
+	}
+	
+	public String getConditionalMomentsOf(AggregatedState state){
+		
+		String output = "{";
+		
+		ArrayList<ODEVariableConditionalExpectation> conditionalExpectationVariables = state.getOdeVariablesConditionalExpectation();
+		
+		Iterator<ODEVariableConditionalExpectation> iter = conditionalExpectationVariables.iterator();
+		
+		ODEVariableConditionalExpectation variable;
+		
+		while(iter.hasNext()){
+
+			variable = iter.next();
+			
+			int index = variable.getIndex();
+			
+			output += String.format("y(%d)",index );
+			
+			if (iter.hasNext()){
+				output += " , ";
+			}
+		}
+		
+		output += "}";
+		
+		return output;
+	}
+	
+	public String constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(ODEVariableConditionalExpectation variable){
+	
+		String output = "";
+		
+		// filter the transitions into the associated aggregated state which are enabled by A_{sl} transitions
+		AggregatedState aggState = variable.getState();
+		
+		ArrayList<Transition> relevantTransitions = filterInwardTransitionsSmallLarge(aggState);
+		
+		for(Transition transition : relevantTransitions){
+			
+			output += " + " ;
+			
+			output += constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(variable, transition);
+			
+		}
+		
+		
+		return output;
+		
+	}
+	
+	public String constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(ODEVariableConditionalExpectation odeVariable, Transition transition){
+		
+		String output = "";
+		
+		StateVariable stateVariable = odeVariable.getVariable();
+		
+		AggregatedAction aggAction = (AggregatedAction) transition.getAction();
+		OriginalAction origAction = aggAction.getOriginalAction();
+		
+		int impactOnStateVariable = origAction.getImpactOn(stateVariable);
+		
+		AggregatedState aggState = odeVariable.getState();
+		
+		int probability_index = aggState.getOdeVariableProbability().getIndex();
+		
+		String actionName = aggAction.getName();
+		String stateName =String.format("st%d" , probability_index); 
+
+		output += String.format("y(%d) * rate_%s(%s) * ( %d ) ", probability_index,actionName,stateName, impactOnStateVariable);
+		
+		return output;
+		
+	}
+
+	public String constructConditionalMomentInfluxDueToInwardTransitions(ODEVariableConditionalExpectation variable){
+		
+		String output = "";
+		
+		AggregatedState aggState = variable.getState();
+		
+		ArrayList<Transition> inwardTransitions = aggState.getInwardTransitions();
+		
+		Iterator<Transition> iter = inwardTransitions.iterator();
+		
+		Transition transition;
+		
+		while(iter.hasNext()){
+			
+			transition = iter.next();
+			
+			output += " + ";
+			
+			output += constructConditionalMomentInfluxDueToInwardTransitions(variable,transition);
+			
+		}
+		
+		
+		return output;
+		
+	}
+	
+	public String constructConditionalMomentInfluxDueToInwardTransitions(ODEVariableConditionalExpectation variable, Transition transition){
+		
+		String output = "";
+		
+		AggregatedState state = (AggregatedState) transition.getStart();
+		
+		int start_index = state.getOdeVariableProbability().getIndex();
+		
+		String stateName = String.format("st%d",start_index);
+		
+		String actionName = ((AggregatedAction) transition.getAction()).getName();
+		
+		output += String.format(" rate_%s(%s) * y(%s)", actionName, stateName,
+				start_index);	
+		
+		return output;
+		
+	}
+	
+	public String constructConditionalMomentOutfluxDueToOutwardTransitions(ODEVariableConditionalExpectation variable){
+		
+		String output = "";
+		
+		AggregatedState aggState = variable.getState();
+		
+		
+		output += " - " ;
+		
+		int index_subchain = aggState.getOdeVariableProbability().getIndex();
+		output += String.format("y(%d)",index_subchain);
+		
+		output += " * " ;
+		
+		int index_odeVariable = variable.getIndex();
+		output += String.format("y(%d)",index_odeVariable);
+		
+		output += " * " ;
+		
+		// outward transitions.
+			
+		ArrayList<Transition> outwardTransitions = aggStateSpace.getOutgoingTransitionBank().get(aggState);
+		Iterator<Transition> iter = outwardTransitions.iterator();
+		
+		Transition transition;
+		
+		output += "( ";
+		
+		while(iter.hasNext()){
+			
+			transition = iter.next();
+									
+			output += constructConditionalMomentOutfluxDueToOutwardTransitions(variable,transition) ;
+			
+			if (iter.hasNext()){
+				output += " + " ;
+			}
+			
+		}
+		
+		output += ")";
+		
+		return output;
+		
+	}
+	
+	public String constructConditionalMomentOutfluxDueToOutwardTransitions(ODEVariableConditionalExpectation variable , Transition transition){
+		
+		String output = "";
+		
+	
+		
+		String stateName = "st" + variable.getIndex();
+		String actionName =  ((AggregatedAction) transition.getAction()).getName();
+		
+		output += String.format(" rate_%s(%s)", actionName, stateName);
+		
+		
+		
+		return output;
+	}
+	
+	public String constructConditionalMomentOutfluxDueToProbabilityOutflux(ODEVariableConditionalExpectation variable){
+		
+		String output = "";
+		
+		output += "-" ;
+		
+		// the first part: change in the probability of being in the related sub-chain
+		output += " ( " ;
+		String probabilityChangeExpression = variable.getState().getOdeVariableProbability().getExpression();
+		output += probabilityChangeExpression;
+		output += " ) " ; 
+		
+		output += " * " ;
+		
+		output += String.format("y(%d)", variable.getIndex());
+				
+		return output;
 	}
 	
 	public String runSolverStatement(){
@@ -629,6 +940,7 @@ public class ConditionalExpectation {
 			odeVar.setName(varName);
 			
 			odeVar.setState(state);
+			state.getOdeVariablesConditionalExpectation().add(odeVar);
 			
 			odeVar.setVariable(variable);
 			
