@@ -88,7 +88,7 @@ public class Group {
 		
 		String varName = this.getName() + "_" + enablingDerivative.getName() ;
 		
-		output = localRate + " * " + "moments('" + varName + "')" ;
+		output = localRate + " * " + "state_conditionals('" + varName + "')" ;
 		
 		return output; 
 	}

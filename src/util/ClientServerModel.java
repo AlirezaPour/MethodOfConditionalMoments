@@ -266,8 +266,8 @@ public class ClientServerModel {
 		thinkJumpVector.put(Si, 0);
 		thinkJumpVector.put(Sl, 0);
 		thinkJumpVector.put(Sb, 0);
-		thinkJumpVector.put(Ct, +1);
-		thinkJumpVector.put(Cr, -1);
+		thinkJumpVector.put(Ct, -1);
+		thinkJumpVector.put(Cr, +1);
 						
 		think.setJumpVector(thinkJumpVector);
 					

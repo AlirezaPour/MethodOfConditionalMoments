@@ -80,10 +80,9 @@ public class ConditionalExpectation {
 		output += runSolverStatement();
 		output += "\n\n";
 		
-		// apparent rate functions
-		output += constructKeyMomentsForOneSubChain();
-		output += "\n\n";
+		output += "%---------------------------------------------------------\n\n";
 		
+		// apparent rate functions	
 		output += constructApparentRateFunctions();
 		output += "\n\n";
 		
@@ -175,7 +174,7 @@ public class ConditionalExpectation {
 			}
 			
 			output += expression + " ; " ;
-			output += "\n";
+			output += "\n\n";
 									
 		}
 
@@ -224,7 +223,7 @@ public class ConditionalExpectation {
 		return output;
 		
 	}
-	
+				   
 	public String constructDerivativeFunctionProbabilityVariableInflux(ODEVariableProbability variable){
 		
 		String output = "";
@@ -241,6 +240,7 @@ public class ConditionalExpectation {
 		
 	}
 	
+	
 	public String constructDerivativeFunctionProbabilityVariableInflux(ODEVariableProbability variable, Transition transition){
 		
 		String output =" ";
@@ -254,7 +254,7 @@ public class ConditionalExpectation {
 		String actionName = ((AggregatedAction) transition.getAction()).getName();
 		
 		
-		output += String.format(" rate_%s(%s) * y(%s)", actionName, stateName,
+		output += String.format("( rate_%s(%s) * y(%s) )", actionName, stateName,
 				startIndex);
 		
 		return output;
@@ -275,7 +275,7 @@ public class ConditionalExpectation {
 		
 		return output;
 	}
-	
+				   
 	public String constructDerivativeFunctionProbabilityVariableOutFlux(ODEVariableProbability variable,Transition transition){
 		
 		String output = "";
@@ -284,16 +284,13 @@ public class ConditionalExpectation {
 		String stateName = "st" + index;
 		String actionName = ((AggregatedAction) transition.getAction()).getName();
 		
-		output += String.format(" rate_%s(%s) * y(%s)", actionName,stateName,index);
+		output += String.format(" ( rate_%s(%s) * y(%s) )", actionName,stateName,index);
 		
 		return output;
 		
 	}
 	
-	public String constructDerivativeFunctionProbabilityVariableInFlux(ODEVariableProbability variable){
-		String output = "";
-		return output;
-	}
+	
 	
 	public String constructDerivativeExpression(ODEVariableConditionalExpectation variable){
 		
@@ -301,18 +298,23 @@ public class ConditionalExpectation {
 		
 		// the flow out of the moment due to the probability outflux from the related aggregated state.
 		output += constructConditionalMomentOutfluxDueToProbabilityOutflux(variable);
+		output += "\n\t\t";
 		
 		// the flow out of the moment due to the outward Small and Small&Large transitions leaving the associated aggregated state.
 		output += constructConditionalMomentOutfluxDueToOutwardTransitions(variable);
+		output += "\n\t\t";
 		
 		// the flow into the conditional moment due to the inward transitions enabled by ActionSmall and ActionSmallAndLarge
 		output += constructConditionalMomentInfluxDueToInwardTransitions(variable);
+		output += "\n\t\t";
 		
 		// the flow into the conditional moment due to inward transition enabled by ActionsSmallLarge
 		output += constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(variable);
+		output += "\n\t\t";
 		
 		// the flow into the conditional moment due to inward transitions enabled by ActionsLarge
 		output += constructConditionalMomentInfluxDueToInwardLargeOnlyTransitions(variable);
+		
 		
 		
 		return output;
@@ -417,14 +419,14 @@ public class ConditionalExpectation {
 		
 		AggregatedAction aggAction = (AggregatedAction) transition.getAction();
 		OriginalAction origAction = aggAction.getOriginalAction();
-		
+		String actionName = aggAction.getName();
+	
+		// impact
 		int impactOnStateVariable = origAction.getImpactOn(stateVariable);
 		
-		AggregatedState aggState = odeVariable.getState();
-		
+		// probability index of the transition's start state
+		AggregatedState aggState = (AggregatedState) transition.getStart();
 		int probability_index = aggState.getOdeVariableProbability().getIndex();
-		
-		String actionName = aggAction.getName();
 		String stateName =String.format("st%d" , probability_index); 
 
 		output += String.format("y(%d) * rate_%s(%s) * ( %d ) ", probability_index,actionName,stateName, impactOnStateVariable);
@@ -465,23 +467,39 @@ public class ConditionalExpectation {
 		String output = "";
 		
 		AggregatedState state = (AggregatedState) transition.getStart();
-		
 		int start_index = state.getOdeVariableProbability().getIndex();
-		
 		String stateName = String.format("st%d",start_index);
 		
 		String actionName = ((AggregatedAction) transition.getAction()).getName();
 		
-		output += String.format(" rate_%s(%s) * y(%s)", actionName, stateName,
-				start_index);	
+		StateVariable stateVariable = variable.getVariable();
+		ODEVariableConditionalExpectation relatedVariable = getODEVariableInSubChain(state, stateVariable);
+		int index_conditional_start = relatedVariable.getIndex();
+		
+		output += String.format("( y(%s) * rate_%s(%s) * y(%d) )", start_index,actionName, stateName, index_conditional_start);	
 		
 		return output;
 		
 	}
 	
+	public ODEVariableConditionalExpectation getODEVariableInSubChain(AggregatedState aggState, StateVariable fStateVariable){
+		
+		ArrayList<ODEVariableConditionalExpectation> allODEVariables = aggState.getOdeVariablesConditionalExpectation();
+		
+		StateVariable stateVariable;
+		for(ODEVariableConditionalExpectation odeVariable : allODEVariables){
+			stateVariable = odeVariable.getVariable();
+			if (stateVariable.equals(fStateVariable)){
+				return odeVariable;
+			}
+		}
+		
+		return null;
+	}
+	
 	public String constructConditionalMomentOutfluxDueToOutwardTransitions(ODEVariableConditionalExpectation variable){
 		
-		String output = "";
+		String output = " (";
 		
 		AggregatedState aggState = variable.getState();
 		
@@ -519,7 +537,12 @@ public class ConditionalExpectation {
 			
 		}
 		
-		output += ")";
+		// for the last transitoin.
+		output += " )";
+		
+		// for the end of the expression. 
+		output += " )";
+		
 		
 		return output;
 		
@@ -529,9 +552,10 @@ public class ConditionalExpectation {
 		
 		String output = "";
 		
-	
+		AggregatedState state = variable.getState();
+		int indexSubchain = state.getOdeVariableProbability().getIndex();
 		
-		String stateName = "st" + variable.getIndex();
+		String stateName = "st" + indexSubchain;
 		String actionName =  ((AggregatedAction) transition.getAction()).getName();
 		
 		output += String.format(" rate_%s(%s)", actionName, stateName);
@@ -545,7 +569,7 @@ public class ConditionalExpectation {
 		
 		String output = "";
 		
-		output += "-" ;
+		output += "( -" ;
 		
 		// the first part: change in the probability of being in the related sub-chain
 		output += " ( " ;
@@ -556,6 +580,8 @@ public class ConditionalExpectation {
 		output += " * " ;
 		
 		output += String.format("y(%d)", variable.getIndex());
+		
+		output += " ) ";
 				
 		return output;
 	}
@@ -570,7 +596,8 @@ public class ConditionalExpectation {
 		String output = "conditionals_key = { " ;
 		
 		AggregatedState aggState = aggStateSpace.getExplored().get(0);
-		ArrayList<ODEVariableConditionalExpectation> conditionals = construOdeVariableConditionalExpectations(aggState, origModel.getStateDescriptorLargeGroups(), null);
+		//ArrayList<ODEVariableConditionalExpectation> conditionals = construOdeVariableConditionalExpectations(aggState, origModel.getStateDescriptorLargeGroups(), null);
+		ArrayList<ODEVariableConditionalExpectation> conditionals = aggState.getOdeVariablesConditionalExpectation();
 		Iterator<ODEVariableConditionalExpectation> iter = conditionals.iterator();
 		
 		// first variable.
@@ -635,7 +662,7 @@ public class ConditionalExpectation {
 		output += action.getName() + "(moments)";
 		output += "\n\n";
 
-		output += "\tst_conditionals = containers.Map(conditionals_key,moments) ; " ; 
+		output += "\tstate_conditionals = containers.Map(conditionals_key,moments) ; " ; 
 		output += "\n\n";
 		
 		output += String.format(	"\trate = ( %s ) ;\n"	,	action.getSymbolicRateOfActionForMatlabConditionalMoments(	origModel.getStateDescriptor()	,	 origModel.getLargeGroups()	)	);
@@ -940,7 +967,8 @@ public class ConditionalExpectation {
 			odeVar.setName(varName);
 			
 			odeVar.setState(state);
-			state.getOdeVariablesConditionalExpectation().add(odeVar);
+			ArrayList<ODEVariableConditionalExpectation> exisitingConVariables = state.getOdeVariablesConditionalExpectation();
+			exisitingConVariables.add(odeVar);
 			
 			odeVar.setVariable(variable);
 			

@@ -20,9 +20,6 @@ public class ODEVariableConditionalExpectation extends ODEVariable {
 	}
 
 	
-	
-	
-	
 	public AggregatedState getState() {
 		return state;
 	}
@@ -55,6 +52,9 @@ public class ODEVariableConditionalExpectation extends ODEVariable {
 	}
 	 
 	public String toString(){
-		return "CondExp_" + state.getStateId() + variable.toString() ;
+		//return "CondExp_" + variable.toString() + "_st" + state.getStateId() ;
+		return this.getName();
 	}
+	
+	
 }
