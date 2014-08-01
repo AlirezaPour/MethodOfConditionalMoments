@@ -1,10 +1,10 @@
 function marginal_distribution_conditional_expectation
 
-r_f = 11 ;
-r_l = 5 ;
-r_t = 13 ;
-r_b = 7 ;
-r_s = 2 ;
+r_f = 8.0E-4 ;
+r_l = 250.0 ;
+r_t = 3.0 ;
+r_b = 3.0E-4 ;
+r_s = 100.0 ;
 
 
 k={'Servers_Server_idle' , 'Servers_Server_log' , 'Servers_Server_brk'};
@@ -54,15 +54,15 @@ u_con_E_Clients_Client_req_st_3 = ? ;
 init_con_E_Clients_Client_req_st_3 =  ( u_con_E_Clients_Client_req_st_3 )  /  ( init_prob_st_3 )  ; 
 
 
-y0 = [ init_prob_st_1  ;       % index 1
-init_prob_st_2  ;     %   index 2
-init_prob_st_3  ;     %   index 3
-init_con_E_Clients_Client_think_st_1  ;     %   index 4
-init_con_E_Clients_Client_req_st_1  ;     %   index 5
-init_con_E_Clients_Client_think_st_2  ;     %   index 6
-init_con_E_Clients_Client_req_st_2  ;     %   index 7
-init_con_E_Clients_Client_think_st_3  ;     %   index 8
-init_con_E_Clients_Client_req_st_3   %   index 9  
+y0 = [ 	init_prob_st_1  ;       % index 1
+	init_prob_st_2  ;     %   index 2
+	init_prob_st_3  ;     %   index 3
+	init_con_E_Clients_Client_think_st_1  ;     %   index 4
+	init_con_E_Clients_Client_req_st_1  ;     %   index 5
+	init_con_E_Clients_Client_think_st_2  ;     %   index 6
+	init_con_E_Clients_Client_req_st_2  ;     %   index 7
+	init_con_E_Clients_Client_think_st_3  ;     %   index 8
+	init_con_E_Clients_Client_req_st_3   %   index 9  
 	 ]  ;
 
 options=odeset('Mass',@mass,'RelTol',1.0E-10,'AbsTol',[1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 1.0E-6 ]);

@@ -34,7 +34,7 @@ public class OriginalModel{
 	private ArrayList<Group> largeGroups; 
 	private ArrayList<Group> smallGroups;
 	
-	private HashMap<String, Integer> constants;
+	private HashMap<String, Double> constants;
 	
 	private Display display;
 	
@@ -53,7 +53,7 @@ public class OriginalModel{
 						  	ArrayList<OriginalAction> actions, 
 						  	ArrayList<Group> largeGroups,
 						  	ArrayList<Group> smallGroups,
-						  	HashMap<String, Integer> constants)   {
+						  	HashMap<String, Double> constants)   {
 		this.localDerivatives = localDerivatives;
 		this.initialState = initialState;
 		this.actions = actions;
@@ -321,11 +321,11 @@ public class OriginalModel{
 		this.stateDescriptorLargeGroups = stateDescriptorLargeGroups;
 	}
 
-	public HashMap<String, Integer> getConstants() {
+	public HashMap<String, Double> getConstants() {
 		return constants;
 	}
 
-	public void setConstants(HashMap<String, Integer> constants) {
+	public void setConstants(HashMap<String, Double> constants) {
 		this.constants = constants;
 	}
 

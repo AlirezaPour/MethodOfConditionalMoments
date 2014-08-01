@@ -914,7 +914,7 @@ public class ConditionalExpectation {
 		// logic 
 		// for each aggregated state construct one initial condition condition for its ODEVariableProbability. 
 		// for each aggregated state, and each ODEVariableConditionalExpectation, construct one initial value
-		String output = "Initial conditions associate with time point, t = ? \n" ;
+		String output = "% Initial conditions associate with time point, t = ? \n" ;
 
 		// introducing the initial values in the matlab file.
 		output += constructInitialValueODEVariables();
@@ -931,10 +931,10 @@ public class ConditionalExpectation {
 		// first variable.
 		var = iter.next();
 		if(var instanceof ODEVariableProbability){
-			output += "init_" + ((ODEVariableProbability)var).getName();
+			output += "\tinit_" + ((ODEVariableProbability)var).getName();
 		}
 		if(var instanceof ODEVariableConditionalExpectation){
-			output += "init_" + ((ODEVariableConditionalExpectation)var).getName();
+			output += "\tinit_" + ((ODEVariableConditionalExpectation)var).getName();
 		}
 
 		if (iter.hasNext()){
@@ -957,10 +957,10 @@ public class ConditionalExpectation {
 			output += "\n";
 			
 			if(var instanceof ODEVariableProbability){
-				output += "init_" + ((ODEVariableProbability)var).getName();
+				output += "\tinit_" + ((ODEVariableProbability)var).getName();
 			}
 			if(var instanceof ODEVariableConditionalExpectation){
-				output += "init_" + ((ODEVariableConditionalExpectation)var).getName();
+				output += "\tinit_" + ((ODEVariableConditionalExpectation)var).getName();
 			}
 
 			if (iter.hasNext()){
@@ -1159,21 +1159,21 @@ public class ConditionalExpectation {
 		
 		String output = "";
 		
-		HashMap<String, Integer> constants = origModel.getConstants();
+		HashMap<String, Double> constants = origModel.getConstants();
 		
 		Iterator<String> names = constants.keySet().iterator();
 		
 		String name; 
-		int value;
+		double value;
 		
 		while(names.hasNext()){
 			
 			name = names.next();
 			
-			value = constants.get(name).intValue();
+			value = constants.get(name);
 			
 			if (!(name.equals("passive"))){
-				output += name + " = " +  Integer.toString(value) + " ;\n";
+				output += name + " = " +  Double.toString(value) + " ;\n";
 			}
 			
 		}
@@ -1503,6 +1503,11 @@ public class ConditionalExpectation {
 		//-------------------------
 		//String output1 = condExptGenerator.display.showODEVariables();
 		//System.out.printf(output1);
+		
+		/*data.originalModel.Display origDisplay = origModel.getDisplay();
+		String outputmodel =  origDisplay.showModel();
+		System.out.println(outputmodel);*/
+		
 		
 		
 		

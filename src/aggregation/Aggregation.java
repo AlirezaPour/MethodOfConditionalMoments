@@ -33,7 +33,7 @@ public class Aggregation {
 			
 		aggModel = new AggregatedModel();		
 		
-		HashMap<String, Integer> constants = constructConstants(originalModel);
+		HashMap<String, Double> constants = constructConstants(originalModel);
 		aggModel.setConstants(constants);
 		
 		ArrayList<Group> groups = constructGroups(originalModel);
@@ -293,8 +293,8 @@ public class Aggregation {
 		
 	}
 	
-	public HashMap<String, Integer> constructConstants(OriginalModel originalModel){
-		HashMap<String, Integer> constants = originalModel.getConstants();
+	public HashMap<String, Double> constructConstants(OriginalModel originalModel){
+		HashMap<String, Double> constants = originalModel.getConstants();
 		return constants;
 	}
 	

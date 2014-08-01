@@ -21,7 +21,7 @@ public class AggregatedModel{
 	
 	private Display display;
 	
-	private HashMap<String, Integer> constants;
+	private HashMap<String, Double> constants;
 	
 	
 	public Display getDisplay (){
@@ -36,7 +36,7 @@ public class AggregatedModel{
 							AggregatedState initialState,
 							ArrayList<AggregatedAction> actions,
 							ArrayList<Group> groups,
-							HashMap<String, Integer> constants)	 {
+							HashMap<String, Double> constants)	 {
 		this.stateDescriptor = stateDescriptor;
 		this.initialState = initialState;
 		this.actions = actions;
@@ -51,11 +51,11 @@ public class AggregatedModel{
 		display = new Display(this);
 	}
 	
-	public HashMap<String, Integer> getConstants() {
+	public HashMap<String, Double> getConstants() {
 		return constants;
 	}
 
-	public void setConstants(HashMap<String, Integer> constants) {
+	public void setConstants(HashMap<String, Double> constants) {
 		this.constants = constants;
 	}
 

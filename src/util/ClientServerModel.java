@@ -19,20 +19,20 @@ public class ClientServerModel {
 	public static OriginalModel getClientServerModel(){
 		
 		// the constants
-		HashMap<String, Integer> constants = new HashMap<String,Integer>();
-		constants.put("r_s", 2);
-		constants.put("r_l", 5);
-		constants.put("r_b", 7);
-		constants.put("r_f", 11);
-		constants.put("r_t", 13);
-		constants.put("passive",1000);
+		HashMap<String, Double> constants = new HashMap<String,Double>();
+		constants.put("r_s", 100.0);
+		constants.put("r_l", 250.0);
+		constants.put("r_b", 0.0003);
+		constants.put("r_f", 0.0008);
+		constants.put("r_t", 3.0);
+		constants.put("passive",1000.0);
 				
-		double r_s = 2  ; 
-		double r_l = 5  ; 
-		double r_b = 7  ; 
-		double r_f = 11 ;
-		double r_t = 13 ; 
-		double passive = 1000.0;
+		double r_s = 100.0  ; 
+		double r_l = 250.0  ; 
+		double r_b = 0.0003  ; 
+		double r_f = 0.0008 ;
+		double r_t = 1000.0 ; 
+		double passive = 10000.0;
 				
 		// initialising local derivates
 		ArrayList<LocalDerivative> localDerivatives = new ArrayList<LocalDerivative>();
