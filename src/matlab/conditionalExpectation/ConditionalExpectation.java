@@ -1,5 +1,7 @@
 package matlab.conditionalExpectation;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,6 +47,22 @@ public class ConditionalExpectation {
 		odeVariables = constructODEVariables(ssp,stDesLargeGroups);
 		this.aggStateSpace = ssp;
 		display = new Display(this);
+	}
+	
+	public void storeMatlabFile() {
+		String content = constructOverallFunction();
+
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("conditional_expectation_generated.m");
+		} catch (FileNotFoundException e) {
+			System.out.printf("\n\nCould not save marginal_distribution.m");
+			e.printStackTrace();
+		}
+
+		out.println(content);
+		out.close();
+
 	}
 	
 	public String constructOverallFunction(){
@@ -94,12 +112,156 @@ public class ConditionalExpectation {
 		output += constructMassFunction();
 		output += "\n\n";
 		
+		// plots
+		output += constructPlots();
+		output += "\n\n";
+		
+		// save to csv
+		output += constructSaveToCSV();
+		output += "\n\n";
+		
+		
 		output += "\n\n";
 		output += "end";
 		
 		return output;
 	}
 	
+	public String constructSaveToCSV(){
+		
+		String output = "for i=1:length(t)";
+		output += "\n";
+
+		output += String.format("\toutput(i,1) = t(i);");
+		output += "\n";
+
+		output += "end";
+		output += "\n\n";
+
+		for (	ODEVariable odeVariable : odeVariables	) {
+			
+			if (odeVariable instanceof ODEVariableProbability){
+				output += constructSaveToCSV((ODEVariableProbability) odeVariable);
+			}
+			if(odeVariable instanceof ODEVariableConditionalExpectation){
+				output += constructSaveToCSV((ODEVariableConditionalExpectation) odeVariable);
+			}
+			
+			output += "\n\n";
+		}
+
+		return output;
+	}
+	
+	
+	public String constructSaveToCSV(ODEVariableProbability odeVariable) {
+		
+		String output = "for i=1:length(t)";
+		output += "\n";
+
+		int index = odeVariable.getIndex();
+		
+		output += String.format("\toutput(i,2) = y(i,%d);", index);
+		output += "\n";
+
+		output += "end";
+		output += "\n";
+
+		output += String.format("csvwrite('%s.dat',output);", odeVariable.getName(), index);
+
+		return output;
+		
+	}
+	
+	
+	public String constructSaveToCSV(ODEVariableConditionalExpectation odeVariable) {
+		
+		String output = "for i=1:length(t)";
+		output += "\n";
+
+		int index = odeVariable.getIndex();
+		
+		output += String.format("\toutput(i,2) = y(i,%d);", index);
+		output += "\n";
+
+		output += "end";
+		output += "\n";
+
+		output += String.format("csvwrite('MCM_Analysis_Output/%s.dat',output);", odeVariable.getName(), index);
+
+		return output;
+		
+	}
+
+	
+	public String constructPlots() {
+		
+		String output = "";
+
+		for (ODEVariable odeVariable : odeVariables) {
+			
+			if (odeVariable instanceof ODEVariableProbability){
+				output += constructPlot((ODEVariableProbability)odeVariable);
+			}
+			
+			if (odeVariable instanceof ODEVariableConditionalExpectation){
+				output += constructPlot((ODEVariableConditionalExpectation)odeVariable);
+			}
+		
+			output += "\n\n";
+		}
+
+		return output;
+	}
+	
+	public String constructPlot(ODEVariableProbability odeVariable) {
+		
+		String output = "figure;";
+		output += "\n";
+
+		int index = odeVariable.getIndex();
+		
+		output += String.format(
+				"plot(t,y(:,%d),'-b','DisplayName','%s')",
+				index, odeVariable.getName());
+		output += "\n";
+
+		output += "legend('-DynamicLegend');";
+		output += "\n";
+
+		output += "legend('Location', 'BestOutside');";
+		output += "\n";
+
+		output += "grid on;";
+
+		return output;
+		
+	}
+	
+	public String constructPlot(ODEVariableConditionalExpectation odeVariable){
+		
+		String output = "figure;";
+		output += "\n";
+
+		int index = odeVariable.getIndex();
+		
+		output += String.format(
+				"plot(t,y(:,%d),'-b','DisplayName','%s')",
+				index, odeVariable.getName());
+		output += "\n";
+
+		output += "legend('-DynamicLegend');";
+		output += "\n";
+
+		output += "legend('Location', 'BestOutside');";
+		output += "\n";
+
+		output += "grid on;";
+
+		return output;
+		
+	}
+
 	
 	public String constructMassFunction() {
 
@@ -298,19 +460,30 @@ public class ConditionalExpectation {
 		
 		// the flow out of the moment due to the probability outflux from the related aggregated state.
 		output += constructConditionalMomentOutfluxDueToProbabilityOutflux(variable);
-		output += "\n\t\t";
+		output += " ...\n\t\t";
+		
 		
 		// the flow out of the moment due to the outward Small and Small&Large transitions leaving the associated aggregated state.
 		output += constructConditionalMomentOutfluxDueToOutwardTransitions(variable);
-		output += "\n\t\t";
+		output += " ...\n\t\t";
 		
 		// the flow into the conditional moment due to the inward transitions enabled by ActionSmall and ActionSmallAndLarge
 		output += constructConditionalMomentInfluxDueToInwardTransitions(variable);
-		output += "\n\t\t";
+		output += " ...\n\t\t";
+		
 		
 		// the flow into the conditional moment due to inward transition enabled by ActionsSmallLarge
-		output += constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(variable);
-		output += "\n\t\t";
+		String partialInflux =constructConditionalMomentPartialInfluxDueToInwardActSLTransitions(variable);
+		if (partialInflux.equals("")){
+			
+			output += " + 0";
+		}
+		else{
+			output += partialInflux;
+		}
+		
+		output += " ...\n\t\t";
+		
 		
 		// the flow into the conditional moment due to inward transitions enabled by ActionsLarge
 		output += constructConditionalMomentInfluxDueToInwardLargeOnlyTransitions(variable);
@@ -499,7 +672,7 @@ public class ConditionalExpectation {
 	
 	public String constructConditionalMomentOutfluxDueToOutwardTransitions(ODEVariableConditionalExpectation variable){
 		
-		String output = " (";
+		String output = " + (";
 		
 		AggregatedState aggState = variable.getState();
 		
@@ -738,17 +911,15 @@ public class ConditionalExpectation {
 	}
 	
 	public String constructInitialValuesODEVariables(){
-		
-		String output = "" ;
+		// logic 
+		// for each aggregated state construct one initial condition condition for its ODEVariableProbability. 
+		// for each aggregated state, and each ODEVariableConditionalExpectation, construct one initial value
+		String output = "Initial conditions associate with time point, t = ? \n" ;
 
 		// introducing the initial values in the matlab file.
-		for(ODEVariable odeVar : odeVariables){
-			
-			output += constructInitialValueODEVariable(odeVar);
-			output += "\n";
+		output += constructInitialValueODEVariables();
+		output += "\n";
 	
-		}
-		
 		// constructing the vector of initial values in matlab.
 		output += "\n\n";
 		output += "y0 = [ " ; 
@@ -804,51 +975,168 @@ public class ConditionalExpectation {
 			}
 		}
 		
-		output += "   ]  ;";
+		output += "  \n\t ]  ;";
 		
 		return output;
 		
 	}
 	
-	public String constructInitialValueODEVariable(ODEVariable odeVar){
+	public ArrayList<ODEVariable> getTail(ArrayList<ODEVariable> list){
+	
+		ArrayList<ODEVariable> tail = new ArrayList<ODEVariable>(); ;
+		ODEVariable item;
 		
-		String output = "";
-		AggregatedState aggState;
+		int size = list.size();
 		
-		if (odeVar instanceof ODEVariableProbability){
+		if (size == 1){
+			// return an empty list.
+			return tail;
+		}
+		
+		if (size > 1){
 			
-			output += "init_" + ((ODEVariableProbability)odeVar).getName();
-			aggState = ((ODEVariableProbability) odeVar).getState();
-			
-			if (aggState.equals(aggModel.getAggInitialState())){
-				output += " = 1 ;";	
-			}else{
-				output += " = 0 ;";
+			for (int i = 1; i <= size-1 ; i++){
+				
+				item = list.get(i);
+				
+				tail.add(item);
 			}
 			
 		}
 		
-		else if ( odeVar instanceof ODEVariableConditionalExpectation	){
+		return tail;
+	
+	}
+	
+	public String constructInitialValueODEVariables(){
+		
+		String output = "";
+		
+		output += constructInitialValueODEVariablesProbabilities();
+		
+		output += "\n";
 			
-			ODEVariableConditionalExpectation odeVarCon = ((ODEVariableConditionalExpectation)odeVar);
+		output += constructInitialValueODEVariablesConditionalExpectation();
 			
-			output += "init_" + odeVarCon.getName() + " = ";
-			
-			AggregatedState subchain = odeVarCon.getState();
-			
-			if (subchain.equals(aggModel.getAggInitialState())){
-				StateVariable variable = odeVarCon.getVariable();
-				Integer value = origModel.getInitialState().get(variable);
-				output += value.toString() + ";" ;
-			}
-			else{
-				output += " 0 ; ";
-			}
+		
+		
+		
+		return output;
+		
+	}
+	
+	public String constructInitialValueODEVariablesConditionalExpectation(){
+		
+		String output = "";
+		
+		ArrayList<AggregatedState> aggStates = aggStateSpace.getExplored();
+		
+		for (AggregatedState aggState : aggStates){
+			output += "\n\n";
+			output += constructInitialValueODEVariablesConditionalExpectation(aggState);
 			
 		}
 		
 		return output;
+	}
+	
+	public String constructInitialValueODEVariablesConditionalExpectation(AggregatedState state){
+		String output = "";
 		
+		ArrayList<ODEVariableConditionalExpectation> conditionalExpectations = state.getOdeVariablesConditionalExpectation();
+		
+		for (ODEVariableConditionalExpectation varCon : conditionalExpectations){
+			output += "\n";
+			output += constructInitialValueODEVariablesConditionalExpectation(state,varCon);
+		}
+		
+		return output;
+	}
+	
+	public String constructInitialValueODEVariablesConditionalExpectation(AggregatedState state , ODEVariableConditionalExpectation varCon){
+		
+		String output = "";
+		
+		
+		
+		
+		
+		return output;
+		
+	}
+	
+	public String constructInitialValueODEVariablesProbabilities(){
+		String output = "";
+		
+		for (AggregatedState state : aggStateSpace.getExplored()){
+			output += "\n";
+			output += constructInitialValueODEVariablesProbabilities(state);
+		}
+		return output;
+	}
+	
+	public String constructInitialValueODEVariablesProbabilities(AggregatedState state){
+		
+		String output = "";
+		
+		ODEVariableProbability odeVar = state.getOdeVariableProbability();
+		
+		output += "init_" + odeVar.getName();
+		AggregatedState aggState = odeVar.getState();
+		
+		if (aggState.equals(aggModel.getAggInitialState())){
+			output += " = 1 ;";	
+		}else{
+			output += " = 0 ;";
+		}
+		
+		return output ;
+		
+	}
+	
+	public String constructInitialValueConditionalExpectationODEVariables(ArrayList<ODEVariable> odeVars){
+		
+		String output = "";
+		
+		// base case- check if this is empty.
+		if (odeVars.isEmpty()){
+			return "";
+		}
+		
+		output += "\n";
+		
+		// process the head.
+		ODEVariableConditionalExpectation head = (ODEVariableConditionalExpectation) odeVars.get(0);
+		output += constructInitialValueConditionalExpectationODEVariable (head);
+		
+		// process the tail
+		ArrayList<ODEVariable> tail = getTail(odeVars);
+		return output + constructInitialValueConditionalExpectationODEVariables(tail);
+		
+	}
+	
+	public String constructInitialValueConditionalExpectationODEVariable(ODEVariableConditionalExpectation odeVarCon){
+		String output = "";
+		
+		output += "init_" + odeVarCon.getName() + " = ";
+		
+		AggregatedState subchain = odeVarCon.getState();
+		
+		if (subchain.equals(aggModel.getAggInitialState())){
+			StateVariable variable = odeVarCon.getVariable();
+			Integer value = origModel.getInitialState().get(variable);
+			output += value.toString() + ";" ;
+		}
+		else{
+			output += " 0 ; ";
+		}
+		
+		return output;
+	}
+	
+	public String constructInitialValueODEVariable(ODEVariableProbability odeVar){
+		
+		return "";
 	}
 	
 	public String constructTimeParameters(){
@@ -1196,6 +1484,8 @@ public class ConditionalExpectation {
 		// producing the matlab file
 		String output = condExptGenerator.constructOverallFunction();
 		System.out.println(output);
+		
+		condExptGenerator.storeMatlabFile();
 		
 		
 		//-------------------------
