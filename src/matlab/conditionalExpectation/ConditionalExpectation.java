@@ -1046,7 +1046,7 @@ public class ConditionalExpectation {
 		ArrayList<ODEVariableConditionalExpectation> conditionalExpectations = state.getOdeVariablesConditionalExpectation();
 		
 		for (ODEVariableConditionalExpectation varCon : conditionalExpectations){
-			output += "\n";
+			output += "\n\n";
 			output += constructInitialValueODEVariablesConditionalExpectation(state,varCon);
 		}
 		
@@ -1057,9 +1057,19 @@ public class ConditionalExpectation {
 		
 		String output = "";
 		
+		String unconditional_name = "u_" + varCon.getName();
 		
+		output += unconditional_name ;
+		output += " = ? ;";
+		output += "\n";
 		
+
+		String name = "init_"+ varCon.getName();
+		output += name ;
 		
+		output += " = " ;
+		
+		output += " ( " + unconditional_name + " ) " + " / " + " ( " + "init_" + state.getOdeVariableProbability().getName() + " ) " + " ; ";
 		
 		return output;
 		

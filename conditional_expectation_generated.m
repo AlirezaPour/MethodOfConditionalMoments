@@ -30,6 +30,30 @@ init_prob_st_3 = 0 ;
 
 
 
+
+u_con_E_Clients_Client_think_st_1 = ? ;
+init_con_E_Clients_Client_think_st_1 =  ( u_con_E_Clients_Client_think_st_1 )  /  ( init_prob_st_1 )  ; 
+
+u_con_E_Clients_Client_req_st_1 = ? ;
+init_con_E_Clients_Client_req_st_1 =  ( u_con_E_Clients_Client_req_st_1 )  /  ( init_prob_st_1 )  ; 
+
+
+
+u_con_E_Clients_Client_think_st_2 = ? ;
+init_con_E_Clients_Client_think_st_2 =  ( u_con_E_Clients_Client_think_st_2 )  /  ( init_prob_st_2 )  ; 
+
+u_con_E_Clients_Client_req_st_2 = ? ;
+init_con_E_Clients_Client_req_st_2 =  ( u_con_E_Clients_Client_req_st_2 )  /  ( init_prob_st_2 )  ; 
+
+
+
+u_con_E_Clients_Client_think_st_3 = ? ;
+init_con_E_Clients_Client_think_st_3 =  ( u_con_E_Clients_Client_think_st_3 )  /  ( init_prob_st_3 )  ; 
+
+u_con_E_Clients_Client_req_st_3 = ? ;
+init_con_E_Clients_Client_req_st_3 =  ( u_con_E_Clients_Client_req_st_3 )  /  ( init_prob_st_3 )  ; 
+
+
 y0 = [ init_prob_st_1  ;       % index 1
 init_prob_st_2  ;     %   index 2
 init_prob_st_3  ;     %   index 3
