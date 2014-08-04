@@ -22,11 +22,11 @@ public class ClientServerAggregatedModel {
 		
 		// the constants
 		
-		HashMap<String, Integer> constants = new HashMap<String,Integer>();
-		constants.put("r_s", 2);
-		constants.put("r_l", 5);
-		constants.put("r_b", 7);
-		constants.put("r_f", 11);
+		HashMap<String, Double> constants = new HashMap<String,Double>();
+		constants.put("r_s", 2.0);
+		constants.put("r_l", 5.0);
+		constants.put("r_b", 7.0);
+		constants.put("r_f", 11.0);
 		
 		double r_s = 2  ; 
 		double r_l = 5  ; 

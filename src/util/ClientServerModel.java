@@ -104,12 +104,12 @@ public class ClientServerModel {
 		descriptor.add(Ct);
 
 		// setting the populations in initial state 
-		int popServerIdle = 1 ; 
+		int popServerIdle = 2 ; 
 		int popServerLog = 0; 
 		int popServerBrok = 0;
 		
-		int popClientThink = 2600 ; 
-		int popClientReq = 120;
+		int popClientThink = 150 ; 
+		int popClientReq = 0;
 				
 				
 		// creating the initial state		
