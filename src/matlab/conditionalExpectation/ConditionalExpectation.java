@@ -167,7 +167,7 @@ public class ConditionalExpectation {
 		output += "end";
 		output += "\n";
 
-		output += String.format("csvwrite('%s.dat',output);", odeVariable.getName(), index);
+		output += String.format("csvwrite('MCM_Analysis_Output/%s.dat',output);", odeVariable.getName(), index);
 
 		return output;
 		
@@ -1151,7 +1151,9 @@ public class ConditionalExpectation {
 	
 	public String constructTimeParameters(){
 		String output = "";
-		output += String.format("tspan = linspace(%f,%f,%d);", initialTime,endTime,numberOfPoints); 
+		output += "% initial distribution associated with time t=? \n";
+		output += "time_initial_distribution = ? ;\n";
+		output += String.format("tspan = linspace(time_initial_distribution,%f,%d);", endTime,numberOfPoints); 
 		return output; 
 	}
 	
