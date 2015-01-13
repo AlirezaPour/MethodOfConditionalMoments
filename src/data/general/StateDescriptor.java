@@ -10,7 +10,6 @@ public class StateDescriptor extends ArrayList<StateVariable>{
 
 	
 	
-	
 	// for a given group and local derivative, what is the associated state variable constructed? 
 	public StateVariable getCorrespondingStateVariable (Group fgroup, LocalDerivative fderivative){
 		

@@ -11,15 +11,14 @@ public class LocalDerivative {
 	String name ;
 	
 	// this represents the action types that the local derivative enables.
+	
 	HashMap<Action, Double> actionRates;
 	
 	HashMap<Action, String > parameterNames;
 	
 	public void setParameterNames(HashMap<Action, String> parameterNames) {
 		this.parameterNames = parameterNames;
-	}
-
-	
+	}	
 	
 	public HashMap<Action, String> getParameterNames(){
 		return this.parameterNames;

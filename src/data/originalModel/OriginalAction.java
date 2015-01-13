@@ -125,9 +125,6 @@ public class OriginalAction extends Action{
 		}
 		
 
-		
-		
-	
 		return rateExpression;
 	
 	}
