@@ -29,7 +29,7 @@ public class TwoTierNetworkOriginalModel {
 		
 		
 		// macro-cell
-		constants.put("r_stream_wcu_femto_1_macro_nr", 0.2);
+		constants.put("r_stream_wcu_femto_1_macro_po", 0.2);
 		constants.put("r_stream_wcu_femto_2_macro_po", 0.2);
 
 		// users near femto-1
@@ -82,7 +82,7 @@ public class TwoTierNetworkOriginalModel {
 		double r_send_femto_1_nr = 20.0 ;
 		double r_send_femto_1_po = 10.0 ;
 
-		double r_wcu_femto_1_process= 0.1;
+		double r_process_wcu_femto_1= 0.1;
 
 		// users near femto-2
 		double r_process_scu_femto_2 =  5.0;
@@ -90,7 +90,7 @@ public class TwoTierNetworkOriginalModel {
 		double r_send_femto_2_nr=  20.0;
 		double r_send_femto_2_po =  10.0;
 
-		double r_wcu_femto_2_process = 0.1;
+		double r_process_wcu_femto_2 = 0.1;
 
 		// femto-1
 		double r_stream_femto_1_nr =  2.5;
@@ -501,180 +501,2883 @@ public class TwoTierNetworkOriginalModel {
 		//////////////////////////////////////////
 		// constructing the actions.
 		/////////////////////////////////////////
+		
 		ArrayList<OriginalAction> actions = new ArrayList<OriginalAction>();
 
-		// creating the action request 
-		OriginalAction request = new OriginalAction();
-		request.setName("request");
+		
+		
+		//////////////////////////////////////////////
+		// Action: near_proc 
+		//////////////////////////////////////////////
+		
+		OriginalAction near_proc = new OriginalAction();
+		near_proc.setName("near_proc");
 
-		JumpVector reqJumpVector = new JumpVector();
-		reqJumpVector.put(Si, -1);
-		reqJumpVector.put(Sl, +1);
-		reqJumpVector.put(Sb, 0);
-		reqJumpVector.put(Ct, +1);
-		reqJumpVector.put(Cr, -1);
+		JumpVector near_proc_JumpVector = new JumpVector();
 
-		request.setJumpVector(reqJumpVector);
+		near_proc_JumpVector.put(var_user_near_processing , -1 ) ;
+		near_proc_JumpVector.put(var_user_near_sending , +1 ) ;
+		near_proc_JumpVector.put(var_ldcq_0 ,0 );
+		near_proc_JumpVector.put(var_ldcq_1 ,0 );
+		near_proc_JumpVector.put(var_ch_macro_idle ,0 );
+		near_proc_JumpVector.put(var_scu_femto_1_processing , 0);
+		near_proc_JumpVector.put(var_scu_femto_1_sending ,0 );
+		near_proc_JumpVector.put(var_wcu_femto_1_processing , 0);
+		near_proc_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		near_proc_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		near_proc_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		near_proc_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		near_proc_JumpVector.put(var_ch_femto_1_idle , 0);
+		near_proc_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		near_proc_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		near_proc_JumpVector.put(var_scu_femto_2_processing ,0 );
+		near_proc_JumpVector.put(var_scu_femto_2_sending ,0 );
+		near_proc_JumpVector.put(var_wcu_femto_2_processing , 0);
+		near_proc_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		near_proc_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		near_proc_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		near_proc_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		near_proc_JumpVector.put(var_ch_femto_2_idle , 0);
+		near_proc_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		near_proc_JumpVector.put(var_wcuq_femto_2_1 , 0);
+		
+		near_proc.setJumpVector(near_proc_JumpVector);
 
-		JumpVector reqJumpVectorMinus = new JumpVector();
-		reqJumpVectorMinus.put(Si, 1);
-		reqJumpVectorMinus.put(Sl, 0);
-		reqJumpVectorMinus.put(Sb, 0);
-		reqJumpVectorMinus.put(Ct, 0);
-		reqJumpVectorMinus.put(Cr, 1);
+		JumpVector near_proc_JumpVectorMinus = new JumpVector();
+		
+		near_proc_JumpVectorMinus.put(var_user_near_processing , 1 ) ;
+		near_proc_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		near_proc_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		near_proc_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		near_proc_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		near_proc_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		near_proc_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		near_proc_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		near_proc_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		near_proc_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		near_proc_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
 
-		request.setJumpVectorMinus(reqJumpVectorMinus);
+		near_proc.setJumpVectorMinus(near_proc_JumpVectorMinus);
 
-		JumpVector reqJumpVectorPlus = new JumpVector();
-		reqJumpVectorPlus.put(Si, 0);
-		reqJumpVectorPlus.put(Sl, +1);
-		reqJumpVectorPlus.put(Sb, 0);
-		reqJumpVectorPlus.put(Ct, +1);
-		reqJumpVectorPlus.put(Cr, 0);
+		JumpVector near_proc_JumpVectorPlus = new JumpVector();
+		
+		near_proc_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		near_proc_JumpVectorMinus.put(var_user_near_sending , +1 ) ;
+		near_proc_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		near_proc_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		near_proc_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		near_proc_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		near_proc_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		near_proc_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		near_proc_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		near_proc_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		near_proc_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		near_proc_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		near_proc_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+		
+		near_proc.setJumpVectorPlus(near_proc_JumpVectorPlus);
 
-		request.setJumpVectorPlus(reqJumpVectorPlus);
-
-		actions.add(request);
-
-
-		// creating the action log 
-		OriginalAction log = new OriginalAction();
-		log.setName("log");
-
-		JumpVector logJumpVector = new JumpVector();
-		logJumpVector.put(Si, +1);
-		logJumpVector.put(Sl, -1);
-		logJumpVector.put(Sb, 0);
-		logJumpVector.put(Ct, 0);
-		logJumpVector.put(Cr, 0);
-
-		log.setJumpVector(logJumpVector);
-
-		JumpVector logJumpVectorMinus = new JumpVector();
-		logJumpVectorMinus.put(Si, 0);
-		logJumpVectorMinus.put(Sl, 1);
-		logJumpVectorMinus.put(Sb, 0);
-		logJumpVectorMinus.put(Ct, 0);
-		logJumpVectorMinus.put(Cr, 0);
-
-		log.setJumpVectorMinus(logJumpVectorMinus);
-
-		JumpVector logJumpVectorPlus = new JumpVector();
-		logJumpVectorPlus.put(Si, 1);
-		logJumpVectorPlus.put(Sl, 0);
-		logJumpVectorPlus.put(Sb, 0);
-		logJumpVectorPlus.put(Ct, 0);
-		logJumpVectorPlus.put(Cr, 0);
-
-		log.setJumpVectorPlus(logJumpVectorPlus);
-
-		actions.add(log);
-
-		// creating the action brk 
-		OriginalAction brk = new OriginalAction();
-		brk.setName("break");
-
-		JumpVector brkJumpVector = new JumpVector();
-		brkJumpVector.put(Si, -1);
-		brkJumpVector.put(Sl, 0);
-		brkJumpVector.put(Sb, +1);
-		brkJumpVector.put(Ct, 0);
-		brkJumpVector.put(Cr, 0);
-
-		brk.setJumpVector(brkJumpVector);
-
-		JumpVector brkJumpVectorMinus = new JumpVector();
-		brkJumpVectorMinus.put(Si, 1);
-		brkJumpVectorMinus.put(Sl, 0);
-		brkJumpVectorMinus.put(Sb, 0);
-		brkJumpVectorMinus.put(Ct, 0);
-		brkJumpVectorMinus.put(Cr, 0);
-
-		brk.setJumpVectorMinus(brkJumpVectorMinus);
-
-		JumpVector brkJumpVectorPlus = new JumpVector();
-		brkJumpVectorPlus.put(Si, 0);
-		brkJumpVectorPlus.put(Sl, 0);
-		brkJumpVectorPlus.put(Sb, 1);
-		brkJumpVectorPlus.put(Ct, 0);
-		brkJumpVectorPlus.put(Cr, 0);
-
-		brk.setJumpVectorPlus(brkJumpVectorPlus);
-
-		actions.add(brk);
-
-		// creating the action fix 
-		OriginalAction fix = new OriginalAction();
-		fix.setName("fix");
-
-		JumpVector fixJumpVector = new JumpVector();
-		fixJumpVector.put(Si, +1);
-		fixJumpVector.put(Sl, 0);
-		fixJumpVector.put(Sb, -1);
-		fixJumpVector.put(Ct, 0);
-		fixJumpVector.put(Cr, 0);
-
-		fix.setJumpVector(fixJumpVector);
-
-		JumpVector fixJumpVectorMinus = new JumpVector();
-		fixJumpVectorMinus.put(Si, 0);
-		fixJumpVectorMinus.put(Sl, 0);
-		fixJumpVectorMinus.put(Sb, 1);
-		fixJumpVectorMinus.put(Ct, 0);
-		fixJumpVectorMinus.put(Cr, 0);
-
-		fix.setJumpVectorMinus(fixJumpVectorMinus);
-
-		JumpVector fixJumpVectorPlus = new JumpVector();
-		fixJumpVectorPlus.put(Si, 1);
-		fixJumpVectorPlus.put(Sl, 0);
-		fixJumpVectorPlus.put(Sb, 0);
-		fixJumpVectorPlus.put(Ct, 0);
-		fixJumpVectorPlus.put(Cr, 0);
-
-		fix.setJumpVectorPlus(fixJumpVectorPlus);
-
-		actions.add(fix);
-
-		// creating action think
-		OriginalAction think = new OriginalAction();
-		think.setName("think");
-
-		JumpVector thinkJumpVector = new JumpVector();
-		thinkJumpVector.put(Si, 0);
-		thinkJumpVector.put(Sl, 0);
-		thinkJumpVector.put(Sb, 0);
-		thinkJumpVector.put(Ct, -1);
-		thinkJumpVector.put(Cr, +1);
-
-		think.setJumpVector(thinkJumpVector);
-
-		JumpVector thinkJumpVectorMinus = new JumpVector();
-		thinkJumpVectorMinus.put(Si, 0);
-		thinkJumpVectorMinus.put(Sl, 0);
-		thinkJumpVectorMinus.put(Sb, 0);
-		thinkJumpVectorMinus.put(Ct, 1);
-		thinkJumpVectorMinus.put(Cr, 0);
-
-		think.setJumpVectorMinus(thinkJumpVectorMinus);
-
-		JumpVector thinkJumpVectorPlus = new JumpVector();
-		thinkJumpVectorPlus.put(Si, 0);
-		thinkJumpVectorPlus.put(Sl, 0);
-		thinkJumpVectorPlus.put(Sb, 0);
-		thinkJumpVectorPlus.put(Ct, 0);
-		thinkJumpVectorPlus.put(Cr, +1);
-
-		think.setJumpVectorPlus(thinkJumpVectorPlus);
-
-		actions.add(think);
+		actions.add(near_proc);
 
 
-		// setting the apparent rate data. For each local derivative and action type the derivative enables, specify the rate at which the action is enabled.
 
+		//////////////////////////////////////////////
+		// Action: send_macro_nr
+		//////////////////////////////////////////////
+
+		OriginalAction send_macro_nr = new OriginalAction();
+		send_macro_nr.setName("send_macro_nr");
+
+		JumpVector send_macro_nr_JumpVector = new JumpVector();
+
+		send_macro_nr_JumpVector.put(var_user_near_processing , +1 ) ;
+		send_macro_nr_JumpVector.put(var_user_near_sending , -1 ) ;
+		send_macro_nr_JumpVector.put(var_ldcq_0 ,0 );
+		send_macro_nr_JumpVector.put(var_ldcq_1 ,0 );
+		send_macro_nr_JumpVector.put(var_ch_macro_idle ,0 );
+		send_macro_nr_JumpVector.put(var_scu_femto_1_processing , 0);
+		send_macro_nr_JumpVector.put(var_scu_femto_1_sending ,0 );
+		send_macro_nr_JumpVector.put(var_wcu_femto_1_processing , 0);
+		send_macro_nr_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		send_macro_nr_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		send_macro_nr_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_macro_nr_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		send_macro_nr_JumpVector.put(var_ch_femto_1_idle , 0);
+		send_macro_nr_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		send_macro_nr_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		send_macro_nr_JumpVector.put(var_scu_femto_2_processing ,0 );
+		send_macro_nr_JumpVector.put(var_scu_femto_2_sending ,0 );
+		send_macro_nr_JumpVector.put(var_wcu_femto_2_processing , 0);
+		send_macro_nr_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		send_macro_nr_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		send_macro_nr_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_macro_nr_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		send_macro_nr_JumpVector.put(var_ch_femto_2_idle , 0);
+		send_macro_nr_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		send_macro_nr_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		send_macro_nr.setJumpVector(send_macro_nr_JumpVector);
+
+		JumpVector send_macro_nr_JumpVectorMinus = new JumpVector();
+
+		send_macro_nr_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		send_macro_nr_JumpVectorMinus.put(var_user_near_sending , 1 ) ;
+		send_macro_nr_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		send_macro_nr_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_ch_macro_idle ,1 );
+		send_macro_nr_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		send_macro_nr_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_macro_nr_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		send_macro_nr_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_macro_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_macro_nr_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		send_macro_nr_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		send_macro_nr.setJumpVectorMinus(send_macro_nr_JumpVectorMinus);
+
+		JumpVector send_macro_nr_JumpVectorPlus = new JumpVector();
+
+		send_macro_nr_JumpVectorPlus.put(var_user_near_processing , +1 ) ;
+		send_macro_nr_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		send_macro_nr_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		send_macro_nr_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_ch_macro_idle ,1 );
+		send_macro_nr_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		send_macro_nr_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_macro_nr_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		send_macro_nr_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_macro_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_macro_nr_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		send_macro_nr_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		send_macro_nr.setJumpVectorPlus(send_macro_nr_JumpVectorPlus);
+
+		actions.add(send_macro_nr);
+		
+		
+
+		//////////////////////////////////////////////
+		// Action: send_macro_po
+		//////////////////////////////////////////////
+
+		OriginalAction send_macro_po = new OriginalAction();
+		send_macro_po.setName("send_macro_po");
+
+		JumpVector send_macro_po_JumpVector = new JumpVector();
+
+		send_macro_po_JumpVector.put(var_user_near_processing , +1 ) ;
+		send_macro_po_JumpVector.put(var_user_near_sending , -1 ) ;
+		send_macro_po_JumpVector.put(var_ldcq_0 ,0 );
+		send_macro_po_JumpVector.put(var_ldcq_1 ,0 );
+		send_macro_po_JumpVector.put(var_ch_macro_idle ,0 );
+		send_macro_po_JumpVector.put(var_scu_femto_1_processing , 0);
+		send_macro_po_JumpVector.put(var_scu_femto_1_sending ,0 );
+		send_macro_po_JumpVector.put(var_wcu_femto_1_processing , 0);
+		send_macro_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		send_macro_po_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		send_macro_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_macro_po_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		send_macro_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		send_macro_po_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		send_macro_po_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		send_macro_po_JumpVector.put(var_scu_femto_2_processing ,0 );
+		send_macro_po_JumpVector.put(var_scu_femto_2_sending ,0 );
+		send_macro_po_JumpVector.put(var_wcu_femto_2_processing , 0);
+		send_macro_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		send_macro_po_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		send_macro_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_macro_po_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		send_macro_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		send_macro_po_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		send_macro_po_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		send_macro_po.setJumpVector(send_macro_po_JumpVector);
+
+		JumpVector send_macro_po_JumpVectorMinus = new JumpVector();
+
+		send_macro_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		send_macro_po_JumpVectorMinus.put(var_user_near_sending , 1 ) ;
+		send_macro_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		send_macro_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		send_macro_po_JumpVectorMinus.put(var_ch_macro_idle ,1 );
+		send_macro_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		send_macro_po_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_macro_po_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		send_macro_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		send_macro_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		send_macro_po_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_macro_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_macro_po_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		send_macro_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		send_macro_po.setJumpVectorMinus(send_macro_po_JumpVectorMinus);
+
+		JumpVector send_macro_po_JumpVectorPlus = new JumpVector();
+
+		send_macro_po_JumpVectorPlus.put(var_user_near_processing , +1 ) ;
+		send_macro_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		send_macro_po_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		send_macro_po_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		send_macro_po_JumpVectorPlus.put(var_ch_macro_idle ,1 );
+		send_macro_po_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		send_macro_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_macro_po_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		send_macro_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		send_macro_po_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		send_macro_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_macro_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_macro_po_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		send_macro_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		send_macro_po.setJumpVectorPlus(send_macro_po_JumpVectorPlus);
+
+		actions.add(send_macro_po);
+		
+
+		//////////////////////////////////////////////
+		// Action: accept_wcu_femto_1_macro
+		//////////////////////////////////////////////
+
+		OriginalAction accept_wcu_femto_1_macro = new OriginalAction();
+		 accept_wcu_femto_1_macro.setName("accept_wcu_femto_1_macro");
+
+		JumpVector accept_wcu_femto_1_macro_JumpVector = new JumpVector();
+
+		accept_wcu_femto_1_macro_JumpVector.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_macro_JumpVector.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_macro_JumpVector.put(var_ldcq_0 ,-1 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_ldcq_1 ,+1 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_waiting_macro ,-1 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_streaming_macro , +1);
+		accept_wcu_femto_1_macro_JumpVector.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_1_macro.setJumpVector(accept_wcu_femto_1_macro_JumpVector);
+
+		JumpVector accept_wcu_femto_1_JumpVectorMinus = new JumpVector();
+
+		accept_wcu_femto_1_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,1 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_1_macro.setJumpVectorMinus(accept_wcu_femto_1_JumpVectorMinus);
+
+		JumpVector accept_wcu_femto_1_macro_JumpVectorPlus = new JumpVector();
+
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 1);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_1_macro.setJumpVectorPlus(accept_wcu_femto_1_macro_JumpVectorPlus);
+
+		actions.add(accept_wcu_femto_1_macro);
+		
+
+		//////////////////////////////////////////////
+		// Action: reject_wcu_femto_1_macro
+		//////////////////////////////////////////////
+
+		OriginalAction reject_wcu_femto_1_macro = new OriginalAction();
+		reject_wcu_femto_1_macro.setName("reject_wcu_femto_1_macro");
+
+		JumpVector reject_wcu_femto_1_macro_JumpVector = new JumpVector();
+
+		reject_wcu_femto_1_macro_JumpVector.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_1_macro_JumpVector.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_1_macro_JumpVector.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_processing , 1);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_waiting_macro ,-1 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_1_macro_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_1_macro.setJumpVector(reject_wcu_femto_1_macro_JumpVector);
+
+		JumpVector reject_wcu_femto_1_JumpVectorMinus = new JumpVector();
+
+		reject_wcu_femto_1_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_1_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_1_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,1 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_1_macro.setJumpVectorMinus(reject_wcu_femto_1_JumpVectorMinus);
+
+		JumpVector reject_wcu_femto_1_macro_JumpVectorPlus = new JumpVector();
+
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_processing , 1);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_1_macro_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_1_macro.setJumpVectorPlus(reject_wcu_femto_1_macro_JumpVectorPlus);
+
+		actions.add(reject_wcu_femto_1_macro);
+		
+		
+		
+
+		//////////////////////////////////////////////
+		// Action: stream_wcu_femto_1_macro_po
+		//////////////////////////////////////////////
+
+		OriginalAction stream_wcu_femto_1_macro_po = new OriginalAction();
+		stream_wcu_femto_1_macro_po.setName("stream_wcu_femto_1_macro_po");
+
+		JumpVector stream_wcu_femto_1_macro_po_JumpVector = new JumpVector();
+
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_user_near_processing , 0 ) ;
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_user_near_sending , 0 ) ;
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_ldcq_0 ,1 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_ldcq_1 ,-1 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_ch_macro_idle ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_scu_femto_1_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_scu_femto_1_sending ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_1_processing , 1);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_1_streaming_macro , -1);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_scu_femto_2_processing ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_scu_femto_2_sending ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_2_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		stream_wcu_femto_1_macro_po_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		stream_wcu_femto_1_macro_po.setJumpVector(stream_wcu_femto_1_macro_po_JumpVector);
+
+		JumpVector stream_wcu_femto_1_macro_po_JumpVectorMinus = new JumpVector();
+
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro ,1);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_wcu_femto_1_macro_po.setJumpVectorMinus(stream_wcu_femto_1_macro_po_JumpVectorMinus);
+
+		JumpVector stream_wcu_femto_1_macro_po_JumpVectorPlus = new JumpVector();
+
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 1);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		stream_wcu_femto_1_macro_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_wcu_femto_1_macro_po.setJumpVectorPlus(stream_wcu_femto_1_macro_po_JumpVectorPlus);
+
+		actions.add(stream_wcu_femto_1_macro_po);
+		
+
+		//////////////////////////////////////////////
+		// Action: send_femto_1_nr
+		//////////////////////////////////////////////
+
+		OriginalAction send_femto_1_nr = new OriginalAction();
+		send_femto_1_nr.setName("send_femto_1_nr");
+
+		JumpVector send_femto_1_nr_JumpVector = new JumpVector();
+
+		send_femto_1_nr_JumpVector.put(var_user_near_processing , 0 ) ;
+		send_femto_1_nr_JumpVector.put(var_user_near_sending , 0 ) ;
+		send_femto_1_nr_JumpVector.put(var_ldcq_0 ,0 );
+		send_femto_1_nr_JumpVector.put(var_ldcq_1 ,0 );
+		send_femto_1_nr_JumpVector.put(var_ch_macro_idle ,0 );
+		send_femto_1_nr_JumpVector.put(var_scu_femto_1_processing , 1);
+		send_femto_1_nr_JumpVector.put(var_scu_femto_1_sending ,-1 );
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_1_processing , 0);
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_1_nr_JumpVector.put(var_ch_femto_1_idle,0);
+		send_femto_1_nr_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_1_nr_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		send_femto_1_nr_JumpVector.put(var_scu_femto_2_processing ,0 );
+		send_femto_1_nr_JumpVector.put(var_scu_femto_2_sending ,0 );
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_2_processing , 0);
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_1_nr_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_1_nr_JumpVector.put(var_ch_femto_2_idle , 0);
+		send_femto_1_nr_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		send_femto_1_nr_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_1_nr.setJumpVector(send_femto_1_nr_JumpVector);
+
+		JumpVector send_femto_1_nr_JumpVectorMinus = new JumpVector();
+
+		send_femto_1_nr_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		send_femto_1_nr_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		send_femto_1_nr_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		send_femto_1_nr_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_scu_femto_1_sending ,1 );
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_ch_femto_1_idle,1);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_1_nr.setJumpVectorMinus(send_femto_1_nr_JumpVectorMinus);
+
+		JumpVector send_femto_1_nr_JumpVectorPlus = new JumpVector();
+
+		send_femto_1_nr_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		send_femto_1_nr_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		send_femto_1_nr_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		send_femto_1_nr_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_scu_femto_1_processing , 1);
+		send_femto_1_nr_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_ch_femto_1_idle ,1);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_1_nr.setJumpVectorPlus(send_femto_1_nr_JumpVectorPlus);
+
+		actions.add(send_femto_1_nr);
+		
+	
+		//////////////////////////////////////////////
+		// Action: send_femto_1_po
+		//////////////////////////////////////////////
+
+		OriginalAction send_femto_1_po = new OriginalAction();
+		send_femto_1_po.setName("send_femto_1_po");
+
+		JumpVector send_femto_1_po_JumpVector = new JumpVector();
+
+		send_femto_1_po_JumpVector.put(var_user_near_processing , 0 ) ;
+		send_femto_1_po_JumpVector.put(var_user_near_sending , 0 ) ;
+		send_femto_1_po_JumpVector.put(var_ldcq_0 ,0 );
+		send_femto_1_po_JumpVector.put(var_ldcq_1 ,0 );
+		send_femto_1_po_JumpVector.put(var_ch_macro_idle ,0 );
+		send_femto_1_po_JumpVector.put(var_scu_femto_1_processing , +1);
+		send_femto_1_po_JumpVector.put(var_scu_femto_1_sending ,-1 );
+		send_femto_1_po_JumpVector.put(var_wcu_femto_1_processing , 0);
+		send_femto_1_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_1_po_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_1_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_1_po_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_1_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		send_femto_1_po_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_1_po_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		send_femto_1_po_JumpVector.put(var_scu_femto_2_processing ,0 );
+		send_femto_1_po_JumpVector.put(var_scu_femto_2_sending ,0 );
+		send_femto_1_po_JumpVector.put(var_wcu_femto_2_processing , 0);
+		send_femto_1_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_1_po_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_1_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_1_po_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_1_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		send_femto_1_po_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		send_femto_1_po_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_1_po.setJumpVector(send_femto_1_po_JumpVector);
+
+		JumpVector send_femto_1_po_JumpVectorMinus = new JumpVector();
+
+		send_femto_1_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		send_femto_1_po_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		send_femto_1_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		send_femto_1_po_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_scu_femto_1_sending ,1 );
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_ch_femto_1_idle , 1);
+		send_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_1_po.setJumpVectorMinus(send_femto_1_po_JumpVectorMinus);
+
+		JumpVector send_femto_1_po_JumpVectorPlus = new JumpVector();
+
+		send_femto_1_po_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		send_femto_1_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		send_femto_1_po_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		send_femto_1_po_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_scu_femto_1_processing , 1);
+		send_femto_1_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_ch_femto_1_idle , 1);
+		send_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_1_po.setJumpVectorPlus(send_femto_1_po_JumpVectorPlus);
+
+		actions.add(send_femto_1_po);
+		
+
+		
+
+		//////////////////////////////////////////////
+		// Action: stream_femto_1_nr
+		//////////////////////////////////////////////
+
+		OriginalAction stream_femto_1_nr = new OriginalAction();
+		stream_femto_1_nr.setName("stream_femto_1_nr");
+
+		JumpVector stream_femto_1_nr_JumpVector = new JumpVector();
+
+		stream_femto_1_nr_JumpVector.put(var_user_near_processing , 0 ) ;
+		stream_femto_1_nr_JumpVector.put(var_user_near_sending , 0 ) ;
+		stream_femto_1_nr_JumpVector.put(var_ldcq_0 ,0 );
+		stream_femto_1_nr_JumpVector.put(var_ldcq_1 ,0 );
+		stream_femto_1_nr_JumpVector.put(var_ch_macro_idle ,0 );
+		stream_femto_1_nr_JumpVector.put(var_scu_femto_1_processing , 0);
+		stream_femto_1_nr_JumpVector.put(var_scu_femto_1_sending ,0 );
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_1_processing , +1);
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_1_streaming_local, -1);
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_1_nr_JumpVector.put(var_ch_femto_1_idle , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcuq_femto_1_0 ,+1 );
+		stream_femto_1_nr_JumpVector.put(var_wcuq_femto_1_1 ,-1);
+		stream_femto_1_nr_JumpVector.put(var_scu_femto_2_processing ,0 );
+		stream_femto_1_nr_JumpVector.put(var_scu_femto_2_sending ,0 );
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_2_processing , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_1_nr_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_1_nr_JumpVector.put(var_ch_femto_2_idle , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_1_nr_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_1_nr.setJumpVector(stream_femto_1_nr_JumpVector);
+
+		JumpVector stream_femto_1_nr_JumpVectorMinus = new JumpVector();
+
+		stream_femto_1_nr_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		stream_femto_1_nr_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		stream_femto_1_nr_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 1);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_1_1 , 1);
+		stream_femto_1_nr_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_1_nr_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_1_nr.setJumpVectorMinus(stream_femto_1_nr_JumpVectorMinus);
+
+		JumpVector stream_femto_1_nr_JumpVectorPlus = new JumpVector();
+
+		stream_femto_1_nr_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		stream_femto_1_nr_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		stream_femto_1_nr_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_processing , +1);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_1_0 ,1 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_1_nr_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_1_nr.setJumpVectorPlus(stream_femto_1_nr_JumpVectorPlus);
+
+		actions.add(stream_femto_1_nr);
+		
+
+
+		//////////////////////////////////////////////
+		// Action: stream_femto_1_po
+		//////////////////////////////////////////////
+
+		OriginalAction stream_femto_1_po = new OriginalAction();
+		stream_femto_1_po.setName("stream_femto_1_po");
+
+		JumpVector stream_femto_1_po_JumpVector = new JumpVector();
+
+		stream_femto_1_po_JumpVector.put(var_user_near_processing , 0 ) ;
+		stream_femto_1_po_JumpVector.put(var_user_near_sending , 0 ) ;
+		stream_femto_1_po_JumpVector.put(var_ldcq_0 ,0 );
+		stream_femto_1_po_JumpVector.put(var_ldcq_1 ,0 );
+		stream_femto_1_po_JumpVector.put(var_ch_macro_idle ,0 );
+		stream_femto_1_po_JumpVector.put(var_scu_femto_1_processing , 0);
+		stream_femto_1_po_JumpVector.put(var_scu_femto_1_sending ,0 );
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_1_processing , 1);
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_1_streaming_local, -1);
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_1_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		stream_femto_1_po_JumpVector.put(var_wcuq_femto_1_0 ,+1 );
+		stream_femto_1_po_JumpVector.put(var_wcuq_femto_1_1 ,-1);
+		stream_femto_1_po_JumpVector.put(var_scu_femto_2_processing ,0 );
+		stream_femto_1_po_JumpVector.put(var_scu_femto_2_sending ,0 );
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_2_processing , 0);
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_1_po_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_1_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		stream_femto_1_po_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_1_po_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_1_po.setJumpVector(stream_femto_1_po_JumpVector);
+
+		JumpVector stream_femto_1_po_JumpVectorMinus = new JumpVector();
+
+		stream_femto_1_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		stream_femto_1_po_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		stream_femto_1_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		stream_femto_1_po_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 1);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 1);
+		stream_femto_1_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_1_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_1_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_1_po.setJumpVectorMinus(stream_femto_1_po_JumpVectorMinus);
+
+		JumpVector stream_femto_1_po_JumpVectorPlus = new JumpVector();
+
+		stream_femto_1_po_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		stream_femto_1_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		stream_femto_1_po_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		stream_femto_1_po_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 1);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,1 );
+		stream_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_1_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_1_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_1_po.setJumpVectorPlus(stream_femto_1_po_JumpVectorPlus);
+
+		actions.add(stream_femto_1_po);
+		
+
+		
+
+		//////////////////////////////////////////////
+		// Action: accept_wcu_femto_2_macro
+		//////////////////////////////////////////////
+
+		OriginalAction accept_wcu_femto_2_macro = new OriginalAction();
+		accept_wcu_femto_2_macro.setName("accept_wcu_femto_2_macro");
+
+		JumpVector accept_wcu_femto_2_macro_JumpVector = new JumpVector();
+
+		accept_wcu_femto_2_macro_JumpVector.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_2_macro_JumpVector.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_2_macro_JumpVector.put(var_ldcq_0 ,-1 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_ldcq_1 ,+1 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_waiting_macro ,-1 );
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_streaming_macro , +1);
+		accept_wcu_femto_2_macro_JumpVector.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_2_macro.setJumpVector(accept_wcu_femto_2_macro_JumpVector);
+
+		JumpVector accept_wcu_femto_2_JumpVectorMinus = new JumpVector();
+
+		accept_wcu_femto_2_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_2_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_2_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,1 );
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_2_macro.setJumpVectorMinus(accept_wcu_femto_2_JumpVectorMinus);
+
+		JumpVector accept_wcu_femto_2_macro_JumpVectorPlus = new JumpVector();
+
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 1);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_2_macro.setJumpVectorPlus(accept_wcu_femto_2_macro_JumpVectorPlus);
+
+		actions.add(accept_wcu_femto_2_macro);
+
+
+		//////////////////////////////////////////////
+		// Action: reject_wcu_femto_2_macro
+		//////////////////////////////////////////////
+
+		OriginalAction reject_wcu_femto_2_macro = new OriginalAction();
+		reject_wcu_femto_2_macro.setName("reject_wcu_femto_2_macro");
+
+		JumpVector reject_wcu_femto_2_macro_JumpVector = new JumpVector();
+
+		reject_wcu_femto_2_macro_JumpVector.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_2_macro_JumpVector.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_2_macro_JumpVector.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_processing , +1);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_waiting_macro ,-1 );
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_2_macro_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_2_macro.setJumpVector(reject_wcu_femto_2_macro_JumpVector);
+
+		JumpVector reject_wcu_femto_2_JumpVectorMinus = new JumpVector();
+
+		reject_wcu_femto_2_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_2_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_2_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,1 );
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_2_macro.setJumpVectorMinus(reject_wcu_femto_2_JumpVectorMinus);
+
+		JumpVector reject_wcu_femto_2_macro_JumpVectorPlus = new JumpVector();
+
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_processing , 1);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_2_macro_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_2_macro.setJumpVectorPlus(reject_wcu_femto_2_macro_JumpVectorPlus);
+
+		actions.add(reject_wcu_femto_2_macro);
+
+
+		//////////////////////////////////////////////
+		// Action: stream_wcu_femto_2_macro_po
+		//////////////////////////////////////////////
+
+		OriginalAction stream_wcu_femto_2_macro_po = new OriginalAction();
+		stream_wcu_femto_2_macro_po.setName("stream_wcu_femto_2_macro_po");
+
+		JumpVector stream_wcu_femto_2_macro_po_JumpVector = new JumpVector();
+
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_user_near_processing , 0 ) ;
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_user_near_sending , 0 ) ;
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_ldcq_0 ,1 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_ldcq_1 ,-1 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_ch_macro_idle ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_scu_femto_1_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_scu_femto_1_sending ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_1_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_scu_femto_2_processing ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_scu_femto_2_sending ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_2_processing , +1);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcu_femto_2_streaming_macro , -1);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		stream_wcu_femto_2_macro_po_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		stream_wcu_femto_2_macro_po.setJumpVector(stream_wcu_femto_2_macro_po_JumpVector);
+
+		JumpVector stream_wcu_femto_2_macro_po_JumpVectorMinus = new JumpVector();
+
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 1);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_wcu_femto_2_macro_po.setJumpVectorMinus(stream_wcu_femto_2_macro_po_JumpVectorMinus);
+
+		JumpVector stream_wcu_femto_2_macro_po_JumpVectorPlus = new JumpVector();
+
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 1);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		stream_wcu_femto_2_macro_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_wcu_femto_2_macro_po.setJumpVectorPlus(stream_wcu_femto_2_macro_po_JumpVectorPlus);
+
+		actions.add(stream_wcu_femto_2_macro_po);
+		
+		
+		
+
+		//////////////////////////////////////////////
+		// Action: send_femto_2_nr
+		//////////////////////////////////////////////
+
+		OriginalAction send_femto_2_nr = new OriginalAction();
+		send_femto_2_nr.setName("send_femto_2_nr");
+
+		JumpVector send_femto_2_nr_JumpVector = new JumpVector();
+
+		send_femto_2_nr_JumpVector.put(var_user_near_processing , 0 ) ;
+		send_femto_2_nr_JumpVector.put(var_user_near_sending , 0 ) ;
+		send_femto_2_nr_JumpVector.put(var_ldcq_0 ,0 );
+		send_femto_2_nr_JumpVector.put(var_ldcq_1 ,0 );
+		send_femto_2_nr_JumpVector.put(var_ch_macro_idle ,0 );
+		send_femto_2_nr_JumpVector.put(var_scu_femto_1_processing , 0);
+		send_femto_2_nr_JumpVector.put(var_scu_femto_1_sending ,0 );
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_1_processing , 0);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_2_nr_JumpVector.put(var_ch_femto_1_idle , 0);
+		send_femto_2_nr_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_2_nr_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		send_femto_2_nr_JumpVector.put(var_scu_femto_2_processing ,1 );
+		send_femto_2_nr_JumpVector.put(var_scu_femto_2_sending ,-1);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_2_processing , 0);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_2_nr_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_2_nr_JumpVector.put(var_ch_femto_2_idle , 0);
+		send_femto_2_nr_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		send_femto_2_nr_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_2_nr.setJumpVector(send_femto_2_nr_JumpVector);
+
+		JumpVector send_femto_2_nr_JumpVectorMinus = new JumpVector();
+
+		send_femto_2_nr_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		send_femto_2_nr_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		send_femto_2_nr_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		send_femto_2_nr_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_scu_femto_2_sending ,1 );
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_ch_femto_2_idle , 1);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_2_nr.setJumpVectorMinus(send_femto_2_nr_JumpVectorMinus);
+
+		JumpVector send_femto_2_nr_JumpVectorPlus = new JumpVector();
+
+		send_femto_2_nr_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		send_femto_2_nr_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		send_femto_2_nr_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		send_femto_2_nr_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_scu_femto_2_processing ,1 );
+		send_femto_2_nr_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_ch_femto_2_idle , 1);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_2_nr.setJumpVectorPlus(send_femto_2_nr_JumpVectorPlus);
+
+		actions.add(send_femto_2_nr);
+		
+		
+		//////////////////////////////////////////////
+		// Action: send_femto_2_po
+		//////////////////////////////////////////////
+
+		OriginalAction send_femto_2_po = new OriginalAction();
+		send_femto_2_po.setName("send_femto_2_po");
+
+		JumpVector send_femto_2_po_JumpVector = new JumpVector();
+
+		send_femto_2_po_JumpVector.put(var_user_near_processing , 0 ) ;
+		send_femto_2_po_JumpVector.put(var_user_near_sending , 0 ) ;
+		send_femto_2_po_JumpVector.put(var_ldcq_0 ,0 );
+		send_femto_2_po_JumpVector.put(var_ldcq_1 ,0 );
+		send_femto_2_po_JumpVector.put(var_ch_macro_idle ,0 );
+		send_femto_2_po_JumpVector.put(var_scu_femto_1_processing , 0);
+		send_femto_2_po_JumpVector.put(var_scu_femto_1_sending ,0 );
+		send_femto_2_po_JumpVector.put(var_wcu_femto_1_processing , 0);
+		send_femto_2_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_2_po_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_2_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_2_po_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_2_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		send_femto_2_po_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_2_po_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		send_femto_2_po_JumpVector.put(var_scu_femto_2_processing ,+1 );
+		send_femto_2_po_JumpVector.put(var_scu_femto_2_sending ,-1 );
+		send_femto_2_po_JumpVector.put(var_wcu_femto_2_processing , 0);
+		send_femto_2_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_2_po_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_2_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_2_po_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_2_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		send_femto_2_po_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		send_femto_2_po_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_2_po.setJumpVector(send_femto_2_po_JumpVector);
+
+		JumpVector send_femto_2_po_JumpVectorMinus = new JumpVector();
+
+		send_femto_2_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		send_femto_2_po_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		send_femto_2_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		send_femto_2_po_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_scu_femto_2_sending ,1 );
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_ch_femto_2_idle , 1);
+		send_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+		
+		send_femto_2_po.setJumpVectorMinus(send_femto_2_po_JumpVectorMinus);
+
+		JumpVector send_femto_2_po_JumpVectorPlus = new JumpVector();
+
+		send_femto_2_po_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		send_femto_2_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		send_femto_2_po_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		send_femto_2_po_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_scu_femto_2_processing ,1 );
+		send_femto_2_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		send_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_ch_femto_2_idle , 1);
+		send_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		send_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		send_femto_2_po.setJumpVectorPlus(send_femto_2_po_JumpVectorPlus);
+
+		actions.add(send_femto_2_po);
+		
+
+		//////////////////////////////////////////////
+		// Action: stream_femto_2_nr
+		//////////////////////////////////////////////
+
+		OriginalAction stream_femto_2_nr = new OriginalAction();
+		stream_femto_2_nr.setName("stream_femto_2_nr");
+
+		JumpVector stream_femto_2_nr_JumpVector = new JumpVector();
+
+		stream_femto_2_nr_JumpVector.put(var_user_near_processing , 0 ) ;
+		stream_femto_2_nr_JumpVector.put(var_user_near_sending , 0 ) ;
+		stream_femto_2_nr_JumpVector.put(var_ldcq_0 ,0 );
+		stream_femto_2_nr_JumpVector.put(var_ldcq_1 ,0 );
+		stream_femto_2_nr_JumpVector.put(var_ch_macro_idle ,0 );
+		stream_femto_2_nr_JumpVector.put(var_scu_femto_1_processing , 0);
+		stream_femto_2_nr_JumpVector.put(var_scu_femto_1_sending ,0 );
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_1_processing , 0);
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_2_nr_JumpVector.put(var_ch_femto_1_idle , 0);
+		stream_femto_2_nr_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_2_nr_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_2_nr_JumpVector.put(var_scu_femto_2_processing ,0 );
+		stream_femto_2_nr_JumpVector.put(var_scu_femto_2_sending ,0 );
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_2_processing , 1);
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_2_streaming_local , -1);
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_2_nr_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_2_nr_JumpVector.put(var_ch_femto_2_idle , 0);
+		stream_femto_2_nr_JumpVector.put(var_wcuq_femto_2_0 , +1);
+		stream_femto_2_nr_JumpVector.put(var_wcuq_femto_2_1 , -1);
+
+		stream_femto_2_nr.setJumpVector(stream_femto_2_nr_JumpVector);
+
+		JumpVector stream_femto_2_nr_JumpVectorMinus = new JumpVector();
+
+		stream_femto_2_nr_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		stream_femto_2_nr_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		stream_femto_2_nr_JumpVectorMinus.put(var_ldcq_0 ,1 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 1);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_2_nr_JumpVectorMinus.put(var_wcuq_femto_2_1 , 1);
+
+		stream_femto_2_nr.setJumpVectorMinus(stream_femto_2_nr_JumpVectorMinus);
+
+		JumpVector stream_femto_2_nr_JumpVectorPlus = new JumpVector();
+
+		stream_femto_2_nr_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		stream_femto_2_nr_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		stream_femto_2_nr_JumpVectorPlus.put(var_ldcq_0 ,1 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_processing , 1);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_2_0 , 1);
+		stream_femto_2_nr_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+		
+		stream_femto_2_nr.setJumpVectorPlus(stream_femto_2_nr_JumpVectorPlus);
+
+		actions.add(stream_femto_2_nr);
+		
+		
+
+		//////////////////////////////////////////////
+		// Action: stream_femto_2_po
+		//////////////////////////////////////////////
+
+		OriginalAction stream_femto_2_po = new OriginalAction();
+		stream_femto_2_po.setName("stream_femto_2_po");
+
+		JumpVector stream_femto_2_po_JumpVector = new JumpVector();
+
+		stream_femto_2_po_JumpVector.put(var_user_near_processing , 0 ) ;
+		stream_femto_2_po_JumpVector.put(var_user_near_sending , 0 ) ;
+		stream_femto_2_po_JumpVector.put(var_ldcq_0 ,0 );
+		stream_femto_2_po_JumpVector.put(var_ldcq_1 ,0 );
+		stream_femto_2_po_JumpVector.put(var_ch_macro_idle ,0 );
+		stream_femto_2_po_JumpVector.put(var_scu_femto_1_processing , 0);
+		stream_femto_2_po_JumpVector.put(var_scu_femto_1_sending ,0 );
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_1_processing , 0);
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_2_po_JumpVector.put(var_ch_femto_1_idle , 0);
+		stream_femto_2_po_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_2_po_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_2_po_JumpVector.put(var_scu_femto_2_processing ,0 );
+		stream_femto_2_po_JumpVector.put(var_scu_femto_2_sending ,0 );
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_2_processing , +1);
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_2_streaming_local , -1);
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_2_po_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_2_po_JumpVector.put(var_ch_femto_2_idle , 0);
+		stream_femto_2_po_JumpVector.put(var_wcuq_femto_2_0 , +1);
+		stream_femto_2_po_JumpVector.put(var_wcuq_femto_2_1 , -1);
+
+		stream_femto_2_po.setJumpVector(stream_femto_2_po_JumpVector);
+
+		JumpVector stream_femto_2_po_JumpVectorMinus = new JumpVector();
+
+		stream_femto_2_po_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		stream_femto_2_po_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		stream_femto_2_po_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_ldcq_1 ,1 );
+		stream_femto_2_po_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 1);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_2_po_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		stream_femto_2_po_JumpVectorMinus.put(var_wcuq_femto_2_1 , 1);
+
+		stream_femto_2_po.setJumpVectorMinus(stream_femto_2_po_JumpVectorMinus);
+
+		JumpVector stream_femto_2_po_JumpVectorPlus = new JumpVector();
+
+		stream_femto_2_po_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		stream_femto_2_po_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		stream_femto_2_po_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		stream_femto_2_po_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_processing , 1);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		stream_femto_2_po_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_2_0 , 1);
+		stream_femto_2_po_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		stream_femto_2_po.setJumpVectorPlus(stream_femto_2_po_JumpVectorPlus);
+
+		actions.add(stream_femto_2_po);
+		
+
+		//////////////////////////////////////////////
+		// Action: process_scu_femto_1
+		//////////////////////////////////////////////
+
+		OriginalAction process_scu_femto_1 = new OriginalAction();
+		process_scu_femto_1.setName("process_scu_femto_1");
+
+		JumpVector process_scu_femto_1_JumpVector = new JumpVector();
+
+		process_scu_femto_1_JumpVector.put(var_user_near_processing , 0 ) ;
+		process_scu_femto_1_JumpVector.put(var_user_near_sending , 0 ) ;
+		process_scu_femto_1_JumpVector.put(var_ldcq_0 ,0 );
+		process_scu_femto_1_JumpVector.put(var_ldcq_1 ,0 );
+		process_scu_femto_1_JumpVector.put(var_ch_macro_idle ,0 );
+		process_scu_femto_1_JumpVector.put(var_scu_femto_1_processing , -1);
+		process_scu_femto_1_JumpVector.put(var_scu_femto_1_sending ,1 );
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_1_processing , 0);
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		process_scu_femto_1_JumpVector.put(var_ch_femto_1_idle , 0);
+		process_scu_femto_1_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		process_scu_femto_1_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		process_scu_femto_1_JumpVector.put(var_scu_femto_2_processing ,0 );
+		process_scu_femto_1_JumpVector.put(var_scu_femto_2_sending ,0 );
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_2_processing , 0);
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_scu_femto_1_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		process_scu_femto_1_JumpVector.put(var_ch_femto_2_idle , 0);
+		process_scu_femto_1_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		process_scu_femto_1_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		process_scu_femto_1.setJumpVector(process_scu_femto_1_JumpVector);
+
+		JumpVector process_scu_femto_1_JumpVectorMinus = new JumpVector();
+
+		process_scu_femto_1_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		process_scu_femto_1_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		process_scu_femto_1_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_scu_femto_1_processing , 1);
+		process_scu_femto_1_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_scu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		process_scu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		process_scu_femto_1.setJumpVectorMinus(process_scu_femto_1_JumpVectorMinus);
+
+		JumpVector process_scu_femto_1_JumpVectorPlus = new JumpVector();
+
+		process_scu_femto_1_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		process_scu_femto_1_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		process_scu_femto_1_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_ldcq_1 ,1 );
+		process_scu_femto_1_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_scu_femto_1_sending ,1 );
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_scu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		process_scu_femto_1_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		process_scu_femto_1.setJumpVectorPlus(process_scu_femto_1_JumpVectorPlus);
+
+		actions.add(process_scu_femto_1);
+		
+
+
+		//////////////////////////////////////////////
+		// Action: process_wcu_femto_1
+		//////////////////////////////////////////////
+
+		OriginalAction process_wcu_femto_1 = new OriginalAction();
+		process_wcu_femto_1.setName("process_wcu_femto_1");
+
+		JumpVector process_wcu_femto_1_JumpVector = new JumpVector();
+
+		process_wcu_femto_1_JumpVector.put(var_user_near_processing , 0 ) ;
+		process_wcu_femto_1_JumpVector.put(var_user_near_sending , 0 ) ;
+		process_wcu_femto_1_JumpVector.put(var_ldcq_0 ,0 );
+		process_wcu_femto_1_JumpVector.put(var_ldcq_1 ,0 );
+		process_wcu_femto_1_JumpVector.put(var_ch_macro_idle ,0 );
+		process_wcu_femto_1_JumpVector.put(var_scu_femto_1_processing , 0);
+		process_wcu_femto_1_JumpVector.put(var_scu_femto_1_sending ,0 );
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_1_processing , -1);
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_1_waiting_local , +1);
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		process_wcu_femto_1_JumpVector.put(var_ch_femto_1_idle , 0);
+		process_wcu_femto_1_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		process_wcu_femto_1_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		process_wcu_femto_1_JumpVector.put(var_scu_femto_2_processing ,0 );
+		process_wcu_femto_1_JumpVector.put(var_scu_femto_2_sending ,0 );
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_2_processing , 0);
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_wcu_femto_1_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		process_wcu_femto_1_JumpVector.put(var_ch_femto_2_idle , 0);
+		process_wcu_femto_1_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		process_wcu_femto_1_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		process_wcu_femto_1.setJumpVector(process_wcu_femto_1_JumpVector);
+
+		JumpVector process_wcu_femto_1_JumpVectorMinus = new JumpVector();
+
+		process_wcu_femto_1_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		process_wcu_femto_1_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		process_wcu_femto_1_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_processing , 1);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		process_wcu_femto_1_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		process_wcu_femto_1.setJumpVectorMinus(process_wcu_femto_1_JumpVectorMinus);
+
+		JumpVector process_wcu_femto_1_JumpVectorPlus = new JumpVector();
+
+		process_wcu_femto_1_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		process_wcu_femto_1_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		process_wcu_femto_1_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 1);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		process_wcu_femto_1_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		process_wcu_femto_1.setJumpVectorPlus(process_wcu_femto_1_JumpVectorPlus);
+
+		actions.add(process_wcu_femto_1);
+		
+		
+		//////////////////////////////////////////////
+		// Action: accept_wcu_femto_1_local
+		//////////////////////////////////////////////
+
+		OriginalAction accept_wcu_femto_1_local = new OriginalAction();
+		accept_wcu_femto_1_local.setName("accept_wcu_femto_1_local");
+
+		JumpVector accept_wcu_femto_1_local_JumpVector = new JumpVector();
+
+		accept_wcu_femto_1_local_JumpVector.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_local_JumpVector.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_local_JumpVector.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_waiting_local , -1);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_streaming_local, +1);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_1_0 ,-1);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_1_1 ,+1);
+		accept_wcu_femto_1_local_JumpVector.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_1_local.setJumpVector(accept_wcu_femto_1_local_JumpVector);
+
+		JumpVector accept_wcu_femto_1_local_JumpVectorMinus = new JumpVector();
+
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 1);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_1_0 ,1 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_1_local.setJumpVectorMinus(accept_wcu_femto_1_local_JumpVectorMinus);
+
+		JumpVector accept_wcu_femto_1_local_JumpVectorPlus = new JumpVector();
+
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 1);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_1_1 ,1);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_1_local.setJumpVectorPlus(accept_wcu_femto_1_local_JumpVectorPlus);
+
+		actions.add(accept_wcu_femto_1_local);
+		
+		
+		//////////////////////////////////////////////
+		// Action: reject_wcu_femto_1_local
+		//////////////////////////////////////////////
+
+		OriginalAction reject_wcu_femto_1_local = new OriginalAction();
+		reject_wcu_femto_1_local.setName("reject_wcu_femto_1_local");
+
+		JumpVector reject_wcu_femto_1_local_JumpVector = new JumpVector();
+
+		reject_wcu_femto_1_local_JumpVector.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_1_local_JumpVector.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_1_local_JumpVector.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_waiting_local , -1);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_waiting_macro ,+1 );
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_1_local_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_1_local_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_1_local.setJumpVector(reject_wcu_femto_1_local_JumpVector);
+
+		JumpVector reject_wcu_femto_1_local_JumpVectorMinus = new JumpVector();
+
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 1);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_1_1 , 1);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_1_local.setJumpVectorMinus(reject_wcu_femto_1_local_JumpVectorMinus);
+
+		JumpVector reject_wcu_femto_1_local_JumpVectorPlus = new JumpVector();
+
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,1);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_1_1 , 1);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_1_local_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		reject_wcu_femto_1_local.setJumpVectorPlus(reject_wcu_femto_1_local_JumpVectorPlus);
+
+		actions.add(reject_wcu_femto_1_local);
+
+		
+		
+		
+
+		//////////////////////////////////////////////
+		// Action: process_scu_femto_2
+		//////////////////////////////////////////////
+
+		OriginalAction process_scu_femto_2 = new OriginalAction();
+		process_scu_femto_2.setName("process_scu_femto_2");
+
+		JumpVector process_scu_femto_2_JumpVector = new JumpVector();
+
+		process_scu_femto_2_JumpVector.put(var_user_near_processing , 0 ) ;
+		process_scu_femto_2_JumpVector.put(var_user_near_sending , 0 ) ;
+		process_scu_femto_2_JumpVector.put(var_ldcq_0 ,0 );
+		process_scu_femto_2_JumpVector.put(var_ldcq_1 ,0 );
+		process_scu_femto_2_JumpVector.put(var_ch_macro_idle ,0 );
+		process_scu_femto_2_JumpVector.put(var_scu_femto_1_processing , 0);
+		process_scu_femto_2_JumpVector.put(var_scu_femto_1_sending ,0 );
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_1_processing , 0);
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		process_scu_femto_2_JumpVector.put(var_ch_femto_1_idle , 0);
+		process_scu_femto_2_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		process_scu_femto_2_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		process_scu_femto_2_JumpVector.put(var_scu_femto_2_processing ,0 );
+		process_scu_femto_2_JumpVector.put(var_scu_femto_2_sending ,0 );
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_2_processing , 0);
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_2_waiting_local , 0);
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_scu_femto_2_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		process_scu_femto_2_JumpVector.put(var_ch_femto_2_idle , 0);
+		process_scu_femto_2_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		process_scu_femto_2_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		process_scu_femto_2.setJumpVector(process_scu_femto_2_JumpVector);
+
+		JumpVector process_scu_femto_2_JumpVectorMinus = new JumpVector();
+
+		process_scu_femto_2_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		process_scu_femto_2_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		process_scu_femto_2_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_scu_femto_2_processing ,-1 );
+		process_scu_femto_2_JumpVectorMinus.put(var_scu_femto_2_sending ,+1 );
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_scu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		process_scu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		process_scu_femto_2.setJumpVectorMinus(process_scu_femto_2_JumpVectorMinus);
+
+		JumpVector process_scu_femto_2_JumpVectorPlus = new JumpVector();
+
+		process_scu_femto_2_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		process_scu_femto_2_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		process_scu_femto_2_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_scu_femto_2_sending ,1);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_scu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		process_scu_femto_2_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		process_scu_femto_2.setJumpVectorPlus(process_scu_femto_2_JumpVectorPlus);
+
+		actions.add(process_scu_femto_2);
+		
+
+		//////////////////////////////////////////////
+		// Action: process_wcu_femto_2
+		//////////////////////////////////////////////
+
+		OriginalAction process_wcu_femto_2 = new OriginalAction();
+		process_wcu_femto_2.setName("process_wcu_femto_2");
+
+		JumpVector process_wcu_femto_2_JumpVector = new JumpVector();
+
+		process_wcu_femto_2_JumpVector.put(var_user_near_processing , 0 ) ;
+		process_wcu_femto_2_JumpVector.put(var_user_near_sending , 0 ) ;
+		process_wcu_femto_2_JumpVector.put(var_ldcq_0 ,0 );
+		process_wcu_femto_2_JumpVector.put(var_ldcq_1 ,0 );
+		process_wcu_femto_2_JumpVector.put(var_ch_macro_idle ,0 );
+		process_wcu_femto_2_JumpVector.put(var_scu_femto_1_processing , 0);
+		process_wcu_femto_2_JumpVector.put(var_scu_femto_1_sending ,0 );
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_1_processing , 0);
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		process_wcu_femto_2_JumpVector.put(var_ch_femto_1_idle , 0);
+		process_wcu_femto_2_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		process_wcu_femto_2_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		process_wcu_femto_2_JumpVector.put(var_scu_femto_2_processing ,0 );
+		process_wcu_femto_2_JumpVector.put(var_scu_femto_2_sending ,0 );
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_2_processing , -1);
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_2_waiting_local , +1);
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_wcu_femto_2_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		process_wcu_femto_2_JumpVector.put(var_ch_femto_2_idle , 0);
+		process_wcu_femto_2_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		process_wcu_femto_2_JumpVector.put(var_wcuq_femto_2_1 , 0);
+
+		process_wcu_femto_2.setJumpVector(process_wcu_femto_2_JumpVector);
+
+		JumpVector process_wcu_femto_2_JumpVectorMinus = new JumpVector();
+
+		process_wcu_femto_2_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		process_wcu_femto_2_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		process_wcu_femto_2_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_processing , 1);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		process_wcu_femto_2_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		process_wcu_femto_2.setJumpVectorMinus(process_wcu_femto_2_JumpVectorMinus);
+
+		JumpVector process_wcu_femto_2_JumpVectorPlus = new JumpVector();
+
+		process_wcu_femto_2_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		process_wcu_femto_2_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		process_wcu_femto_2_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 1);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		process_wcu_femto_2_JumpVectorPlus.put(var_wcuq_femto_2_1 , 0);
+
+		process_wcu_femto_2.setJumpVectorPlus(process_wcu_femto_2_JumpVectorPlus);
+
+		actions.add(process_wcu_femto_2);
+
+		
+
+		//////////////////////////////////////////////
+		// Action: accept_wcu_femto_2_local
+		//////////////////////////////////////////////
+
+		OriginalAction accept_wcu_femto_2_local = new OriginalAction();
+		accept_wcu_femto_2_local.setName("accept_wcu_femto_2_local");
+
+		JumpVector accept_wcu_femto_2_local_JumpVector = new JumpVector();
+
+		accept_wcu_femto_2_local_JumpVector.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_2_local_JumpVector.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_2_local_JumpVector.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_1_0 ,0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_1_1 ,0);
+		accept_wcu_femto_2_local_JumpVector.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_waiting_local , -1);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_streaming_local , +1);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_2_0 , -1);
+		accept_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_2_1 , +1);
+
+		accept_wcu_femto_2_local.setJumpVector(accept_wcu_femto_2_local_JumpVector);
+
+		JumpVector accept_wcu_femto_2_local_JumpVectorMinus = new JumpVector();
+
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 1);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_2_0 , 1);
+		accept_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_2_1 , 0);
+
+		accept_wcu_femto_2_local.setJumpVectorMinus(accept_wcu_femto_2_local_JumpVectorMinus);
+
+		JumpVector accept_wcu_femto_2_local_JumpVectorPlus = new JumpVector();
+
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_1_1 ,0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 1);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,0 );
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		accept_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_2_1 , 1);
+
+		accept_wcu_femto_2_local.setJumpVectorPlus(accept_wcu_femto_2_local_JumpVectorPlus);
+
+		actions.add(accept_wcu_femto_2_local);
+		
+		//////////////////////////////////////////////
+		// Action: reject_wcu_femto_2_local
+		//////////////////////////////////////////////
+
+		OriginalAction reject_wcu_femto_2_local = new OriginalAction();
+		reject_wcu_femto_2_local.setName("reject_wcu_femto_2_local");
+
+		JumpVector reject_wcu_femto_2_local_JumpVector = new JumpVector();
+
+		reject_wcu_femto_2_local_JumpVector.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_2_local_JumpVector.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_2_local_JumpVector.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_waiting_macro ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_waiting_local , -1);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_waiting_macro ,+1 );
+		reject_wcu_femto_2_local_JumpVector.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_2_local_JumpVector.put(var_wcuq_femto_2_1 , 0);
+		
+		reject_wcu_femto_2_local.setJumpVector(reject_wcu_femto_2_local_JumpVector);
+
+		JumpVector reject_wcu_femto_2_local_JumpVectorMinus = new JumpVector();
+
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_macro ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_local , 1);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_waiting_macro ,0 );
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_2_local_JumpVectorMinus.put(var_wcuq_femto_2_1 , 1);
+
+		reject_wcu_femto_2_local.setJumpVectorMinus(reject_wcu_femto_2_local_JumpVectorMinus);
+
+		JumpVector reject_wcu_femto_2_local_JumpVectorPlus = new JumpVector();
+
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_user_near_processing , 0 ) ;
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_user_near_sending , 0 ) ;
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_ldcq_0 ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_ldcq_1 ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_ch_macro_idle ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_1_processing , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_1_sending ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_processing , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_local , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_local, 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_waiting_macro ,0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_1_streaming_macro , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_ch_femto_1_idle , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_1_0 ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_1_1 , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_2_processing ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_scu_femto_2_sending ,0 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_processing , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_local , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_local , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_waiting_macro ,1 );
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcu_femto_2_streaming_macro , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_ch_femto_2_idle , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_2_0 , 0);
+		reject_wcu_femto_2_local_JumpVectorPlus.put(var_wcuq_femto_2_1 , 1);
+
+		reject_wcu_femto_2_local.setJumpVectorPlus(reject_wcu_femto_2_local_JumpVectorPlus);
+
+		actions.add(reject_wcu_femto_2_local);
+		
+		// setting the apparent rate data.
+		//For each local derivative and action type that the derivative enables, specify the rate of the action in the local derivative.
+		
+		///////////////////////////////////////////////////
+		// local derivative: user_near_processing
+		//////////////////////////////////////////////////
+		
+		// action: near_proc
+		user_near_processing.getActionRates().put(near_proc,r_near_process);
+		user_near_processing.getParameterNames().put(near_proc,"r_near_process");
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: user_near_sending
+		/////////////////////////////////////////////////
+		
+		// action: send_macro_nr
+		user_near_sending.getActionRates().put(send_macro_nr,passive);
+		user_near_sending.getParameterNames().put(send_macro_nr,"passive");
+		
+		// action: send_macro_nr
+		user_near_sending.getActionRates().put(send_macro_po,passive);
+		user_near_sending.getParameterNames().put(send_macro_po,"passive");
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: ldcq_0
+		/////////////////////////////////////////////////
+		
+		// action: send_macro_nr
+		ldcq_0.getActionRates().put(send_macro_nr,passive);
+		ldcq_0.getParameterNames().put(send_macro_nr,"passive");
+				
+		// action: accept_wcu_femto_1_macro
+		ldcq_0.getActionRates().put(accept_wcu_femto_1_macro,r_control);
+		ldcq_0.getParameterNames().put(accept_wcu_femto_1_macro,"r_control");
+		
+		// action: send_femto_1_nr
+		ldcq_0.getActionRates().put(send_femto_1_nr,passive);
+		ldcq_0.getParameterNames().put(send_femto_1_nr,"r_passive");
+
+
+		// action: stream_femto_1_nr
+		ldcq_0.getActionRates().put(stream_femto_1_nr,passive);
+		ldcq_0.getParameterNames().put(stream_femto_1_nr,"r_passive");
+
+		
+		// action: accept_wcu_femto_2_macro
+		ldcq_0.getActionRates().put(accept_wcu_femto_2_macro,r_control);
+		ldcq_0.getParameterNames().put(accept_wcu_femto_2_macro,"r_control");
+		
+		
+		// action: send_femto_2_nr
+		ldcq_0.getActionRates().put(send_femto_2_nr,passive);
+		ldcq_0.getParameterNames().put(send_femto_2_nr,"r_passive");
+
+
+		// action: stream_femto_2_nr
+		ldcq_0.getActionRates().put(stream_femto_2_nr,passive);
+		ldcq_0.getParameterNames().put(stream_femto_2_nr,"r_passive");
+
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: ldcq_1 
+		/////////////////////////////////////////////////
+		
+		// action: send_macro_po 
+		ldcq_1.getActionRates().put(send_macro_po,passive);
+		ldcq_1.getParameterNames().put(send_macro_po,"passive");
+		
+		// action: reject_wcu_femto_1_macro
+		ldcq_1.getActionRates().put(reject_wcu_femto_1_macro,r_control);
+		ldcq_1.getParameterNames().put(reject_wcu_femto_1_macro,"r_control");
+		
+		// action: stream_wcu_femto_1_macro_po
+		ldcq_1.getActionRates().put(stream_wcu_femto_1_macro_po,r_stream_wcu_femto_1_macro_po);
+		ldcq_1.getParameterNames().put(stream_wcu_femto_1_macro_po,"r_stream_wcu_femto_1_macro_po");
+
+		// action: send_femto_1_po
+		ldcq_1.getActionRates().put(send_femto_1_po,passive);
+		ldcq_1.getParameterNames().put(send_femto_1_po,"r_passive");
+
+		
+		// action: stream_femto_1_po
+		ldcq_1.getActionRates().put(stream_femto_1_po,passive);
+		ldcq_1.getParameterNames().put(stream_femto_1_po,"r_passive");
+
+		
+		// action: reject_wcu_femto_2_macro
+		ldcq_1.getActionRates().put(reject_wcu_femto_2_macro,r_control);
+		ldcq_1.getParameterNames().put(reject_wcu_femto_2_macro,"r_control");
+
+		
+		// action: stream_wcu_femto_2_macro_po
+		ldcq_1.getActionRates().put(stream_wcu_femto_2_macro_po,r_stream_wcu_femto_2_macro_po);
+		ldcq_1.getParameterNames().put(stream_wcu_femto_2_macro_po,"r_stream_wcu_femto_2_macro_po");
+
+
+		// action: send_femto_2_po
+		ldcq_1.getActionRates().put(send_femto_2_po,passive);
+		ldcq_1.getParameterNames().put(send_femto_2_po,"r_passive");
+
+
+		// action: stream_femto_2_po
+		ldcq_1.getActionRates().put(stream_femto_2_po,passive);
+		ldcq_1.getParameterNames().put(stream_femto_2_po,"r_passive");
+
+		
+		//////////////////////////////////////////////////
+		// local derivative: ch_macro_idle
+		/////////////////////////////////////////////////
+		
+		// action: send_macro_nr 
+		ch_macro_idle.getActionRates().put(send_macro_nr,r_send_macro_nr);
+		ch_macro_idle.getParameterNames().put(send_macro_nr,"r_send_macro_nr");
+		
+		// action: send_macro_po		
+		ch_macro_idle.getActionRates().put(send_macro_po,r_send_macro_po);
+		ch_macro_idle.getParameterNames().put(send_macro_po,"r_send_macro_po");
+
+		
+		//////////////////////////////////////////////////
+		// local derivative: scu_femto_1_processing
+		/////////////////////////////////////////////////
+		
+		// action: process_scu_femto_1
+		scu_femto_1_processing.getActionRates().put(process_scu_femto_1,r_process_scu_femto_1);
+		scu_femto_1_processing.getParameterNames().put(process_scu_femto_1,"r_process_scu_femto_1"); 
+		
+
+		//////////////////////////////////////////////////
+		// local derivative: scu_femto_1_sending
+		/////////////////////////////////////////////////
+		
+		// action: send_femto_1_nr
+		scu_femto_1_sending.getActionRates().put(send_femto_1_nr,passive);
+		scu_femto_1_sending.getParameterNames().put(send_femto_1_nr,"r_passive");
+		
+		// action: send_femto_1_po
+		scu_femto_1_sending.getActionRates().put(send_femto_1_po,passive);
+		scu_femto_1_sending.getParameterNames().put(send_femto_1_po,"r_passive");		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_1_processing
+		/////////////////////////////////////////////////
+		
+		// action: process_wcu_femto_1_
+		wcu_femto_1_processing.getActionRates().put(process_wcu_femto_1,r_process_wcu_femto_1);
+		wcu_femto_1_processing.getParameterNames().put(process_wcu_femto_1,"r_process_wcu_femto_1"); 
+			
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_1_waiting_local
+		/////////////////////////////////////////////////
+		
+		// action: accept_wcu_femto_1_local 
+		wcu_femto_1_waiting_local.getActionRates().put(accept_wcu_femto_1_local,r_control);
+		wcu_femto_1_waiting_local.getParameterNames().put(accept_wcu_femto_1_local,"r_control");
+		
+		// action: reject_wcu_femto_1_local
+		wcu_femto_1_waiting_local.getActionRates().put(reject_wcu_femto_1_local,r_control);
+		wcu_femto_1_waiting_local.getParameterNames().put(reject_wcu_femto_1_local,"r_control");
+
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_1_streaming_local
+		/////////////////////////////////////////////////
+		
+		// action: stream_femto_1_nr
+		wcu_femto_1_streaming_local.getActionRates().put(stream_femto_1_nr,passive);
+		wcu_femto_1_streaming_local.getParameterNames().put(stream_femto_1_nr,"r_passive");
+		
+		
+		// action: stream_femto_1_po
+		wcu_femto_1_streaming_local.getActionRates().put(stream_femto_1_po,passive);
+		wcu_femto_1_streaming_local.getParameterNames().put(stream_femto_1_nr,"r_passive");
+		
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_1_waiting_macro
+		/////////////////////////////////////////////////
+		
+		// action: accept_wcu_femto_1_macro
+		wcu_femto_1_waiting_macro.getActionRates().put(accept_wcu_femto_1_macro,r_control);
+		wcu_femto_1_waiting_macro.getParameterNames().put(accept_wcu_femto_1_macro,"r_control"); 
+		
+		// action: reject_wcu_femto_1_macro
+		wcu_femto_1_waiting_macro.getActionRates().put(reject_wcu_femto_1_macro,r_control);
+		wcu_femto_1_waiting_macro.getParameterNames().put(reject_wcu_femto_1_macro,"r_control"); 
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_1_streaming_macro
+		/////////////////////////////////////////////////
+		
+		// action: stream_wcu_femto_1_macro_po 
+		wcu_femto_1_streaming_macro.getActionRates().put(stream_wcu_femto_1_macro_po,passive);
+		wcu_femto_1_streaming_macro.getParameterNames().put(stream_wcu_femto_1_macro_po,"r_passive");
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: ch_femto_1_idle
+		/////////////////////////////////////////////////
+		
+		// action: send_femto_1_nr
+		ch_femto_1_idle.getActionRates().put(send_femto_1_nr,r_send_femto_1_nr);
+		ch_femto_1_idle.getParameterNames().put(send_femto_1_nr,"r_send_femto_1_nr");
+		
+		// action: send_femto_1_po
+		ch_femto_1_idle.getActionRates().put(send_femto_1_po,r_send_femto_1_po);
+		ch_femto_1_idle.getParameterNames().put(send_femto_1_po,"r_send_femto_1_po");
+				
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcuq_femto_1_0
+		/////////////////////////////////////////////////
+		
+		// action: accept_wcu_femto_1_local 
+		wcuq_femto_1_0.getActionRates().put(accept_wcu_femto_1_local,r_control);
+		wcuq_femto_1_0.getParameterNames().put(accept_wcu_femto_1_local,"r_control");
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcuq_femto_1_1
+		/////////////////////////////////////////////////
+		
+		// action: reject_wcu_femto_1_local 
+		wcuq_femto_1_1.getActionRates().put(reject_wcu_femto_1_local,r_control);
+		wcuq_femto_1_1.getParameterNames().put(reject_wcu_femto_1_local,"r_control");
+	
+		
+		// action: stream_femto_1_nr 
+		wcuq_femto_1_1.getActionRates().put(stream_femto_1_nr,r_stream_femto_1_nr);
+		wcuq_femto_1_1.getParameterNames().put(stream_femto_1_nr,"r_stream_femto_1_nr");
+			
+		// action: stream_femto_1_po 
+		wcuq_femto_1_1.getActionRates().put(stream_femto_1_po,r_stream_femto_1_po);
+		wcuq_femto_1_1.getParameterNames().put(stream_femto_1_po,"r_stream_femto_1_po");
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: scu_femto_2_processing
+		/////////////////////////////////////////////////
+		
+		// action: process_scu_femto_2
+		scu_femto_2_processing.getActionRates().put(process_scu_femto_2,r_process_scu_femto_2);
+		scu_femto_2_processing.getParameterNames().put(process_scu_femto_2,"r_process_scu_femto_2");
+
+		
+		//////////////////////////////////////////////////
+		// local derivative: scu_femto_2_sending 
+		/////////////////////////////////////////////////
+		
+		// action: send_femto_2_nr
+		scu_femto_2_sending.getActionRates().put(send_femto_2_nr,r_send_femto_2_nr);
+		scu_femto_2_sending.getParameterNames().put(send_femto_2_nr,"r_send_femto_2_nr");
+		
+		
+		// action: send_femto_2_po
+		scu_femto_2_sending.getActionRates().put(send_femto_2_po,r_send_femto_2_po);
+		scu_femto_2_sending.getParameterNames().put(send_femto_2_po,"r_send_femto_2_po");
+
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_2_processing
+		/////////////////////////////////////////////////
+		
+		// action: process_wcu_femto_2
+		wcu_femto_2_processing.getActionRates().put(process_wcu_femto_2,r_process_wcu_femto_2);
+		wcu_femto_2_processing.getParameterNames().put(process_wcu_femto_2,"r_process_wcu_femto_2"); 
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_2_waiting_local
+		/////////////////////////////////////////////////
+		
+		// action: accept_wcu_femto_2_local
+		wcu_femto_2_waiting_local.getActionRates().put(accept_wcu_femto_2_local,r_control);
+		wcu_femto_2_waiting_local.getParameterNames().put(accept_wcu_femto_2_local,"r_control");
+		
+		
+		// action: reject_wcu_femto_2_local
+		wcu_femto_2_waiting_local.getActionRates().put(reject_wcu_femto_2_local,r_control);
+		wcu_femto_2_waiting_local.getParameterNames().put(reject_wcu_femto_2_local,"r_control");
+				
+			
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_2_streaming_local
+		/////////////////////////////////////////////////
+		
+		// action: 
+		local_derivative.getActionRates().put(action,rateValue);
+		local_derivative.getParameterNames().put(action,Parameter_name)
+
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_2_waiting_macro
+		/////////////////////////////////////////////////
+		
+		// action: 
+		local_derivative.getActionRates().put(action,rateValue);
+		local_derivative.getParameterNames().put(action,Parameter_name)
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcu_femto_2_streaming_macro
+		/////////////////////////////////////////////////
+		
+		// action: 
+		local_derivative.getActionRates().put(action,rateValue);
+		local_derivative.getParameterNames().put(action,Parameter_name)
+		
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: ch_femto_2_idle
+		/////////////////////////////////////////////////
+
+		// action: 
+		local_derivative.getActionRates().put(action,rateValue);
+		local_derivative.getParameterNames().put(action,Parameter_name)
+
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcuq_femto_2_0
+		/////////////////////////////////////////////////
+		
+		// action: 
+		local_derivative.getActionRates().put(action,rateValue);
+		local_derivative.getParameterNames().put(action,Parameter_name)
+		
+		
+		
+		//////////////////////////////////////////////////
+		// local derivative: wcuq_femto_2_1
+		/////////////////////////////////////////////////
+		
+		// action: 
+		local_derivative.getActionRates().put(action,rateValue);
+		local_derivative.getParameterNames().put(action,Parameter_name)
+		
+		
 		// local derivative Server_idle and the action request
-		serverIdle.getActionRates().put(request, r_s);
-		serverIdle.getParameterNames().put(request, "r_s");
+		
 
 		// local derivative Server_idle and the action break
 		serverIdle.getActionRates().put(brk, r_b);
