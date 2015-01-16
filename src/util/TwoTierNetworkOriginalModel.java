@@ -1700,7 +1700,6 @@ public class TwoTierNetworkOriginalModel {
 
 		return model;
 		
-		
 	}
 	
 	
