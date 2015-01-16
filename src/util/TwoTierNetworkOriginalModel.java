@@ -16,7 +16,7 @@ import data.originalModel.OriginalState;
 public class TwoTierNetworkOriginalModel {
 
 	
-	public OriginalModel getTwoTierNetworkModel(){
+	public static OriginalModel getTwoTierNetworkModel(){
 		
 		// the constants
 		HashMap<String, Double> constants = new HashMap<String,Double>();
@@ -1178,8 +1178,8 @@ public class TwoTierNetworkOriginalModel {
 
 		JumpVector reject_wcu_femto_1_local_JumpVectorMinus = new JumpVector(descriptor);
 
-		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 1);
-		accept_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_1_1 , 1);
+		reject_wcu_femto_1_local_JumpVectorMinus.put(var_wcu_femto_1_waiting_local , 1);
+		reject_wcu_femto_1_local_JumpVectorMinus.put(var_wcuq_femto_1_1 , 1);
 
 		reject_wcu_femto_1_local.setJumpVectorMinus(reject_wcu_femto_1_local_JumpVectorMinus);
 
@@ -1334,11 +1334,11 @@ public class TwoTierNetworkOriginalModel {
 		
 		// action: send_macro_nr
 		user_near_sending.getActionRates().put(send_macro_nr,passive);
-		user_near_sending.getParameterNames().put(send_macro_nr,"passive");
+		user_near_sending.getParameterNames().put(send_macro_nr,"r_passive");
 		
 		// action: send_macro_nr
 		user_near_sending.getActionRates().put(send_macro_po,passive);
-		user_near_sending.getParameterNames().put(send_macro_po,"passive");
+		user_near_sending.getParameterNames().put(send_macro_po,"r_passive");
 		
 		
 		//////////////////////////////////////////////////
@@ -1347,7 +1347,7 @@ public class TwoTierNetworkOriginalModel {
 		
 		// action: send_macro_nr
 		ldcq_0.getActionRates().put(send_macro_nr,passive);
-		ldcq_0.getParameterNames().put(send_macro_nr,"passive");
+		ldcq_0.getParameterNames().put(send_macro_nr,"r_passive");
 				
 		// action: accept_wcu_femto_1_macro
 		ldcq_0.getActionRates().put(accept_wcu_femto_1_macro,r_control);
